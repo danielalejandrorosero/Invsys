@@ -2,14 +2,8 @@
 
 require_once '../config/cargarConfig.php';
 
-date_default_timezone_set('America/Bogota');
 
 $error = [];
-
-// Verificar que la conexión a la BD esté inicializada
-if (!isset($conn)) {
-    die("Error: Conexión a la base de datos no inicializada.");
-}
 
 nivelRequerido(1);
 

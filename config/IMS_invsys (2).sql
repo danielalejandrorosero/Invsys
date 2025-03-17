@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 13-03-2025 a las 00:21:13
+-- Tiempo de generación: 16-03-2025 a las 17:10:39
 -- Versión del servidor: 11.7.2-MariaDB
--- Versión de PHP: 8.4.4
+-- Versión de PHP: 8.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,31 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `IMS_invsys`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `alertas_stock`
+--
+
+CREATE TABLE `alertas_stock` (
+  `id_alerta` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_almacen` int(11) NOT NULL,
+  `mensaje` text NOT NULL,
+  `fecha_alerta` timestamp NULL DEFAULT current_timestamp(),
+  `estado` enum('pendiente','enviada') DEFAULT 'pendiente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `alertas_stock`
+--
+
+INSERT INTO `alertas_stock` (`id_alerta`, `id_producto`, `id_almacen`, `mensaje`, `fecha_alerta`, `estado`) VALUES
+(1, 12, 1, 'Stock bajo (1 disponibles, mínimo 5)', '2025-03-15 17:04:30', 'pendiente'),
+(2, 3, 1, 'Stock bajo (1 disponibles, mínimo 15)', '2025-03-15 17:04:30', 'pendiente'),
+(3, 2, 2, 'Stock bajo (1 disponibles, mínimo 20)', '2025-03-15 17:04:30', 'pendiente'),
+(4, 3, 2, 'Stock bajo (1 disponibles, mínimo 15)', '2025-03-15 17:04:30', 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -214,17 +239,18 @@ CREATE TABLE `movimientos_stock` (
   `id_almacen_destino` int(11) DEFAULT NULL,
   `tipo_movimiento` enum('entrada','salida','transferencia') NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `fecha_movimiento` timestamp NULL DEFAULT current_timestamp()
+  `fecha_movimiento` timestamp NULL DEFAULT current_timestamp(),
+  `id_usuario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `movimientos_stock`
 --
 
-INSERT INTO `movimientos_stock` (`id_movimiento`, `id_producto`, `id_almacen_origen`, `id_almacen_destino`, `tipo_movimiento`, `cantidad`, `fecha_movimiento`) VALUES
-(1, 1, NULL, 1, 'entrada', 50, '2025-03-12 22:05:59'),
-(2, 2, NULL, 2, 'entrada', 100, '2025-03-12 22:05:59'),
-(3, 3, 1, 2, 'transferencia', 10, '2025-03-12 22:05:59');
+INSERT INTO `movimientos_stock` (`id_movimiento`, `id_producto`, `id_almacen_origen`, `id_almacen_destino`, `tipo_movimiento`, `cantidad`, `fecha_movimiento`, `id_usuario`) VALUES
+(1, 1, 2, 1, 'entrada', 50, '2025-03-12 22:05:59', 47),
+(2, 2, 1, 2, 'entrada', 100, '2025-03-12 22:05:59', 44),
+(3, 3, 1, 2, 'transferencia', 10, '2025-03-12 22:05:59', 47);
 
 -- --------------------------------------------------------
 
@@ -253,9 +279,13 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id_producto`, `nombre`, `codigo`, `sku`, `descripcion`, `precio_compra`, `precio_venta`, `id_unidad_medida`, `stock_minimo`, `stock_maximo`, `id_categoria`, `fecha_creacion`, `fecha_actualizacion`) VALUES
-(1, 'Smartphone X', 'PROD001', 'SKU12345', 'Teléfono inteligente última generación', 800000.00, 1200000.00, 1, 10, 100, 1, '2025-03-12 22:05:59', '2025-03-12 22:05:59'),
+(1, 'Smartphone X', 'PROD001', 'SKU12345', 'Teléfono inteligente última generación', 800000.00, 1200000.00, 2, 5, 100, 1, '2025-03-12 22:05:59', '2025-03-15 16:36:30'),
 (2, 'Camisa Algodón', 'PROD002', 'SKU54321', 'Camisa de algodón talla M', 50000.00, 85000.00, 1, 20, 200, 2, '2025-03-12 22:05:59', '2025-03-12 22:05:59'),
-(3, 'Juego de Sábanas', 'PROD003', 'SKU67890', 'Sábanas de algodón egipcio', 120000.00, 180000.00, 1, 15, 150, 3, '2025-03-12 22:05:59', '2025-03-12 22:05:59');
+(3, 'Juego de Sábanas', 'PROD003', 'SKU67890', 'Sábanas de algodón egipcio', 120000.00, 180000.00, 1, 15, 150, 3, '2025-03-12 22:05:59', '2025-03-12 22:05:59'),
+(7, 'ProductoPrueba', 'PROD999', 'SKU99999', 'Este es un producto de prueba', 1000.50, 1500.75, 1, 5, 50, 1, '2025-03-13 03:12:01', '2025-03-13 03:12:01'),
+(12, 'ProductoPrueba', 'PROD9999', 'SKU999999', 'Este es un producto de prueba', 1000.50, 1500.75, 1, 5, 50, 1, '2025-03-13 03:20:41', '2025-03-13 03:20:41'),
+(13, 'ProductoPrueba', 'PROD9999999', 'SKU9999999', 'Este es un producto de prueba', 1000.50, 1500.75, 1, 5, 50, 1, '2025-03-13 03:39:21', '2025-03-13 03:39:21'),
+(14, 'ProductoActualizado', 'PROD000014', 'SKU000014', 'Este producto fue editado de prueba', 1200.50, 1700.75, 1, 5, 50, 1, '2025-03-13 19:59:54', '2025-03-13 20:07:33');
 
 -- --------------------------------------------------------
 
@@ -290,18 +320,18 @@ CREATE TABLE `stock_almacen` (
   `id_stock` int(11) NOT NULL,
   `id_almacen` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL DEFAULT 0
+  `cantidad_disponible` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `stock_almacen`
 --
 
-INSERT INTO `stock_almacen` (`id_stock`, `id_almacen`, `id_producto`, `cantidad`) VALUES
-(1, 1, 1, 50),
-(2, 1, 3, 30),
-(3, 2, 2, 100),
-(4, 2, 3, 20);
+INSERT INTO `stock_almacen` (`id_stock`, `id_almacen`, `id_producto`, `cantidad_disponible`) VALUES
+(1, 1, 12, 1),
+(2, 1, 3, 111),
+(3, 2, 2, 111),
+(4, 2, 3, 100);
 
 -- --------------------------------------------------------
 
@@ -384,6 +414,14 @@ INSERT INTO `ventas` (`id_venta`, `id_cliente`, `fecha_venta`, `total`) VALUES
 --
 
 --
+-- Indices de la tabla `alertas_stock`
+--
+ALTER TABLE `alertas_stock`
+  ADD PRIMARY KEY (`id_alerta`),
+  ADD KEY `id_producto` (`id_producto`),
+  ADD KEY `id_almacen` (`id_almacen`);
+
+--
 -- Indices de la tabla `almacenes`
 --
 ALTER TABLE `almacenes`
@@ -453,7 +491,8 @@ ALTER TABLE `movimientos_stock`
   ADD PRIMARY KEY (`id_movimiento`),
   ADD KEY `id_producto` (`id_producto`),
   ADD KEY `id_almacen_origen` (`id_almacen_origen`),
-  ADD KEY `id_almacen_destino` (`id_almacen_destino`);
+  ADD KEY `id_almacen_destino` (`id_almacen_destino`),
+  ADD KEY `fk_movimientos_stock_usuarios` (`id_usuario`);
 
 --
 -- Indices de la tabla `productos`
@@ -506,6 +545,12 @@ ALTER TABLE `ventas`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `alertas_stock`
+--
+ALTER TABLE `alertas_stock`
+  MODIFY `id_alerta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `almacenes`
@@ -571,7 +616,7 @@ ALTER TABLE `movimientos_stock`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
@@ -606,6 +651,13 @@ ALTER TABLE `ventas`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `alertas_stock`
+--
+ALTER TABLE `alertas_stock`
+  ADD CONSTRAINT `alertas_stock_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`),
+  ADD CONSTRAINT `alertas_stock_ibfk_2` FOREIGN KEY (`id_almacen`) REFERENCES `stock_almacen` (`id_almacen`);
 
 --
 -- Filtros para la tabla `compras`
@@ -643,6 +695,7 @@ ALTER TABLE `imagenes_usuarios`
 -- Filtros para la tabla `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
+  ADD CONSTRAINT `fk_movimientos_stock_usuarios` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`),
   ADD CONSTRAINT `movimientos_stock_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`),
   ADD CONSTRAINT `movimientos_stock_ibfk_2` FOREIGN KEY (`id_almacen_origen`) REFERENCES `almacenes` (`id_almacen`),
   ADD CONSTRAINT `movimientos_stock_ibfk_3` FOREIGN KEY (`id_almacen_destino`) REFERENCES `almacenes` (`id_almacen`);

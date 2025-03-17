@@ -1,6 +1,6 @@
 <?php
-// Habilitar reporte de errores para depuración
 
+// DASHBOARD DE LISTA PARA BUSCAR POR 
 
 require_once '../config/cargarConfig.php';
 

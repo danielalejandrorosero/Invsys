@@ -7,6 +7,8 @@ require_once '../config/cargarConfig.php';
 
 nivelRequerido(1);
 
+// dashboard
+
 // Consulta para obtener todos los productos con el nombre de la categoría y de la unidad de medida
 $sql = "SELECT p.nombre, p.codigo, p.sku, p.descripcion, p.precio_compra, p.precio_venta, p.stock_minimo, p.stock_maximo, c.nombre
 AS categoria, u.nombre 

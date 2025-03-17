@@ -3,7 +3,6 @@
 require_once '../config/cargarConfig.php';
 require_once 'config_mail.php';
 
-date_default_timezone_set('America/Bogota');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo = trim($_POST['correo']);
