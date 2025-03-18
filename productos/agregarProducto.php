@@ -1,10 +1,5 @@
 <?php
-
-
-
 require_once '../config/cargarConfig.php';
-
-
 
 $error = [];
 
@@ -12,11 +7,8 @@ date_default_timezone_set('America/Bogota');
 
 nivelRequerido(1);
 
-// Verificar si el usuario es administrador
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregarProducto'])) {
-    $camposRequeridos = ['nombre', 'codigo', 'sku', 'descripcion', 'precio_compra', 'precio_venta', 'stock_minimo', 'stock_maximo', 'id_categoria', 'id_unidad_medida'];
+    $camposRequeridos = ['nombre', 'codigo', 'sku', 'descripcion', 'precio_compra', 'precio_venta', 'stock_minimo', 'stock_maximo', 'id_categoria', 'id_unidad_medida', 'id_proveedor'];
     validarCampos($camposRequeridos);
 
     if (empty($error)) {
@@ -31,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregarProducto'])) {
         $stock_minimo = (int) $_POST['stock_minimo'];
         $stock_maximo = (int) $_POST['stock_maximo'];
         $id_categoria = (int) $_POST['id_categoria'];
+        $id_proveedor = (int) $_POST['id_proveedor'];
 
         // Validar precios
         if (!$precio_compra || $precio_compra <= 0 || !$precio_venta || $precio_venta <= 0) {
@@ -51,7 +44,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregarProducto'])) {
         }
         $stmt->close();
 
-        // codigo debe 
+        // Validar existencia del proveedor
+        $stmt = $conn->prepare("SELECT id_proveedor FROM proveedores WHERE id_proveedor = ?");
+        $stmt->bind_param("i", $id_proveedor);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows == 0) {
+            $error[] = "El proveedor no existe.";
+        }
+        $stmt->close();
+
+        // Validar código único
         $stmt = $conn->prepare("SELECT codigo FROM productos WHERE codigo = ?");
         $stmt->bind_param("s", $codigo);
         $stmt->execute();
@@ -81,20 +83,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregarProducto'])) {
         // Si no hay errores, insertar producto
         if (empty($error)) {
             $sql = "INSERT INTO productos 
-            (nombre,
-            codigo, 
-            sku, 
-            descripcion, 
-            precio_compra, 
-            precio_venta, 
-            id_unidad_medida, 
-            stock_minimo, 
-            stock_maximo, 
-            id_categoria) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            (nombre, codigo, sku, descripcion, precio_compra, precio_venta, id_unidad_medida, stock_minimo, stock_maximo, id_categoria, id_proveedor) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssddiiii",
+            $stmt->bind_param("ssssddiiiii",
             $nombre, 
             $codigo, 
             $sku, 
@@ -104,7 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregarProducto'])) {
             $id_unidad_medida, 
             $stock_minimo, 
             $stock_maximo, 
-            $id_categoria);
+            $id_categoria, 
+            $id_proveedor);
 
             if ($stmt->execute()) {
                 echo "Producto agregado correctamente.";
@@ -115,8 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregarProducto'])) {
         }
     }
 }
-
-
 
 // Mostrar errores
 if (!empty($error)) {

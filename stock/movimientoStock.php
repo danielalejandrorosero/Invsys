@@ -1,27 +1,10 @@
 <?php
-
 require_once '../config/cargarConfig.php';
 nivelRequerido(1);
 
-$filters = [];
-$params = [];
-
-if (isset($_GET['producto']) && !empty(trim($_GET['producto']))) {
-    $filters[] = "p.nombre LIKE ?";
-    $params[] = "%" . trim($_GET['producto']) . "%";
-}
-
-if (isset($_GET['almacen']) && !empty(trim($_GET['almacen']))) {
-    $filters[] = "(a_origen.nombre LIKE ? OR a_destino.nombre LIKE ?)";
-    $almacen_filter = "%" . trim($_GET['almacen']) . "%";
-    $params[] = $almacen_filter;
-    $params[] = $almacen_filter;
-}
-
-if (isset($_GET['tipo']) && !empty(trim($_GET['tipo']))) {
-    $filters[] = "ms.tipo_movimiento = ?";
-    $params[] = trim($_GET['tipo']);
-}
+$almacen = isset($_GET['almacen']) ? trim($_GET['almacen']) : null;
+$producto = isset($_GET['producto']) ? trim($_GET['producto']) : null;
+$tipo = isset($_GET['tipo']) ? trim($_GET['tipo']) : null;
 
 $sql = "SELECT 
             ms.id_movimiento, 
@@ -38,29 +21,65 @@ $sql = "SELECT
         LEFT JOIN almacenes a_destino ON ms.id_almacen_destino = a_destino.id_almacen
         LEFT JOIN usuarios u ON ms.id_usuario = u.id_usuario";
 
-// Si hay filtros, se agrega la cláusula WHERE
-if (!empty($filters)) {
-    $sql .= " WHERE " . implode(" AND ", $filters);
+$where = [];
+$params = [];
+$types = "";
+
+if (!empty($almacen)) {
+    $where[] = "(a_origen.nombre LIKE ? OR a_destino.nombre LIKE ?)";
+    $params[] = "%$almacen%";
+    $params[] = "%$almacen%";
+    $types   .= "ss";
+}
+
+if (!empty($producto)) {
+    $where[] = "p.nombre LIKE ?";
+    $params[] = "%$producto%";
+    $types   .= "s";
+}
+
+if (!empty($tipo)) {
+    $where[] = "ms.tipo_movimiento LIKE ?";
+    $params[] = "%$tipo%";
+    $types   .= "s";
+}
+
+if (!empty($where)) {
+    $sql .= " WHERE " . implode(" AND ", $where);
 }
 
 $sql .= " ORDER BY ms.fecha_movimiento DESC";
 
 $stmt = $conn->prepare($sql);
+if (!$stmt) {
+    die("Error en la consulta: " . $conn->error);
+}
 
-// Vincular parámetros si existen
-if (count($params) > 0) {
-    $types = str_repeat('s', count($params)); // Asumimos todos los parámetros tipo string
+if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
 }
 
 $stmt->execute();
 $result = $stmt->get_result();
 
-$movimientos = [];
+echo "<table>";
+echo "<thead><tr><th>ID</th><th>Producto</th><th>Tipo</th><th>Cantidad</th><th>Fecha</th><th>Almacén Origen</th><th>Almacén Destino</th><th>Usuario</th></tr></thead>";
+echo "<tbody>";
+
 while ($row = $result->fetch_assoc()) {
-    $movimientos[] = $row;
+    echo "<tr>";
+    echo "<td>{$row['id_movimiento']}</td>";
+    echo "<td>{$row['producto']}</td>";
+    echo "<td>{$row['tipo_movimiento']}</td>";
+    echo "<td>{$row['cantidad']}</td>";
+    echo "<td>{$row['fecha_movimiento']}</td>";
+    echo "<td>{$row['almacen_origen']}</td>";
+    echo "<td>{$row['almacen_destino']}</td>";
+    echo "<td>{$row['usuario']}</td>";
+    echo "</tr>";
 }
 
-// Se envía la respuesta en formato JSON
-header('Content-Type: application/json');
-echo json_encode($movimientos);
+echo "</tbody></table>";
+
+$stmt->close();
+?>

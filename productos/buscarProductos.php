@@ -68,7 +68,6 @@ $sql .= " ORDER BY p.nombre ASC";
 // Preparar la consulta
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-    error_log("Error en la preparación de la consulta: " . $conn->error);
     die("Error en la consulta.");
 }
 
@@ -100,3 +99,4 @@ if ($result && $result->num_rows > 0) {
 
 $stmt->close();
 ?>
+    
