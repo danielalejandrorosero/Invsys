@@ -8,6 +8,8 @@ require_once '../config/cargarConfig.php';
 
 nivelRequerido(1);
 
+
+
 // Obtener parámetros de búsqueda
 $nombreProducto       = isset($_GET['nombre']) ? trim($_GET['nombre']) : null;
 $codigoProducto       = isset($_GET['codigo']) ? trim($_GET['codigo']) : null;
@@ -15,10 +17,6 @@ $skuProducto          = isset($_GET['sku']) ? trim($_GET['sku']) : null;
 $CategoriaProducto    = isset($_GET['categoria']) ? trim($_GET['categoria']) : null;
 $UnidadMedidaProducto = isset($_GET['unidad_medida']) ? trim($_GET['unidad_medida']) : null;
 
-// Si no hay criterios de búsqueda, detener ejecución
-if (empty($nombreProducto) && empty($codigoProducto) && empty($skuProducto) && empty($CategoriaProducto) && empty($UnidadMedidaProducto)) {
-    die("Por favor, ingresa algún criterio de búsqueda para mostrar los productos.");
-}
 
 // Construcción de la consulta
 $sql = "SELECT p.nombre, p.codigo, p.sku, p.descripcion, p.precio_compra, p.precio_venta, 
@@ -99,4 +97,3 @@ if ($result && $result->num_rows > 0) {
 
 $stmt->close();
 ?>
-    
