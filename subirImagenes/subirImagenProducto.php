@@ -107,39 +107,3 @@ while ($row = $result->fetch_assoc()) {
     $productos[] = $row;
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir Imagen de Producto</title>
-</head>
-<body>
-    <h2>Subir Imagen de Producto</h2>
-    <?php
-    if (isset($_SESSION['error'])) {
-        echo '<p style="color: red;">' . $_SESSION['error'] . '</p>';
-        unset($_SESSION['error']);
-    }
-    if (isset($_SESSION['mensaje'])) {
-        echo '<p style="color: green;">' . $_SESSION['mensaje'] . '</p>';
-        unset($_SESSION['mensaje']);
-    }
-    ?>
-    <form action="subirImagenProducto.php" method="POST" enctype="multipart/form-data">
-        <label for="id_producto">Producto:</label>
-        <select name="id_producto" id="id_producto" required>
-            <option value="">Seleccione un producto</option>
-            <?php foreach ($productos as $producto): ?>
-                <option value="<?= htmlspecialchars($producto['id_producto']) ?>">
-                    <?= htmlspecialchars($producto['nombre']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <label for="imagen">Seleccionar Imagen:</label>
-        <input type="file" name="imagen" id="imagen" accept="image/jpeg, image/png" required>
-        <button type="submit" name="subirImagenProducto">Subir Imagen</button>
-    </form>
-</body>
-</html>
