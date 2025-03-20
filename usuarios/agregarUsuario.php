@@ -1,21 +1,23 @@
 <?php
-
 require_once '../config/cargarConfig.php';
 
+// Iniciar sesión
+session_start();
 
 $error = [];
 
+// Verificar si el usuario tiene el nivel requerido (1 en este caso)
 nivelRequerido(1);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregarUsuario'])) {
-    $camposRequeridos = ['email', 'nombre', 'nombreUsuario', 'password', 'nivel_usuario']; 
+    $camposRequeridos = ['email', 'nombre', 'nombreUsuario', 'password', 'nivel_usuario'];
     validarCampos($camposRequeridos);
 
     if (empty($error)) {
         // Limpiar y sanitizar los datos
         $nombre = trim($_POST['nombre']);
         $nombreUsuario = trim($_POST['nombreUsuario']);
-        $email = filter_var(trim($_POST['email']),  );
+        $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
         $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
         $nivel_usuario = intval($_POST['nivel_usuario']);
         $status = 1; // 1 = activo, 0 = inactivo
@@ -37,13 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregarUsuario'])) {
             $stmt->bind_param("ssssiis", $nombre, $nombreUsuario, $email, $password, $status, $nivel_usuario, $last_login);
 
             if ($stmt->execute()) {
-                echo "Usuario agregado exitosamente";
+                // Redirección a listaUsuarios.php después de agregar exitosamente
+                header("Location: listaUsuarios.php");
+                exit();
             } else {
                 $error[] = "Error al agregar usuario: " . $stmt->error;
             }
             $stmt->close();
         }
         $checkGroup->close();
+    } else {
+        echo "<p style='color:red;'>Error: Campos requeridos no válidos.</p>";
     }
 }
 

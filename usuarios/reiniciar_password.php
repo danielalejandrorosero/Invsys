@@ -1,6 +1,11 @@
 <?php
 
 require_once '../config/cargarConfig.php';
+require_once 'config_mail.php';
+
+
+// horario de Colombia
+date_default_timezone_set('America/Bogota');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = trim($_POST['token']);
@@ -23,6 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->affected_rows > 0) {
             echo "Contraseña actualizada con éxito.";
+            // y si se restablece que me mande a login
+            header("Location: iniciarSesion.php");
+            exit();
         } else {
             echo "Error al actualizar la contraseña.";
         }
@@ -30,7 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Token inválido o expirado.";
     }
 } else {
-    echo "Método no permitido.";
+    // si no se envía por POST, redireccionar a la página de solicitar recuperación
+    header("Location: solicitar_recuperacion.php");
+    exit();
 }
 
 ?>

@@ -1,9 +1,11 @@
-    <?php
+<?php
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require_once '../vendor/autoload.php';
 
+
+// usar las variables de entorno para seguridad del 
 
 function enviarCorreoRecuperacion($correo, $token) {
     $mail = new PHPMailer(true);
@@ -22,7 +24,7 @@ function enviarCorreoRecuperacion($correo, $token) {
         $mail->isHTML(true);
         $mail->Subject = 'Recupera tu contraseña';
         $mail->Body = "<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-                       <p><a href='http://localhost/InventoryManagementSystem/usuarios/reiniciar_password.php?token=$token'>Recuperar Contraseña</a></p>";
+                       <p><a href='http://localhost/InventoryManagementSystem/frontend/reiniciarPassword.html?token=$token'>Recuperar Contraseña</a></p>";
 
         if ($mail->send()) {
             return true;  
