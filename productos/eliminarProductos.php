@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminarProducto'])) 
     $id_producto = isset($_POST['id_producto']) ? intval($_POST['id_producto']) : 0;
     
     if (!$id_producto || $id_producto <= 0) {
-        $error[] = "ID de producto inválido.";
+        $error[] = "producto inválido.";
     }
 
     // Solo intentamos eliminar si no hay errores previos

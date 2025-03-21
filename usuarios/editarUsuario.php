@@ -5,10 +5,6 @@ session_start();
 
 $error = [];
 
-// Requerir nivel de acceso (admin)
-nivelRequerido(1);
-
-// Verificar si el usuario es administrador
 
 
 
@@ -97,3 +93,54 @@ if (!empty($error)) {
 }
 
 ?>
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario</title>
+    <link rel="stylesheet" href="../frontend/editarUsuario.css"> <!-- Asegúrate de tener un archivo CSS para los estilos -->
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Usuario</h1>
+        <form action="editarUsuario.php" method="POST">
+            <input type="hidden" name="id_usuario" value="<?php echo $_SESSION['id_usuario']; ?>">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="nombreUsuario">Nombre de Usuario</label>
+                <input type="text" id="nombreUsuario" name="nombreUsuario" required>
+            </div>
+            <button type="submit" name="actualizarUsuario">Actualizar Usuario</button>
+        </form>
+        <hr>
+        <h2>Actualizar Contraseña</h2>
+        <form action="editarUsuario.php" method="POST">
+            <input type="hidden" name="id_usuario" value="<?php echo $_SESSION['id_usuario']; ?>">
+            <div class="form-group">
+                <label for="password">Nueva Contraseña</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" name="actualizarPassword">Actualizar Contraseña</button>
+        </form>
+        <?php
+        // Mostrar mensajes si los hay
+        if (isset($mensaje)) {
+            echo "<p style='color:green;'>$mensaje</p>";
+        }
+        if (!empty($error)) {
+            foreach ($error as $err) {
+                echo "<p style='color:red;'>$err</p>";
+            }
+        }
+        ?>
+    </div>
+</body>
+</html>

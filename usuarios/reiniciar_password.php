@@ -3,7 +3,6 @@
 require_once '../config/cargarConfig.php';
 require_once 'config_mail.php';
 
-
 // horario de Colombia
 date_default_timezone_set('America/Bogota');
 
@@ -19,28 +18,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($resultado->num_rows > 0) {
         $usuario = $resultado->fetch_assoc();
 
-        // 🔹 Actualizar la contraseña y eliminar el token
+        // Actualizar la contraseña y eliminar el token
         $stmt = $conn->prepare("UPDATE usuarios SET password = ?, token_recuperacion = NULL, expira_token = NULL WHERE id_usuario = ?");
         $stmt->bind_param("si", $nuevaPassword, $usuario['id_usuario']);
         $stmt->execute();
 
-        $stmt->close();
-
         if ($stmt->affected_rows > 0) {
-            echo "Contraseña actualizada con éxito.";
-            // y si se restablece que me mande a login
+            $mensaje = "Contraseña actualizada con éxito.";
             header("Location: iniciarSesion.php");
             exit();
         } else {
-            echo "Error al actualizar la contraseña.";
+            $mensaje = "Error al actualizar la contraseña.";
         }
     } else {
-        echo "Token inválido o expirado.";
+        $mensaje = "Token inválido o expirado.";
     }
+} else if (isset($_GET['token'])) {
+    $token = $_GET['token'];
 } else {
-    // si no se envía por POST, redireccionar a la página de solicitar recuperación
+    // Si no se proporciona un token, redirigimos a la página de solicitar recuperación
     header("Location: solicitar_recuperacion.php");
     exit();
 }
 
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reiniciar Contraseña</title>
+    <link rel="stylesheet" href="../frontend/reiniciarPassword.css"> <!-- Asegúrate de tener un archivo CSS para los estilos -->
+</head>
+<body>
+    <div class="container">
+        <h1>Reiniciar Contraseña</h1>
+        <form action="reiniciar_password.php" method="POST">
+            <div class="form-group">
+                <label for="token">Token de Recuperación</label>
+                <input type="text" id="token" name="token" value="<?php echo isset($token) ? htmlspecialchars($token) : ''; ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Nueva Contraseña</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Reiniciar Contraseña</button>
+        </form>
+        <?php
+        if (isset($mensaje)) {
+            echo "<p>{$mensaje}</p>";
+        }
+        ?>
+    </div>
+</body>
+</html>

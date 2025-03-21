@@ -10,6 +10,6 @@ session_unset();
 session_destroy();
 
 // Redirigir al login correctamente
-//header("Location: ../frontend/login.php");
+header("Location: iniciarSesion.php");
 exit();
 ?>

@@ -4,10 +4,12 @@ require_once '../config/cargarConfig.php';
 
 $error = [];
 
-// Iniciar sesión si no está iniciada
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subirImagenUsuario'])) {
     $camposRequeridos = ['id_usuario'];
