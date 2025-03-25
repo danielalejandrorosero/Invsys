@@ -1,5 +1,5 @@
 <?php
-require_once '../config/cargarConfig.php';
+require_once __DIR__ . '/../../../config/cargarConfig.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -10,6 +10,6 @@ session_unset();
 session_destroy();
 
 // Redirigir al login correctamente
-header("Location: iniciarSesion.php");
+header("Location: ../../Views/usuarios/login.php");
 exit();
 ?>

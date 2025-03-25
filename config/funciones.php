@@ -11,32 +11,105 @@ function validarCampos($camposRequeridos) {
 function nivelRequerido($nivel) {
     global $sesion;
 
-    if (!isset($sesion)) {
-        throw new Exception("Error: La clase Sesiones no está definida.");
+    // Verificar si el usuario está autenticado
+    if (!$sesion->usuarioAutenticado()) {
+        header("Location: ../../Views/usuarios/login.php");
+        exit();
     }
 
-    if ($sesion->usuarioAutenticado() === false) {
-        throw new Exception("Error: El usuario no está autenticado.");
-    }
     
+
+    // Obtener el usuario actual
     $usuarioActual = UsuarioActual();
     if (!$usuarioActual) {
-        throw new Exception("Error: No se pudo obtener información del usuario actual.");
+        $_SESSION['error'] = "Error: No se pudo obtener la información del usuario.";
+        header("Location: ../../Views/usuarios/login.php");
+        exit();
     }
 
+    // Obtener el nivel del usuario desde la base de datos
     $nivel_sesion = encontrarPorGrupoNivel($usuarioActual['nivel_usuario']);
     if (!$nivel_sesion) {
-        throw new Exception("Error: No se encontró el nivel del usuario en la base de datos.");
+        $_SESSION['error'] = "Error: No se encontró el nivel del usuario en la base de datos.";
+        header("Location: ../../Views/usuarios/login.php");
+        exit();
     }
 
+    // Si el grupo de usuario está inactivo
     if ($nivel_sesion['estado_grupo'] === 0) {
-        throw new Exception("Error: El grupo de usuario está inactivo.");
+        $_SESSION['error'] = "Este nivel de usuario ha sido deshabilitado.";
+        header("Location: ../../Views/usuarios/login.php");
+        exit();
     }
 
-    if ($nivel_sesion['nivel_grupo'] < (int) $nivel) {
-        throw new Exception("Error: No tienes permisos para acceder a esta página.");
+    // Verificar si el usuario tiene el nivel requerido
+    if ((int)$usuarioActual['nivel_usuario'] > (int)$nivel) {
+
+        if (basename($_SERVER['PHP_SELF']) !== "index.php") {
+            $_SESSION['error'] = "Lo siento, no tienes permisos para ver esta página.";
+            header("Location: ../../Views/usuarios/index.php");
+            exit();
+        }
     }
 }
+/*
+
+
+
+
+        $usuarioActual = UsuarioActual();
+        $nivel_sesion = encontrarPorGrupoNivel($usuarioActual['nivel_usuario']);
+
+        if (!isset($nivel_sesion['nivel_grupo']) || $nivel_sesion['nivel_grupo'] !== 1) {
+            $_SESSION['error'] = "No tienes permisos para acceder a esta página.";
+            header("Location: ../../Views/usuarios/index.php"); // O redirigir donde prefieras
+            exit();
+        }
+
+
+
+
+function nivelRequerido($nivel) {
+    if (!isset($_SESSION['id_usuario'])) {
+        $_SESSION['error'] = "Debes iniciar sesión para acceder a esta página.";
+        header("Location: ../../Views/usuarios/login.php");
+        exit();
+    }
+
+    $usuarioActual = UsuarioActual();
+    if (!$usuarioActual || !isset($usuarioActual['nivel_usuario'])) {
+        $_SESSION['error'] = "No se pudo obtener la información del usuario.";
+        header("Location: ../../Views/usuarios/login.php");
+        exit();
+    }
+
+    // Obtener el nivel del usuario desde la BD
+    $nivel_sesion = encontrarPorGrupoNivel($usuarioActual['nivel_usuario']);
+    if (!$nivel_sesion || !isset($nivel_sesion['nivel_grupo'])) {
+        $_SESSION['error'] = "No se encontró el nivel del usuario en la base de datos.";
+        header("Location: ../../Views/usuarios/login.php");
+        exit();
+    }
+
+    // Verificar si el grupo de usuario está inactivo
+    if ($nivel_sesion['estado_grupo'] === 0) {
+        $_SESSION['error'] = "El grupo de usuario está inactivo.";
+        header("Location: ../../Views/usuarios/login.php");
+        exit();
+    }
+
+    if (!isset($nivel_sesion['nivel_grupo']) || $nivel_sesion['nivel_grupo'] !== 1) {
+        $_SESSION['error'] = "No tienes permisos para acceder a esta página.";
+        header(header: "Location: ../../Views/usuarios/login.php");
+        exit();
+    }
+}
+
+*/
+
+
+
+
 
 function encontrarPorGrupoNivel($nivel) {
     global $conn;
@@ -49,6 +122,7 @@ function encontrarPorGrupoNivel($nivel) {
 
     $grupo = ($resultado->num_rows > 0) ? $resultado->fetch_assoc() : null;
 
+    
     $stmt->close();
     return $grupo;
 }
