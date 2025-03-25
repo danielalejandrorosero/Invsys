@@ -104,6 +104,7 @@ $productosBajoStock = $stockController->alertaStock();
                 <li><a href="../../Controller/usuarios/editarUsuario.php">Editar Usuario</a></li>
                 <li><a href="../../Controller/stock/verInventarioController.php">Ver Inventario</a></li>
                 <li><a href="../../Controller/stock/ajustarStockController.php">Ajustar Stock</a></li>
+                <li><a href="../../Controller/stock/movimientoStockController.php">Movimientos de Stock</a></li>
             </ul>
         </nav>
     </div>

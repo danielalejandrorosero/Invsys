@@ -121,8 +121,65 @@ class Stock {
         return $almacenes;
     }
 
-}
 
+    public function obtenerMovimientos($almacen = null, $producto = null, $tipo = null) {
+        $sql = "SELECT 
+                    ms.id_movimiento, 
+                    p.nombre AS producto, 
+                    ms.tipo_movimiento, 
+                    ms.cantidad, 
+                    ms.fecha_movimiento,
+                    a_origen.nombre AS almacen_origen,
+                    a_destino.nombre AS almacen_destino,
+                    COALESCE(u.nombre, 'Sin usuario') AS usuario
+                FROM movimientos_stock ms
+                JOIN productos p ON ms.id_producto = p.id_producto
+                LEFT JOIN almacenes a_origen ON ms.id_almacen_origen = a_origen.id_almacen
+                LEFT JOIN almacenes a_destino ON ms.id_almacen_destino = a_destino.id_almacen
+                LEFT JOIN usuarios u ON ms.id_usuario = u.id_usuario";
+
+        $where = [];
+        $params = [];
+        $types = "";
+
+        if (!empty($almacen)) {
+            $where[] = "(a_origen.nombre LIKE ? OR a_destino.nombre LIKE ?)";
+            $params[] = "%$almacen%";
+            $params[] = "%$almacen%";
+            $types   .= "ss";
+        }
+
+        if (!empty($producto)) {
+            $where[] = "p.nombre LIKE ?";
+            $params[] = "%$producto%";
+            $types   .= "s";
+        }
+
+        if (!empty($tipo)) {
+            $where[] = "ms.tipo_movimiento LIKE ?";
+            $params[] = "%$tipo%";
+            $types   .= "s";
+        }
+
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $sql .= " ORDER BY ms.fecha_movimiento DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            die("Error en la consulta: " . $this->conn->error);
+        }
+
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+}
 
 
 
