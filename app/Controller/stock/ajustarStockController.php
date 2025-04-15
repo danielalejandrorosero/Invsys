@@ -1,24 +1,23 @@
 <?php
 
-// dbugear
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
+require_once __DIR__ . '/../../Models/productos/productos.php';
 nivelRequerido(1);
 
 class ControlInventarioController {
     private $stockModel;
-
+    private $productoModel;
+    
     public function __construct($conn) {
         $this->stockModel = new Stock($conn);
+        $this->productoModel = new Productos($conn);
     }
 
     public function ajustarStock() {
         $error = [];
         $almacenes = [];
-        $productos = $this->stockModel->obtenerProductos();
+        $productos = $this->productoModel->obtenerProductos();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_stock'])) {
             $id_producto = (int) $_POST['id_producto'];

@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
 require_once __DIR__ . '/../../Controller/stock/alertaStockController.php';
 session_start();
-
+    
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: login.php");
@@ -105,6 +105,10 @@ $productosBajoStock = $stockController->alertaStock();
                 <li><a href="../../Controller/stock/verInventarioController.php">Ver Inventario</a></li>
                 <li><a href="../../Controller/stock/ajustarStockController.php">Ajustar Stock</a></li>
                 <li><a href="../../Controller/stock/movimientoStockController.php">Movimientos de Stock</a></li>
+                <li><a href="../../Controller/stock/reporteStockController.php">Reporte de Stock</a></li>
+                <li><a href="../../Controller/stock/transferirStock.php">Transferir Stock</a></li>
+                <li><a href="../../Controller/subirImagenes/SubirImagenController.php?tipo=producto">Colocar Imagen Producto</a></li>
+                <li><a href="../../Controller/subirImagenes/SubirImagenController.php?tipo=usuario">Colocar Imagen Usuario</a></li>
             </ul>
         </nav>
     </div>
