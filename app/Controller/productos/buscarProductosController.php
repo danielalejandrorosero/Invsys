@@ -1,52 +1,64 @@
 <?php
-require_once __DIR__ . '/../../../config/cargarConfig.php';
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
+require_once __DIR__ . "/../../../config/cargarConfig.php";
+require_once __DIR__ . "/../../Models/productos/productos.php";
 
-
-require_once __DIR__ . '/../../Models/productos/productos.php';
-
-
-class BuscarProductosController {
-
-
-
+class BuscarProductosController
+{
     private $productoModel;
 
-
-    public function __construct($conn) {
+    public function __construct($conn)
+    {
         $this->productoModel = new Productos($conn);
     }
 
-    public function buscarProductos() {
+    public function buscarProductos()
+    {
         nivelRequerido(1);
 
+        // Obtener parámetros de búsqueda
+        $nombre = isset($_GET["nombre"]) ? $_GET["nombre"] : null;
+        $codigo = isset($_GET["codigo"]) ? $_GET["codigo"] : null;
+        $sku = isset($_GET["sku"]) ? $_GET["sku"] : null;
+        $categoria = isset($_GET["categoria"]) ? $_GET["categoria"] : null;
+        $unidad_medida = isset($_GET["unidad_medida"])
+            ? $_GET["unidad_medida"]
+            : null;
 
-
-        // obtener los parametor de busqueda desde el get
-        $nombre = isset($_GET['nombre']) ? trim($_GET['nombre']) : null;
-        $codigo = isset($_GET['codigo']) ? trim($_GET['codigo']) : null;
-        $sku = isset($_GET['sku']) ? trim($_GET['sku']) : null;
-        $categoria = isset($_GET['categoria']) ? trim($_GET['categor    ia']) : null;
-        $unidad_medida = isset($_GET['unidad_medida']) ? trim($_GET['unidad_medida']) : null;
-
-
-        // buscar productos
-
-
-        $productos = $this->productoModel->buscarProductos($nombre, $codigo, $sku, $categoria, $unidad_medida);
-
-        // categoria y unidad de medida
+        // Obtener categorías y unidades de medida para los select
         $categorias = $this->productoModel->obtenerCategorias();
         $unidades_medida = $this->productoModel->obtenerUnidadesMedida();
 
+        // Inicializar variable productos
+        $productos = [];
 
-        // cargar vista
+        // Realizar búsqueda solo si se envió el formulario
+        if (
+            $_SERVER["REQUEST_METHOD"] === "GET" &&
+            !empty($_GET) &&
+            (isset($_GET["nombre"]) ||
+                isset($_GET["codigo"]) ||
+                isset($_GET["sku"]) ||
+                isset($_GET["categoria"]) ||
+                isset($_GET["unidad_medida"]))
+        ) {
+            $productos = $this->productoModel->buscarProductos(
+                $nombre,
+                $codigo,
+                $sku,
+                $categoria,
+                $unidad_medida
+            );
+        }
 
-        require_once __DIR__ . '/../../Views/productos/buscarProductosVista.php';   
-        
+        // Cargar vista con los resultados
+        require_once __DIR__ .
+            "/../../Views/productos/buscarProductosVista.php";
     }
 }
 
-
 $controller = new BuscarProductosController($conn);
 $controller->buscarProductos();
+?>

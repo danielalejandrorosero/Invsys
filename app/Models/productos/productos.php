@@ -296,59 +296,59 @@ class productos
         $categoria = null,
         $unidad_medida = null
     ) {
+        $stmt = null; // Inicializar $stmt para prevenir variable indefinida
+
         try {
             $sql = "SELECT p.nombre, p.codigo, p.sku, p.descripcion, p.precio_compra, p.precio_venta,
                            p.stock_minimo, p.stock_maximo, c.nombre AS categoria, u.nombre AS unidad_medida
                     FROM productos p
                     JOIN categorias c ON p.id_categoria = c.id_categoria
-                    JOIN unidades_medida u ON p.id_unidad_medida = u.id_unidad
-                    WHERE p.estado = 'activo'";
+                    JOIN unidades_medida u ON p.id_unidad_medida = u.id_unidad";
 
-            $where = [];
+            // Primero agregamos el filtro de estado activo
+            $conditions = ["p.estado = 'activo'"];
             $params = [];
             $types = "";
 
             if (!empty($nombre)) {
-                $where[] = "p.nombre LIKE ?";
+                $conditions[] = "p.nombre LIKE ?";
                 $params[] = "%$nombre%";
                 $types .= "s";
             }
 
             if (!empty($codigo)) {
-                $where[] = "p.codigo LIKE ?";
+                $conditions[] = "p.codigo LIKE ?";
                 $params[] = "%$codigo%";
                 $types .= "s";
             }
 
             if (!empty($sku)) {
-                $where[] = "p.sku LIKE ?";
+                $conditions[] = "p.sku LIKE ?";
                 $params[] = "%$sku%";
                 $types .= "s";
             }
 
             if (!empty($categoria)) {
-                $where[] = "c.nombre LIKE ?";
+                $conditions[] = "c.nombre LIKE ?";
                 $params[] = "%$categoria%";
                 $types .= "s";
             }
 
             if (!empty($unidad_medida)) {
-                $where[] = "u.nombre LIKE ?";
+                $conditions[] = "u.nombre LIKE ?";
                 $params[] = "%$unidad_medida%";
                 $types .= "s";
             }
 
-            if (!empty($where)) {
-                $sql .= " WHERE " . implode(" AND ", $where);
-            }
-
+            // Siempre añadimos las condiciones porque al menos tenemos p.estado = 'activo'
+            $sql .= " WHERE " . implode(" AND ", $conditions);
             $sql .= " ORDER BY p.nombre ASC";
 
             $stmt = $this->conn->prepare($sql);
 
             if (!$stmt) {
                 throw new Exception(
-                    "Error al preparar la consulta" . $this->conn->error
+                    "Error al preparar la consulta: " . $this->conn->error
                 );
             }
 
@@ -356,10 +356,7 @@ class productos
                 $stmt->bind_param($types, ...$params);
             }
 
-            // ejecutar la consulta
-
             $stmt->execute();
-
             $resultado = $stmt->get_result();
             $productos = $resultado->fetch_all(MYSQLI_ASSOC);
 
@@ -368,7 +365,10 @@ class productos
             error_log("Error al buscar productos: " . $e->getMessage());
             return [];
         } finally {
-            $stmt->close();
+            // Verificar que $stmt exista antes de cerrarlo
+            if (isset($stmt) && $stmt !== null) {
+                $stmt->close();
+            }
         }
     }
 

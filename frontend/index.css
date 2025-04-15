@@ -14,7 +14,8 @@ body {
     border-radius: 8px;
 }
 
-h1, h2 {
+h1,
+h2 {
     text-align: center;
     color: #333;
 }
@@ -32,7 +33,7 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: #007BFF;
+    color: #007bff;
     font-weight: bold;
 }
 

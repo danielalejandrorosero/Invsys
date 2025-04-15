@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subir Imagen de Producto</title>
     <link rel="stylesheet" href="../../../frontend/styles.css">
+    <link rel="stylesheet" href="../../../public/css/subirimagenproducto.css">
 </head>
 <body>
     <div class="container">
         <h1>Subir Imagen de Producto</h1>
 
         <?php if (isset($_SESSION['mensaje'])): ?>
-            <p style="color: green;"><?php echo $_SESSION['mensaje']; ?></p>
+            <p class="alert alert-success"><?php echo $_SESSION['mensaje']; ?></p>
             <?php unset($_SESSION['mensaje']); ?>
         <?php endif; ?>
         <?php if (isset($_SESSION['errores'])): ?>
             <?php foreach ($_SESSION['errores'] as $error): ?>
-                <p style="color: red;"><?php echo $error; ?></p>
+                <p class="alert alert-danger"><?php echo $error; ?></p>
             <?php endforeach; ?>
             <?php unset($_SESSION['errores']); ?>
         <?php endif; ?>

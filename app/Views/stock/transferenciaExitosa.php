@@ -9,12 +9,10 @@
 <body>
     <div class="container">
         <h1>Transferencia realizada con éxito</h1>
-        <?php
-        if (!empty($_SESSION['success'])) {
-            echo "<p style='color:green;'>{$_SESSION['success']}</p>";
-            unset($_SESSION['success']);
-        }
-        ?>
+        <?php if (!empty($_SESSION["success"])) {
+            echo "<p style='color:green;'>{$_SESSION["success"]}</p>";
+            unset($_SESSION["success"]);
+        } ?>
     </div>
 </body>
 </html>
