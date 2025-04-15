@@ -1,25 +1,24 @@
 <?php
 
-require_once __DIR__ . '/../../../config/cargarConfig.php';
-require_once __DIR__ . '/../../Models/stock/stock.php';
-require_once __DIR__ . '/../../Controller/stock/alertaStockController.php';
+require_once __DIR__ . "/../../../config/cargarConfig.php";
+require_once __DIR__ . "/../../Models/stock/stock.php";
+require_once __DIR__ . "/../../Controller/stock/alertaStockController.php";
 session_start();
-    
+
 // Verificar si el usuario ha iniciado sesión
-if (!isset($_SESSION['id_usuario'])) {
+if (!isset($_SESSION["id_usuario"])) {
     header("Location: login.php");
     exit();
 }
 
 // ACOMODAR REDIRECCIONES TODOS LOS ARCHIVOS
 
+// Obtener información del usuario
+$id_usuario = $_SESSION["id_usuario"];
+$nombreUsuario = $_SESSION["nombreUsuario"];
+$nivel_usuario = $_SESSION["nivel_usuario"];
 
-// Obtener información del usuario  
-$id_usuario = $_SESSION['id_usuario'];
-$nombreUsuario = $_SESSION['nombreUsuario'];
-$nivel_usuario = $_SESSION['nivel_usuario'];
-
-// inicializar el controlador de stock y obtener 
+// inicializar el controlador de stock y obtener
 $stockController = new AlertaStockController($conn);
 $productosBajoStock = $stockController->alertaStock();
 ?>
@@ -109,18 +108,28 @@ $productosBajoStock = $stockController->alertaStock();
                 <li><a href="../../Controller/stock/transferirStock.php">Transferir Stock</a></li>
                 <li><a href="../../Controller/subirImagenes/SubirImagenController.php?tipo=producto">Colocar Imagen Producto</a></li>
                 <li><a href="../../Controller/subirImagenes/SubirImagenController.php?tipo=usuario">Colocar Imagen Usuario</a></li>
+                <li><a href="../../Controller/productos/agregarProductoController.php">Agregar Producto</a></li>
+                <li><a href="../../Controller/productos/buscarProductosController.php">Buscar Producto</a></li>
+                <li><a href="../../Controller/productos/editarProductoController.php">Editar Producto</a></li>
+                <li><a href="../../Controller/productos/eliminarProductoController.php">Eliminar Producto</a></li>
+                <li><a href="../../Controller/productos/RestaurarProductoController.php">Restaurar Producto</a></li>
             </ul>
         </nav>
     </div>
 
-    <?php if (!empty($productosBajoStock)) : ?>
+
+    <?php if (!empty($productosBajoStock)): ?>
         <div id="toast-notification">
             <span class="close-btn" onclick="hideToast()">×</span>
             <h3>Alertas de Stock Bajo</h3>
             <ul>
-                <?php foreach ($productosBajoStock as $producto) : ?>
+                <?php foreach ($productosBajoStock as $producto): ?>
                     <li>
-                        ⚠️ <?php echo htmlspecialchars($producto['nombre']); ?> - Cantidad: <?php echo htmlspecialchars($producto['cantidad_disponible']); ?>
+                        ⚠️ <?php echo htmlspecialchars(
+                            $producto["nombre"]
+                        ); ?> - Cantidad: <?php echo htmlspecialchars(
+     $producto["cantidad_disponible"]
+ ); ?>
                     </li>
                 <?php endforeach; ?>
             </ul>

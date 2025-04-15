@@ -32,7 +32,7 @@ class SubirImagenController {
             $view = 'subirImagenUsuarioView.php';
             $data = $this->usuarioModel->obtenerUsuarios();
         } elseif ($tipo == 'producto') {
-            $id = isset($_POST['id_producto']) ? (int)$_POST['id_producto'] : null; // Aquí obtenemos el id_producto del POST
+            $id = isset($_POST['id_producto']) ? (int)$_POST['id_producto'] : null; 
             $destinoBase = __DIR__ . '/../../../public/uploads/imagenes/productos/';
             $redirectSuccess =  __DIR__ . '/../../Controller/productos/listarProductos.php';
             $view = 'subirImagenProductoView.php';
@@ -115,8 +115,8 @@ class SubirImagenController {
     }
 }
 
-// Instanciar y ejecutar el controlador según el tipo
-$tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'producto'; // Por defecto producto, o puedes pasarlo por URL
+    
+$tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'producto'; 
 $controller = new SubirImagenController($conn);
 $controller->subirImagen($tipo);
 ?>

@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
 
 
+// debugear
 
 
 class AlertaStockController {
