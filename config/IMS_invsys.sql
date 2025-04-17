@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 15-04-2025 a las 03:10:53
+-- Tiempo de generación: 17-04-2025 a las 04:51:50
 -- Versión del servidor: 11.7.2-MariaDB
 -- Versión de PHP: 8.4.6
 
@@ -220,7 +220,10 @@ CREATE TABLE `imagenes_productos` (
 INSERT INTO `imagenes_productos` (`id_imagen`, `id_producto`, `nombre_imagen`, `ruta_imagen`) VALUES
 (7, 1, 'e12564e38efe1dbbed444d372487db2101d5b2f9c7d82bde89cd4f4e462b1a67.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/e12564e38efe1dbbed444d372487db2101d5b2f9c7d82bde89cd4f4e462b1a67.png'),
 (8, 1, '3d17deeb0ae5d270c934a53ec6df1a4288d2016491ec11f4fd2d740334eb9590.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/3d17deeb0ae5d270c934a53ec6df1a4288d2016491ec11f4fd2d740334eb9590.png'),
-(9, 1, '63ad90449c109cc929d2c4fb700a3df772b8e42e199e52b6c79a6a472ff76fd6.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/63ad90449c109cc929d2c4fb700a3df772b8e42e199e52b6c79a6a472ff76fd6.png');
+(9, 1, '63ad90449c109cc929d2c4fb700a3df772b8e42e199e52b6c79a6a472ff76fd6.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/63ad90449c109cc929d2c4fb700a3df772b8e42e199e52b6c79a6a472ff76fd6.png'),
+(10, 1, 'c42ad814b166cb2357e7b8d13c557aa5e378387d286ce8e8df9c0169e277e266.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/c42ad814b166cb2357e7b8d13c557aa5e378387d286ce8e8df9c0169e277e266.png'),
+(11, 1, '137febe302a96b3fe15b4cdb423013bdca573188885ec1dfd5df5f47502f44a7.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/137febe302a96b3fe15b4cdb423013bdca573188885ec1dfd5df5f47502f44a7.png'),
+(12, 3, 'b5a8d4fda6ba0fda53ffab6830f64da34b4e2a22d8465d6259d72905aaedc7b4.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/b5a8d4fda6ba0fda53ffab6830f64da34b4e2a22d8465d6259d72905aaedc7b4.png');
 
 -- --------------------------------------------------------
 
@@ -240,9 +243,7 @@ CREATE TABLE `imagenes_usuarios` (
 --
 
 INSERT INTO `imagenes_usuarios` (`id_imagen`, `id_usuario`, `nombre_imagen`, `ruta_imagen`) VALUES
-(1, 47, '73f8f5bfa6361d9f51541378b8003127912740d16ad0518667e7d9b6aa650b3a.png', '../uploads/imagenes/usuarios/73f8f5bfa6361d9f51541378b8003127912740d16ad0518667e7d9b6aa650b3a.png'),
-(2, 79, '04dd84553925a5374ddabeddba5df9d6ba5c11a8643c6e2030df78e5b28cd942.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/usuarios/04dd84553925a5374ddabeddba5df9d6ba5c11a8643c6e2030df78e5b28cd942.png'),
-(3, 79, '75ae18e9e55206caa0f8ab730d72b0a8590f1df28d66d88dcab5d69258708f1d.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/usuarios/75ae18e9e55206caa0f8ab730d72b0a8590f1df28d66d88dcab5d69258708f1d.png');
+(1, 47, '73f8f5bfa6361d9f51541378b8003127912740d16ad0518667e7d9b6aa650b3a.png', '../uploads/imagenes/usuarios/73f8f5bfa6361d9f51541378b8003127912740d16ad0518667e7d9b6aa650b3a.png');
 
 -- --------------------------------------------------------
 
@@ -266,13 +267,16 @@ CREATE TABLE `movimientos_stock` (
 --
 
 INSERT INTO `movimientos_stock` (`id_movimiento`, `id_producto`, `id_almacen_origen`, `id_almacen_destino`, `tipo_movimiento`, `cantidad`, `fecha_movimiento`, `id_usuario`) VALUES
-(1, 1, 2, 1, 'entrada', 50, '2025-03-12 22:05:59', 47),
-(3, 3, 1, 2, 'transferencia', 10, '2025-03-12 22:05:59', 47),
-(7, 3, 2, 1, 'transferencia', 33, '2025-03-17 01:47:44', 47),
-(8, 3, 1, 2, 'transferencia', 50, '2025-03-29 18:11:29', 79),
-(9, 1, 2, 1, 'transferencia', 111, '2025-03-29 18:22:46', 79),
-(10, 1, 1, 2, 'transferencia', 11, '2025-03-29 18:56:14', 79),
-(11, 3, 1, 2, 'transferencia', 111, '2025-03-29 19:41:01', 79);
+(1, 1, 2, 1, 'entrada', 1, '2025-03-12 22:05:59', 47),
+(3, 3, 1, 2, 'transferencia', 1, '2025-03-12 22:05:59', 47),
+(7, 3, 2, 1, 'transferencia', 1, '2025-03-17 01:47:44', 47),
+(12, 3, 1, 2, 'transferencia', 3, '2025-04-15 06:49:11', 47),
+(13, 3, 1, 2, 'transferencia', 1, '2025-04-15 06:53:58', 47),
+(14, 3, 1, 2, 'transferencia', 11, '2025-04-15 06:54:17', 47),
+(15, 3, 1, 2, 'transferencia', 1, '2025-04-15 14:00:25', 47),
+(16, 3, 1, 2, 'transferencia', 1, '2025-04-16 06:24:00', 47),
+(17, 2, 2, 1, 'transferencia', 1, '2025-04-16 06:24:58', 47),
+(18, 2, 2, 1, 'transferencia', 1, '2025-04-16 06:25:03', 47);
 
 -- --------------------------------------------------------
 
@@ -303,11 +307,11 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id_producto`, `nombre`, `codigo`, `sku`, `descripcion`, `precio_compra`, `precio_venta`, `id_unidad_medida`, `stock_minimo`, `stock_maximo`, `id_categoria`, `fecha_creacion`, `fecha_actualizacion`, `id_proveedor`, `estado`) VALUES
-(1, 'Smartphone X', 'PROD001', 'SKU12345', 'Teléfono inteligente última generación', 800000.00, 1200000.00, 2, 5, 100, 1, '2025-03-12 22:05:59', '2025-04-15 01:16:59', 2, 'eliminado'),
-(2, 'Camisa Algodón', 'PROD002', 'SKU54321', 'Camisa de algodón talla M', 50000.00, 85000.00, 1, 20, 200, 2, '2025-03-12 22:05:59', '2025-04-15 00:53:00', 2, 'eliminado'),
-(3, 'Juego de Sábanas', 'PROD003', 'SKU67890', 'Sábanas de algodón egipcio', 120000.00, 180000.00, 1, 15, 150, 3, '2025-03-12 22:05:59', '2025-04-15 02:53:37', 1, 'activo'),
-(12, 'ProductoPrueba', 'PROD9999', 'SKU999999', 'Este es un producto de prueba', 1000.50, 1500.75, 1, 5, 50, 1, '2025-03-13 03:20:41', '2025-04-15 02:04:49', 2, 'activo'),
-(18, 'jabon', 'wqdwqd', 'HOLA', 'ddwqd', 1000.00, 1000.00, 2, 2, 2, 2, '2025-04-15 01:17:18', '2025-04-15 02:53:52', 1, 'activo');
+(1, 'Smartphone X', 'PROD001', 'SKU12345', 'Teléfono inteligente última generación', 800000.00, 1200000.00, 2, 5, 100, 1, '2025-03-12 22:05:59', '2025-04-15 16:59:01', 2, 'activo'),
+(2, 'Camisa Algodón', 'PROD002', 'SKU54321', 'Camisa de algodón talla M', 50000.00, 85000.00, 1, 20, 1, 2, '2025-03-12 22:05:59', '2025-04-15 16:58:56', 2, 'activo'),
+(3, 'Juego de Sábanas', 'PROD003', 'SKU67890', 'Sábanas de algodón egipcio', 120000.00, 180000.00, 1, 15, 20, 3, '2025-03-12 22:05:59', '2025-04-16 05:42:20', 1, 'activo'),
+(12, 'ProductoPrueba', 'PROD9999', 'SKU999999', 'Este es un producto de prueba', 1000.50, 1500.75, 1, 5, 50, 1, '2025-03-13 03:20:41', '2025-04-15 16:58:45', 1, 'activo'),
+(18, 'jabon', 'wqdwqd', 'HOLA', 'ddwqd', 1000.00, 1000.00, 2, 2, 2, 2, '2025-04-15 01:17:18', '2025-04-17 01:03:22', 1, 'activo');
 
 -- --------------------------------------------------------
 
@@ -351,16 +355,23 @@ CREATE TABLE `stock_almacen` (
 
 INSERT INTO `stock_almacen` (`id_stock`, `id_almacen`, `id_producto`, `cantidad_disponible`) VALUES
 (1, 1, 12, 1),
-(2, 1, 3, 1172),
-(3, 2, 2, 111),
-(4, 2, 3, 67),
-(6, 2, 3, 17),
+(2, 1, 3, 1145),
+(3, 2, 2, 109),
+(4, 2, 3, 111),
+(6, 2, 3, 111),
 (7, 2, 1, 0),
-(8, 1, 3, 1172),
-(9, 2, 3, 50),
+(8, 1, 3, 1145),
+(9, 2, 3, 111),
 (10, 1, 1, 100),
 (11, 2, 1, 11),
-(12, 2, 3, 111);
+(12, 2, 3, 111),
+(13, 2, 3, 3),
+(14, 2, 3, 11),
+(15, 2, 3, 11),
+(16, 2, 3, 1),
+(17, 2, 3, 1),
+(18, 1, 2, 1),
+(19, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -408,13 +419,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `email`, `password`, `status`, `last_login`, `nivel_usuario`, `nombreUsuario`, `token_recuperacion`, `expira_token`) VALUES
-(47, 'administradro', 'danielalejandroroseroortiz80@gmail.com', '$2y$12$cyOE/k15u9RcMgxbhw9k6eE4gOs9Lm.kcY.mXe/fAPh/YbGYhB6Ci', 1, '2025-03-11 02:54:17', 1, 'daniel rosero', NULL, NULL),
-(77, 'admin', 'admin@gmail.com', '$2y$12$GokTU8wqHPTE3w5mdYyUN.P63TPntqFpbZ6flHCEkqXcvHFDF0F3G', 1, '2025-03-23 23:26:57', 1, 'admin', NULL, NULL),
-(78, 'danielalejandro', 'wdqdqd@gmail.com', '$2y$12$ejvj2WclvHrbWkG08YLa/e1h.VomNT.KCDOoj4AXsXO9Y/ThZpmr6', 1, '2025-03-24 13:51:28', 1, 'wddwd', NULL, NULL),
-(79, 'Camisa Algodón', 'root@gmail.com', '$2y$12$P3Q7l2epVfMBfwxhGJJOxuk8XWLxkLp7HvDfIO4sdS2JU8SG/F43u', 1, '2025-03-24 13:53:43', 1, 'dd', NULL, NULL),
-(80, 'intento2', 'titttt@gmail.com', '$2y$12$mE57FB67OppBCMUqiXEq..xA2k9gcyhGgmWW/C.xJCoFJr1xgkPgS', 1, '2025-03-24 14:00:04', 1, 'elitneto', NULL, NULL),
-(81, 'dwqdwqd', 'wqdwqdwqd@gmail.com', '$2y$12$Ixk1LLPU3nvVF6ai1e7dI.aeImzN3x58BIZVAI2VLQDwcY/2HGYCG', 1, '2025-03-24 14:00:36', 2, 'qdwqdwqd', NULL, NULL),
-(82, 'danielalejandro', 'elquetal@gmail.com', '$2y$12$0brqoHh8Yz3/JBvRtIa8IuExjtifRrPr9FLksk6NdaZd2.0duBHHK', 1, '2025-03-24 15:30:23', 1, 'holauqeal', NULL, NULL);
+(47, 'material', 'danielalejandroroseroortiz80@gmail.com', '$2y$12$i0kHWCiDho0sWAwqgw9OBOPfG295FIvzMsa1EPEJ8.w763zkaOeGC', 1, '2025-03-11 02:54:17', 1, 'root', '2307450b0aea0fabdf18bfa7838fd9e3e90370bc7da267376751100a7020c39c', '2025-04-16 01:30:46'),
+(78, 'danielalejandro', 'wdqdqd@gmail.com', '$2y$12$ejvj2WclvHrbWkG08YLa/e1h.VomNT.KCDOoj4AXsXO9Y/ThZpmr6', 1, '2025-03-24 13:51:28', 1, 'wddwd', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -627,7 +633,7 @@ ALTER TABLE `grupos`
 -- AUTO_INCREMENT de la tabla `imagenes_productos`
 --
 ALTER TABLE `imagenes_productos`
-  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `imagenes_usuarios`
@@ -639,7 +645,7 @@ ALTER TABLE `imagenes_usuarios`
 -- AUTO_INCREMENT de la tabla `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
-  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -657,7 +663,7 @@ ALTER TABLE `proveedores`
 -- AUTO_INCREMENT de la tabla `stock_almacen`
 --
 ALTER TABLE `stock_almacen`
-  MODIFY `id_stock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_stock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `unidades_medida`
@@ -669,7 +675,7 @@ ALTER TABLE `unidades_medida`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
