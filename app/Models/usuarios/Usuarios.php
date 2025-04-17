@@ -378,6 +378,83 @@
             return $usuarios;
         }
 
+
+        public function eliminarUsuario($id_usuario) {
+            // Validate that user ID is a positive number
+            $id_usuario = (int)$id_usuario;
+            if ($id_usuario <= 0) {
+                return "El ID del usuario debe ser un número positivo.";
+            }
+            
+            try {
+                // Count administrators
+                $sql = "SELECT COUNT(*) AS total FROM usuarios WHERE nivel_usuario = 1";
+                $resultado = $this->conn->query($sql);
+                
+                if (!$resultado) {
+                    return "Error al consultar administradores: " . $this->conn->error;
+                }
+                
+                $row = $resultado->fetch_assoc();
+                $total_administradores = $row["total"];
+                
+                // Get user level of the user to be deleted
+                $sql = "SELECT nivel_usuario FROM usuarios WHERE id_usuario = ?";
+                $stmt = $this->conn->prepare($sql);
+                
+                if (!$stmt) {
+                    return "Error al preparar la consulta: " . $this->conn->error;
+                }
+                
+                $stmt->bind_param("i", $id_usuario);
+                $stmt->execute();
+                $stmt->store_result(); // Store the result set
+                // inicializar variable
+                $nivel_usuario_eliminar = null;
+                
+                if ($stmt->num_rows === 0) {
+                    $stmt->close();
+                    return "No se encontró el usuario con ID: " . $id_usuario;
+                }
+                
+                $stmt->bind_result($nivel_usuario_eliminar);
+                $stmt->fetch();
+                $stmt->close();
+                
+                // Check if it's the last admin
+                if ($nivel_usuario_eliminar == 1 && $total_administradores <= 1) {
+                    return "No se puede eliminar el último administrador del sistema.";
+                }
+                
+                // Delete the user
+                $sql = "DELETE FROM usuarios WHERE id_usuario = ?";
+                $stmt = $this->conn->prepare($sql);
+                
+                if (!$stmt) {
+                    return "Error al preparar la eliminación: " . $this->conn->error;
+                }
+                
+                $stmt->bind_param("i", $id_usuario);
+                $resultado = $stmt->execute();
+                
+                if ($resultado) {
+                    if ($stmt->affected_rows > 0) {
+                        $stmt->close();
+                        return true;
+                    } else {
+                        $stmt->close();
+                        return "No se encontró el usuario o ya fue eliminado.";
+                    }
+                } else {
+                    $error = $stmt->error;
+                    $stmt->close();
+                    return "Error al eliminar el usuario: " . $error;
+                }
+            } catch (Exception $e) {
+                return "Error inesperado: " . $e->getMessage();
+            }
+        }
+
         // este metodo lo voy a usar para podeer tener el nombre de los usuario en eliminar usuario
         public function obtenerNombreUsuario()
         {
@@ -392,46 +469,6 @@
                 $usuarios[] = $row;
             }
             return $usuarios;
-        }
-
-        public function eliminarUsuario($id_usuario)
-        {
-            try {
-                // Verificar si hay más de un administrador en la base de datos
-                $sql =
-                    "SELECT COUNT(*) AS total FROM usuarios WHERE nivel_usuario = 1";
-                $result = $this->conn->query($sql);
-                $row = $result->fetch_assoc();
-                $total_admins = $row["total"];
-
-                // Obtener el nivel del usuario a eliminar
-                $sql =
-                    "SELECT nivel_usuario FROM usuarios WHERE id_usuario = ?";
-                $stmt = $this->conn->prepare($sql);
-                $stmt->bind_param("i", $id_usuario);
-                $stmt->execute();
-                $nivel_usuario_eliminar = null;
-                $stmt->bind_result($nivel_usuario_eliminar);
-                $stmt->fetch();
-                $stmt->close();
-
-                if ($nivel_usuario_eliminar == 1 && $total_admins <= 1) {
-                    return "No puedes eliminar el último administrador.";
-                } else {
-                    $sql = "DELETE FROM usuarios WHERE id_usuario = ?";
-                    $stmt = $this->conn->prepare($sql);
-                    $stmt->bind_param("i", $id_usuario);
-                    $stmt->execute();
-
-                    if ($stmt->affected_rows > 0) {
-                        return true;
-                    } else {
-                        return "No se encontró el usuario o error al eliminar.";
-                    }
-                }
-            } catch (Exception $e) {
-                return "Error interno, intenta más tarde.";
-            }
         }
     }
 

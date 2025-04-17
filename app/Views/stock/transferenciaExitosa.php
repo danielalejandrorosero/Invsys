@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transferencia Exitosa</title>
-    <link rel="stylesheet" href="../../../frontend/transferenciaExitosa.css"> <!-- Asegúrate de tener un archivo CSS para los estilos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Transferencia realizada con éxito</h1>
-        <?php if (!empty($_SESSION["success"])) {
-            echo "<p style='color:green;'>{$_SESSION["success"]}</p>";
-            unset($_SESSION["success"]);
-        } ?>
+    <div class="container center-align" style="margin-top: 50px;">
+        <h1 class="green-text">Transferencia realizada con éxito</h1>
+        <?php if (!empty($_SESSION["success"])): ?>
+            <p class="green-text"><?php echo $_SESSION["success"]; ?></p>
+            <?php unset($_SESSION["success"]); ?>
+        <?php endif; ?>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

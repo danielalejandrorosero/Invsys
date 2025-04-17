@@ -5,7 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transferir Stock | Stock Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../public/css/transferirStock.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+        .header-icon {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+        .header-text h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .header-text p {
+            margin: 0;
+            color: #757575;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .step {
+            text-align: center;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .step.complete .step-circle {
+            background-color: #4caf50;
+            color: #fff;
+        }
+        .step.active .step-circle {
+            background-color: #2196f3;
+            color: #fff;
+        }
+        .step-label {
+            font-size: 0.875rem;
+            color: #757575;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        .warehouse-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .warehouse-card {
+            flex: 1 1 calc(50% - 10px);
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .warehouse-card.selected {
+            background-color: #e0f7fa;
+        }
+        .warehouse-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .warehouse-name {
+            font-weight: bold;
+        }
+        .warehouse-location {
+            color: #757575;
+        }
+        .quantity-hint {
+            display: block;
+            margin-top: 5px;
+            color: #757575;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #424242;
+        }
+        .btn-secondary:hover {
+            background-color: #d5d5d5;
+        }
+        .btn-success {
+            background-color: #4caf50;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background-color: #43a047;
+        }
+        .alert {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .alert i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        .alert strong {
+            font-weight: bold;
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Handle warehouse card selection
@@ -115,12 +268,7 @@
                         </div>
                         <input type="hidden" name="obtenerAlmacenOrigen" value="1">
                     </form>
-                <?php
-                    // Get product name
-                    // Skip the origin warehouse
-                    // Get product name
-                    // Skip the origin warehouse
-                    else: ?>
+                <?php else: ?>
                     <!-- Second/Third step: Complete transfer -->
                     <?php
                     $productoSeleccionado = null;

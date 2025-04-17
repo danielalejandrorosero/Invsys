@@ -1,46 +1,71 @@
+<?php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
+require_once __DIR__ . "/../../../config/cargarConfig.php";
+require_once __DIR__ . "/../../Models/stock/stock.php";
+require_once __DIR__ . "/../../Models/productos/productos.php";
+
+$stock = new Stock($conn);
+$productos = new Productos($conn);
+
+$productosBajoStock = $stock->obtenerProductosBajoStock();
+$totalProductos = $productos->contarTotalProductos();
+
+$nombreUsuario = $_SESSION["nombreUsuario"] ?? "Nombre del Usuario";
+$nivel_usuario = $_SESSION["nivel_usuario"] ?? "Nivel del Usuario";
+
+// Ruta de la imagen del usuario
+$rutaImagen =
+    !empty($_SESSION["rutaImagen"]) &&
+    file_exists(__DIR__ . "/../../../../" . $_SESSION["rutaImagen"])
+        ? $_SESSION["rutaImagen"]
+        : "../../../public/uploads/imagenes/usuarios/default-avatar.png";
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Gestión</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/index.css">
+
     <script>
-        function showToast() {
-            var toast = document.getElementById('toast-notification');
-            toast.classList.add('show');
-            // Ocultar automáticamente después de 8 segundos
-            setTimeout(hideToast, 8000);
-        }
-
-        function hideToast() {
-            var toast = document.getElementById('toast-notification');
-            toast.classList.remove('show');
-        }
-
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('show');
         }
 
-        window.onload = function() {
-            showToast();
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if (!empty($productosBajoStock)): ?>
+                var productos = <?php echo json_encode($productosBajoStock); ?>;
+                productos.forEach(function (producto) {
+                    M.toast({
+                        html: 'Stock bajo: ' + producto.nombre + ' - Cantidad: ' + producto.cantidad_disponible,
+                        displayLength: 8000
+                    });
+                });
+            <?php endif; ?>
+        });
     </script>
 </head>
 <body>
-    <!-- Toggle Sidebar Button (visible on mobile) -->
+    <!-- Botón para móviles -->
     <button class="toggle-sidebar" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
             <h2>Stock Manager</h2>
             <div class="user-info">
                 <div class="avatar">
-                    <i class="fas fa-user"></i>
+                    <img src="<?php echo htmlspecialchars(
+                        $rutaImagen
+                    ); ?>" alt="Avatar" class="circle responsive-img">
                 </div>
                 <div class="user-details">
                     <h3><?php echo htmlspecialchars($nombreUsuario); ?></h3>
@@ -76,6 +101,7 @@
                 <li><a href="../../Controller/productos/editarProductoController.php"><i class="fas fa-edit"></i> Editar Producto</a></li>
                 <li><a href="../../Controller/productos/eliminarProductoController.php"><i class="fas fa-trash-alt"></i> Eliminar Producto</a></li>
                 <li><a href="../../Controller/productos/RestaurarProductoController.php"><i class="fas fa-trash-restore"></i> Restaurar Producto</a></li>
+                <li><a href="../../Controller/productos/ListarProductosController.php"><i class="fas fa-users"></i> Listar Productos</a></li>
             </ul>
 
             <h3>Imágenes</h3>
@@ -91,17 +117,17 @@
         </div>
     </div>
 
-    <!-- Main Content Area -->
+    <!-- Contenido Principal -->
     <div class="main-content">
         <div class="header">
             <h1>Panel de Control</h1>
         </div>
 
-        <!-- Dashboard Cards -->
+        <!-- Tarjetas del Dashboard -->
         <div class="card-container">
             <div class="card stat-card">
                 <div class="card-title"><i class="fas fa-boxes"></i> Inventario</div>
-                <div class="number">120</div>
+                <div class="number"><?php echo $totalProductos; ?></div>
                 <div class="label">Productos en total</div>
             </div>
 
@@ -111,6 +137,7 @@
                     $productosBajoStock
                 ); ?></div>
                 <div class="label">Productos con stock bajo</div>
+                <a href="alertStock.php" class="btn red">Ver Detalles</a>
             </div>
 
             <div class="card stat-card">
@@ -120,32 +147,14 @@
             </div>
         </div>
 
-        <!-- Recent Activity Card -->
+        <!-- Actividad Reciente -->
         <div class="card">
             <div class="card-title"><i class="fas fa-clock"></i> Actividad Reciente</div>
             <p>Bienvenido al sistema de gestión de stock. Utilice el menú de la izquierda para navegar por las diferentes funcionalidades.</p>
         </div>
     </div>
 
-    <!-- Toast Notification for Low Stock -->
-    <?php if (!empty($productosBajoStock)): ?>
-        <div id="toast-notification">
-            <div class="close-btn" onclick="hideToast()">×</div>
-            <h3><i class="fas fa-exclamation-triangle"></i> Alertas de Stock Bajo</h3>
-            <ul>
-                <?php foreach ($productosBajoStock as $producto): ?>
-                    <li>
-                        <i class="fas fa-box"></i> <?php echo htmlspecialchars(
-                            $producto["nombre"]
-                        ); ?> -
-                        <strong>Stock: <?php echo htmlspecialchars(
-                            $producto["cantidad_disponible"]
-                        ); ?></strong>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
-
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

@@ -3,7 +3,6 @@
 
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
-session_start();
 nivelRequerido(1);
 
 class ControlInventarioController {

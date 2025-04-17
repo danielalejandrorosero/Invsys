@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario | Stock Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../public/css/verInventario.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Table search
@@ -41,161 +41,147 @@
     <div class="container">
         <!-- Header Card -->
         <div class="card">
-            <div class="card-header">
-                <div class="header-left">
-                    <div class="header-icon">
-                        <i class="fas fa-warehouse"></i>
-                    </div>
-                    <div class="header-content">
-                        <h1>Inventario del Almacén</h1>
-                        <p>Control y gestión de productos disponibles en el inventario</p>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <a href="../../Controller/stock/ajustarStockController.php" class="btn btn-success">
+            <div class="card-content">
+                <span class="card-title">
+                    <i class="fas fa-warehouse"></i> Inventario del Almacén
+                </span>
+                <p>Control y gestión de productos disponibles en el inventario</p>
+                <div class="right-align">
+                    <a href="../../Controller/stock/ajustarStockController.php" class="btn waves-effect waves-light green">
                         <i class="fas fa-edit"></i> Ajustar Stock
                     </a>
-                    <a href="../../Controller/stock/movimientoStockController.php" class="btn btn-info">
+                    <a href="../../Controller/stock/movimientoStockController.php" class="btn waves-effect waves-light blue">
                         <i class="fas fa-exchange-alt"></i> Movimientos
                     </a>
-                    <a href="index.php" class="btn btn-secondary">
+                    <a href="../../Views/usuarios/index.php" class="btn waves-effect waves-light grey">
                         <i class="fas fa-home"></i> Dashboard
                     </a>
                 </div>
             </div>
 
-            <div class="card-body">
+            <div class="card-content">
                 <!-- Stats Cards -->
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <div class="stat-icon primary">
-                            <i class="fas fa-boxes"></i>
-                        </div>
-                        <div class="stat-details">
-                            <div class="stat-value"><?php echo count(
-                                $inventario
-                            ) ?? 0; ?></div>
-                            <div class="stat-label">Total de productos</div>
+                <div class="row">
+                    <div class="col s12 m6 l3">
+                        <div class="card-panel">
+                            <div class="center-align">
+                                <i class="fas fa-boxes fa-2x primary-text"></i>
+                                <h5><?php echo count($inventario) ?? 0; ?></h5>
+                                <p>Total de productos</p>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon success">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="stat-details">
-                            <div class="stat-value">
-                                <?php
-                                $okStock = 0;
-                                if (!empty($inventario)) {
-                                    foreach ($inventario as $item) {
-                                        if (
-                                            isset($item["estado"]) &&
-                                            $item["estado"] === "ok"
-                                        ) {
-                                            $okStock++;
+                    <div class="col s12 m6 l3">
+                        <div class="card-panel">
+                            <div class="center-align">
+                                <i class="fas fa-check-circle fa-2x green-text"></i>
+                                <h5>
+                                    <?php
+                                    $okStock = 0;
+                                    if (!empty($inventario)) {
+                                        foreach ($inventario as $item) {
+                                            if (
+                                                isset($item["estado"]) &&
+                                                $item["estado"] === "ok"
+                                            ) {
+                                                $okStock++;
+                                            }
                                         }
                                     }
-                                }
-                                echo $okStock;
-                                ?>
+                                    echo $okStock;
+                                    ?>
+                                </h5>
+                                <p>Productos con stock adecuado</p>
                             </div>
-                            <div class="stat-label">Productos con stock adecuado</div>
                         </div>
                     </div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon warning">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="stat-details">
-                            <div class="stat-value">
-                                <?php
-                                $lowStock = 0;
-                                if (!empty($inventario)) {
-                                    foreach ($inventario as $item) {
-                                        if (
-                                            isset($item["cantidad"]) &&
-                                            isset($item["stock_minimo"]) &&
-                                            $item["cantidad"] <=
-                                                $item["stock_minimo"]
-                                        ) {
-                                            $lowStock++;
+                    <div class="col s12 m6 l3">
+                        <div class="card-panel">
+                            <div class="center-align">
+                                <i class="fas fa-exclamation-triangle fa-2x orange-text"></i>
+                                <h5>
+                                    <?php
+                                    $lowStock = 0;
+                                    if (!empty($inventario)) {
+                                        foreach ($inventario as $item) {
+                                            if (
+                                                isset($item["cantidad"]) &&
+                                                isset($item["stock_minimo"]) &&
+                                                $item["cantidad"] <=
+                                                    $item["stock_minimo"]
+                                            ) {
+                                                $lowStock++;
+                                            }
                                         }
                                     }
-                                }
-                                echo $lowStock;
-                                ?>
+                                    echo $lowStock;
+                                    ?>
+                                </h5>
+                                <p>Productos con stock bajo</p>
                             </div>
-                            <div class="stat-label">Productos con stock bajo</div>
                         </div>
                     </div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon danger">
-                            <i class="fas fa-times-circle"></i>
-                        </div>
-                        <div class="stat-details">
-                            <div class="stat-value">
-                                <?php
-                                $outOfStock = 0;
-                                if (!empty($inventario)) {
-                                    foreach ($inventario as $item) {
-                                        if (
-                                            isset($item["cantidad"]) &&
-                                            $item["cantidad"] == 0
-                                        ) {
-                                            $outOfStock++;
+                    <div class="col s12 m6 l3">
+                        <div class="card-panel">
+                            <div class="center-align">
+                                <i class="fas fa-times-circle fa-2x red-text"></i>
+                                <h5>
+                                    <?php
+                                    $outOfStock = 0;
+                                    if (!empty($inventario)) {
+                                        foreach ($inventario as $item) {
+                                            if (
+                                                isset($item["cantidad"]) &&
+                                                $item["cantidad"] == 0
+                                            ) {
+                                                $outOfStock++;
+                                            }
                                         }
                                     }
-                                }
-                                echo $outOfStock;
-                                ?>
+                                    echo $outOfStock;
+                                    ?>
+                                </h5>
+                                <p>Productos sin stock</p>
                             </div>
-                            <div class="stat-label">Productos sin stock</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Table Controls -->
-                <div class="table-controls">
-                    <div class="table-actions">
-                        <button class="btn btn-primary">
+                <div class="row">
+                    <div class="col s12 m6">
+                        <button class="btn waves-effect waves-light">
                             <i class="fas fa-file-export"></i> Exportar
                         </button>
-                        <button class="btn btn-primary">
+                        <button class="btn waves-effect waves-light">
                             <i class="fas fa-print"></i> Imprimir
                         </button>
                     </div>
-                    <div class="search-table">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="tableSearch" placeholder="Buscar producto...">
+                    <div class="col s12 m6">
+                        <div class="input-field">
+                            <i class="fas fa-search prefix"></i>
+                            <input type="text" id="tableSearch" placeholder="Buscar producto...">
+                        </div>
                     </div>
                 </div>
 
                 <?php if (empty($inventario)): ?>
                     <!-- Empty State -->
-                    <div class="empty-state">
-                        <i class="fas fa-box-open"></i>
-                        <h3>No hay productos en este almacén</h3>
+                    <div class="center-align">
+                        <i class="fas fa-box-open fa-3x"></i>
+                        <h5>No hay productos en este almacén</h5>
                         <p>Actualmente no hay productos registrados en este almacén. Puede comenzar agregando productos al inventario.</p>
-                        <a href="../../Controller/stock/ajustarStockController.php" class="btn btn-success">
+                        <a href="../../Controller/stock/ajustarStockController.php" class="btn waves-effect waves-light green">
                             <i class="fas fa-plus"></i> Ajustar Stock
                         </a>
                     </div>
-                <?php
-                    // Set default values if not present
-
-                    // Determine stock status
-
-                    // Generate first letter of product name for icon
-                    // Set default values if not present
-                    // Determine stock status
-                    // Generate first letter of product name for icon
-                    else: ?>
+                <?php else: ?>
                     <!-- Inventory Table -->
                     <div class="table-responsive">
-                        <table class="inventory-table">
+                        <table class="highlight inventory-table">
                             <thead>
                                 <tr>
                                     <th>Producto</th>
@@ -213,14 +199,14 @@
                                         $item["stock_maximo"] ?? 100;
                                     $cantidad = $item["cantidad"];
 
-                                    $stockStatus = "success";
+                                    $stockStatus = "green";
                                     $stockLabel = "Adecuado";
 
                                     if ($cantidad <= 0) {
-                                        $stockStatus = "danger";
+                                        $stockStatus = "red";
                                         $stockLabel = "Sin Stock";
                                     } elseif ($cantidad <= $stock_minimo) {
-                                        $stockStatus = "warning";
+                                        $stockStatus = "orange";
                                         $stockLabel = "Bajo";
                                     }
 
@@ -233,8 +219,8 @@
                                     ?>
                                     <tr>
                                         <td>
-                                            <div class="product-name">
-                                                <div class="product-icon">
+                                            <div class="user-info">
+                                                <div class="user-avatar circle">
                                                     <?php echo strtoupper(
                                                         $firstLetter
                                                     ); ?>
@@ -254,36 +240,28 @@
                                             ); ?></span>
                                         </td>
                                         <td>
-                                            <span class="badge badge-<?php echo $stockStatus; ?>">
-                                                <?php echo $stockLabel; ?>
-                                            </span>
+                                            <span class="new badge <?php echo $stockStatus; ?>" data-badge-caption=""><?php echo $stockLabel; ?></span>
                                         </td>
                                         <td>
-                                            <div class="stock-indicator">
-                                                <div class="stock-bar-container">
-                                                    <div class="stock-bar"
-                                                         data-value="<?php echo $cantidad; ?>"
-                                                         data-max="<?php echo $stock_maximo; ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="stock-value">
-                                                    <?php echo round(
-                                                        ($cantidad /
-                                                            $stock_maximo) *
-                                                            100
-                                                    ); ?>%
-                                                </div>
+                                            <div class="progress">
+                                                <div class="determinate" style="width: <?php echo round(
+                                                    ($cantidad /
+                                                        $stock_maximo) *
+                                                        100
+                                                ); ?>%"></div>
                                             </div>
+                                            <span><?php echo round(
+                                                ($cantidad / $stock_maximo) *
+                                                    100
+                                            ); ?>%</span>
                                         </td>
                                         <td>
-                                            <div class="table-actions">
-                                                <a href="../../Controller/stock/ajustarStockController.php?id=<?php echo $item[
-                                                    "id_producto"
-                                                ] ??
-                                                    ""; ?>" class="btn btn-info btn-sm">
-                                                    <i class="fas fa-edit"></i> Ajustar
-                                                </a>
-                                            </div>
+                                            <a href="../../Controller/stock/ajustarStockController.php?id=<?php echo $item[
+                                                "id_producto"
+                                            ] ??
+                                                ""; ?>" class="btn-floating btn-small waves-effect waves-light blue">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php
@@ -293,18 +271,20 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="pagination">
-                        <div class="page-item disabled">
-                            <i class="fas fa-chevron-left"></i>
-                        </div>
-                        <div class="page-item active">1</div>
-                        <div class="page-item disabled">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                    </div>
+                    <ul class="pagination">
+                        <li class="disabled">
+                            <a href="#!"><i class="fas fa-chevron-left"></i></a>
+                        </li>
+                        <li class="active"><a href="#!">1</a></li>
+                        <li class="disabled">
+                            <a href="#!"><i class="fas fa-chevron-right"></i></a>
+                        </li>
+                    </ul>
                 <?php endif; ?>
             </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

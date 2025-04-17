@@ -4,8 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transferir Stock | Seleccionar Producto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../public/css/seleccionarProducto.css">
+    <style>
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .step {
+            text-align: center;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .step.active .step-circle {
+            background-color: #2196f3;
+            color: #fff;
+        }
+        .step-label {
+            font-size: 0.875rem;
+            color: #757575;
+        }
+        .search-product {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-product i {
+            margin-right: 10px;
+        }
+        .product-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .product-option {
+            flex: 1 1 calc(50% - 10px);
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .product-option.selected {
+            background-color: #e0f7fa;
+        }
+        .product-icon {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+        .product-details {
+            flex: 1;
+        }
+        .product-name {
+            font-weight: bold;
+        }
+        .product-info {
+            color: #757575;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Filter products based on search input
@@ -51,19 +127,14 @@
 <body>
     <div class="container">
         <div class="card">
-            <div class="card-header">
-                <div class="header-left">
-                    <div class="header-icon">
-                        <i class="fas fa-exchange-alt"></i>
-                    </div>
-                    <div class="header-content">
-                        <h1>Transferir Stock</h1>
+            <div class="card-content">
+                <div class="row">
+                    <div class="col s12 m6">
+                        <h4><i class="fas fa-exchange-alt"></i> Transferir Stock</h4>
                         <p>Mueva productos entre almacenes</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="card-body">
                 <!-- Step indicators -->
                 <div class="steps-container">
                     <div class="step active">
@@ -96,92 +167,81 @@
 
                 <form action="../../Controller/stock/transferirStock.php" method="post">
                     <!-- Enhanced product selection interface -->
-                    <div class="form-group">
-                        <label for="searchProduct" class="form-label">Buscar y Seleccionar Producto</label>
-                        <div class="search-product">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="searchProduct" placeholder="Buscar producto por nombre o código...">
-                        </div>
+                    <div class="input-field">
+                        <i class="fas fa-search prefix"></i>
+                        <input type="text" id="searchProduct" placeholder="Buscar producto por nombre o código...">
+                        <label for="searchProduct">Buscar y Seleccionar Producto</label>
+                    </div>
 
-                        <!-- Hidden select for form submission -->
-                        <select id="id_producto" name="id_producto" style="display: none;" required>
-                            <?php foreach ($productos as $producto): ?>
-                                <option value="<?= htmlspecialchars(
-                                    $producto["id_producto"]
-                                ) ?>"><?= htmlspecialchars(
+                    <!-- Hidden select for form submission -->
+                    <select id="id_producto" name="id_producto" style="display: none;" required>
+                        <?php foreach ($productos as $producto): ?>
+                            <option value="<?= htmlspecialchars(
+                                $producto["id_producto"]
+                            ) ?>"><?= htmlspecialchars(
     $producto["nombre"]
 ) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php endforeach; ?>
+                    </select>
 
-                        <!-- Visual product selection -->
-                        <div class="product-select">
-                            <?php foreach (
-                                $productos
-                                as $index => $producto
-                            ): ?>
-                                <div class="product-option <?= $index === 0
-                                    ? "selected"
-                                    : "" ?>" data-id="<?= htmlspecialchars(
+                    <!-- Visual product selection -->
+                    <div class="product-select">
+                        <?php foreach ($productos as $index => $producto): ?>
+                            <div class="product-option <?= $index === 0
+                                ? "selected"
+                                : "" ?>" data-id="<?= htmlspecialchars(
     $producto["id_producto"]
 ) ?>">
-                                    <div class="product-icon">
-                                        <i class="fas fa-box"></i>
-                                    </div>
-                                    <div class="product-details">
-                                        <div class="product-name"><?= htmlspecialchars(
-                                            $producto["nombre"]
-                                        ) ?></div>
-                                        <div class="product-info">
-                                            <?php
-                                            $details = [];
-                                            if (!empty($producto["codigo"])) {
-                                                $details[] =
-                                                    "Código: " .
-                                                    htmlspecialchars(
-                                                        $producto["codigo"]
-                                                    );
-                                            }
-                                            if (!empty($producto["sku"])) {
-                                                $details[] =
-                                                    "SKU: " .
-                                                    htmlspecialchars(
-                                                        $producto["sku"]
-                                                    );
-                                            }
-                                            if (
-                                                !empty(
+                                <div class="product-icon">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="product-details">
+                                    <div class="product-name"><?= htmlspecialchars(
+                                        $producto["nombre"]
+                                    ) ?></div>
+                                    <div class="product-info">
+                                        <?php
+                                        $details = [];
+                                        if (!empty($producto["codigo"])) {
+                                            $details[] =
+                                                "Código: " .
+                                                htmlspecialchars(
+                                                    $producto["codigo"]
+                                                );
+                                        }
+                                        if (!empty($producto["sku"])) {
+                                            $details[] =
+                                                "SKU: " .
+                                                htmlspecialchars(
+                                                    $producto["sku"]
+                                                );
+                                        }
+                                        if (!empty($producto["stock_actual"])) {
+                                            $details[] =
+                                                "Stock: " .
+                                                htmlspecialchars(
                                                     $producto["stock_actual"]
-                                                )
-                                            ) {
-                                                $details[] =
-                                                    "Stock: " .
-                                                    htmlspecialchars(
-                                                        $producto[
-                                                            "stock_actual"
-                                                        ]
-                                                    );
-                                            }
-                                            echo implode(" | ", $details);
-                                            ?>
-                                        </div>
+                                                );
+                                        }
+                                        echo implode(" | ", $details);
+                                        ?>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
+                            </div>
+                        <?php endforeach; ?>
 
-                            <?php if (empty($productos)): ?>
-                                <div class="product-option" style="justify-content: center; color: var(--secondary);">
-                                    No hay productos disponibles
-                                </div>
-                            <?php endif; ?>
-                        </div>
+                        <?php if (empty($productos)): ?>
+                            <div class="product-option" style="justify-content: center; color: var(--secondary);">
+                                No hay productos disponibles
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="form-actions">
-                        <a href="index.php" class="btn btn-secondary">
+                        <a href="index.php" class="btn grey">
                             <i class="fas fa-arrow-left"></i> Cancelar
                         </a>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn blue">
                             Continuar <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -189,5 +249,7 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

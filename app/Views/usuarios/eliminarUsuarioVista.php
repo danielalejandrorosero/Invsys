@@ -3,166 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar Usuario | Stock Manager</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../public/css/eliminarUsuario.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteForm = document.getElementById('deleteForm');
-            const confirmCheck = document.getElementById('confirmDelete');
-            const deleteBtn = document.getElementById('deleteBtn');
-            const userSelect = document.getElementById('id_usuario');
-            const modal = document.getElementById('confirmModal');
-            const confirmModalBtn = document.getElementById('confirmModalBtn');
-            const cancelModalBtn = document.getElementById('cancelModalBtn');
-            const closeModalBtn = document.getElementById('closeModal');
-            const modalUserName = document.getElementById('modalUserName');
-            const modalUserInitial = document.getElementById('modalUserInitial');
-            const modalUserId = document.getElementById('modalUserId');
+    <title>Eliminar Usuario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6200ee;
+            --primary-light: #9c4dff;
+            --primary-dark: #3700b3;
+            --secondary-color: #03dac6;
+            --error-color: #b00020;
+            --success-color: #43a047;
+            --warning-color: #ff9800;
+            --background-color: #f5f5f5;
+            --surface-color: #ffffff;
+            --text-primary: rgba(0, 0, 0, 0.87);
+            --text-secondary: rgba(0, 0, 0, 0.6);
+            --text-disabled: rgba(0, 0, 0, 0.38);
+        }
 
-            // Toggle delete button based on checkbox
-            confirmCheck.addEventListener('change', function() {
-                deleteBtn.disabled = !this.checked;
-            });
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            // Open modal instead of submitting form
-            deleteForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
 
-                // Get selected user info
-                const selectedOption = userSelect.options[userSelect.selectedIndex];
-                const userName = selectedOption.text;
-                const userId = selectedOption.value;
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0;
+        }
 
-                // Update modal content
-                modalUserName.textContent = userName;
-                modalUserInitial.textContent = userName.charAt(0).toUpperCase();
-                modalUserId.textContent = 'ID: ' + userId;
+        .card {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            position: relative;
+            transition: box-shadow 0.3s ease;
+        }
 
-                // Show modal
-                modal.classList.add('show');
-            });
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
 
-            // Handle modal confirm button
-            confirmModalBtn.addEventListener('click', function() {
-                // Submit the form
-                deleteForm.submit();
-            });
+        .card-header {
+            padding: 1.5rem;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+        }
 
-            // Handle modal cancel and close buttons
-            cancelModalBtn.addEventListener('click', function() {
-                modal.classList.remove('show');
-            });
+        .card-header .material-icons {
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+            font-size: 1.75rem;
+        }
 
-            closeModalBtn.addEventListener('click', function() {
-                modal.classList.remove('show');
-            });
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0;
+        }
 
-            // Close modal when clicking outside
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('show');
-                }
-            });
-        });
-    </script>
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .alert-danger {
+            background-color: rgba(176, 0, 32, 0.08);
+            color: var(--error-color);
+            border-left: 4px solid var(--error-color);
+        }
+
+        .alert-success {
+            background-color: rgba(67, 160, 71, 0.08);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert .material-icons {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .alert p {
+            margin: 0;
+            flex: 1;
+        }
+
+        .warning-panel {
+            background-color: rgba(255, 152, 0, 0.08);
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .warning-panel .material-icons {
+            color: var(--warning-color);
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .warning-panel-content {
+            flex: 1;
+        }
+
+        .warning-panel-title {
+            color: var(--warning-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-panel p {
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            color: var(--text-primary);
+            background-color: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.23);
+            border-radius: 4px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(98, 0, 238, 0.2);
+        }
+
+        .form-control option {
+            padding: 0.5rem;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: "\e5cf"; /* Material Icons dropdown arrow */
+            font-family: 'Material Icons';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-secondary);
+        }
+
+        .form-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.0892857143em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            min-width: 100px;
+            height: 36px;
+        }
+
+        .btn .material-icons {
+            margin-right: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .btn-danger {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover, .btn-danger:focus {
+            background-color: #cf0025;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            box-shadow: none;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-secondary:hover, .btn-secondary:focus {
+            background-color: rgba(98, 0, 238, 0.04);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 30px;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .custom-checkbox {
+            position: absolute;
+            top: 2px;
+            left: 0;
+            height: 18px;
+            width: 18px;
+            background-color: #fff;
+            border: 2px solid rgba(0, 0, 0, 0.54);
+            border-radius: 2px;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-container:hover input ~ .custom-checkbox {
+            border-color: rgba(0, 0, 0, 0.87);
+        }
+
+        .checkbox-container input:checked ~ .custom-checkbox {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .custom-checkbox:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked ~ .custom-checkbox:after {
+            display: block;
+        }
+
+        .checkbox-container .custom-checkbox:after {
+            left: 6px;
+            top: 2px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            background-color: rgba(0, 0, 0, 0.3);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 95%;
+                margin: 1rem auto;
+            }
+            
+            .form-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="form-header">
-            <a href="../../Controller/usuarios/listarUsuarios.php" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Volver
-            </a>
-            <h1><i class="fas fa-user-minus"></i> Eliminar Usuario</h1>
-            <p>Eliminar un usuario del sistema</p>
-        </div>
-
-        <div class="form-body">
-            <div class="warning-box">
-                <i class="fas fa-exclamation-triangle"></i>
-                <div class="warning-box-content">
-                    <h3>¡Advertencia! Acción irreversible</h3>
-                    <p>Al eliminar un usuario, se eliminarán permanentemente todos sus datos y registros asociados. Esta acción no se puede deshacer.</p>
-                </div>
+        <div class="card">
+            <div class="card-header">
+                <i class="material-icons">person_remove</i>
+                <h1 class="card-title">Eliminar Usuario</h1>
             </div>
-
-            <form id="deleteForm" action="../../Controller/usuarios/eliminarUsuarioController.php" method="POST">
-                <div class="form-group">
-                    <label for="id_usuario">Seleccione el usuario a eliminar:</label>
-                    <div class="select-wrapper">
-                        <select id="id_usuario" name="id_usuario" required>
-                            <option value="" disabled selected>-- Seleccionar usuario --</option>
-                            <?php foreach ($usuarios as $usuario): ?>
-                                <option value="<?php echo $usuario[
-                                    "id_usuario"
-                                ]; ?>"><?php echo htmlspecialchars(
-    $usuario["nombreUsuario"]
-); ?></option>
-                            <?php endforeach; ?>
-                        </select>
+            
+            <div class="card-content">
+                <div class="warning-panel">
+                    <i class="material-icons">warning</i>
+                    <div class="warning-panel-content">
+                        <h3 class="warning-panel-title">¡Advertencia! Acción irreversible</h3>
+                        <p>Al eliminar un usuario, todos sus datos serán borrados permanentemente del sistema y no podrán ser recuperados.</p>
                     </div>
                 </div>
-
-                <div class="confirmation-check">
-                    <input type="checkbox" id="confirmDelete" name="confirmDelete">
-                    <label for="confirmDelete">Confirmo que deseo eliminar permanentemente al usuario seleccionado y entiendo que <span>esta acción no se puede deshacer</span>.</label>
-                </div>
-
-                <button type="submit" id="deleteBtn" name="eliminarUsuario" class="delete-btn" disabled>
-                    <i class="fas fa-trash-alt"></i> Eliminar Usuario
-                </button>
-
-                <a href="../../Controller/usuarios/listarUsuarios.php" class="cancel-btn">Cancelar y volver</a>
-            </form>
-
-            <?php if (isset($mensaje)): ?>
-                <div class="message-box success">
-                    <i class="fas fa-check-circle"></i>
-                    <p><?php echo $mensaje; ?></p>
-                </div>
-            <?php endif; ?>
-
-            <?php if (!empty($error)): ?>
-                <div class="message-box error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <p><?php echo is_array($error)
-                        ? implode("<br>", $error)
-                        : $error; ?></p>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div id="confirmModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <i class="fas fa-trash-alt"></i>
-                <h2>Confirmar Eliminación</h2>
-            </div>
-            <div class="modal-body">
-                <p>Está a punto de eliminar permanentemente el siguiente usuario. Esta acción no se puede deshacer.</p>
-
-                <div class="modal-user-info">
-                    <div class="user-avatar-small" id="modalUserInitial">U</div>
-                    <div class="user-details">
-                        <div class="user-name" id="modalUserName">Nombre de Usuario</div>
-                        <div class="user-id" id="modalUserId">ID: 0</div>
+                
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger">
+                        <i class="material-icons">error_outline</i>
+                        <?php foreach ($error as $err): ?>
+                            <p><?= htmlspecialchars($err) ?></p>
+                        <?php endforeach; ?>
                     </div>
-                </div>
+                <?php endif; ?>
+                
+                <?php if (isset($_SESSION["mensaje"])): ?>
+                    <div class="alert alert-success">
+                        <i class="material-icons">check_circle</i>
+                        <p><?= htmlspecialchars($_SESSION["mensaje"]) ?></p>
+                        <?php unset($_SESSION["mensaje"]); ?>
+                    </div>
+                <?php endif; ?>
 
-                <p>¿Está seguro de que desea continuar?</p>
+                <form method="POST" action="" class="form">
+                    <div class="form-group">
+                        <label for="id_usuario">Seleccione usuario a eliminar:</label>
+                        <div class="select-wrapper">
+                            <select name="id_usuario" id="id_usuario" class="form-control" required>
+                                <option value="">-- Seleccione un usuario --</option>
+                                <?php foreach ($usuarios as $usuario): ?>
+                                    <option value="<?= htmlspecialchars($usuario['id_usuario']) ?>">
+                                        <?= htmlspecialchars($usuario['nombreUsuario']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <label class="checkbox-container">
+                        <span>Confirmo que deseo eliminar permanentemente al usuario seleccionado y entiendo que <strong>esta acción no se puede deshacer</strong>.</span>
+                        <input type="checkbox" id="confirmDelete">
+                        <span class="custom-checkbox"></span>
+                    </label>
 
-                <div class="modal-actions">
-                    <button id="confirmModalBtn" class="btn-confirm-delete">
-                        <i class="fas fa-trash-alt"></i> Sí, Eliminar
-                    </button>
-                    <button id="cancelModalBtn" class="btn-cancel">
-                        <i class="fas fa-times"></i> Cancelar
-                    </button>
-                </div>
+                    <div class="form-buttons">
+                        <button type="submit" name="eliminarUsuario" id="btnEliminar" class="btn btn-danger" disabled>
+                            <i class="material-icons">delete</i> Eliminar Usuario
+                        </button>
+                        <a href="../../Controller/usuarios/listarUsuarios.php" class="btn btn-secondary">
+                            <i class="material-icons">arrow_back</i> Cancelar
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Control de habilitación del botón según checkbox
+        const confirmCheckbox = document.getElementById('confirmDelete');
+        const deleteButton = document.getElementById('btnEliminar');
+        
+        confirmCheckbox.addEventListener('change', function() {
+            deleteButton.disabled = !this.checked;
+        });
+        
+        // Confirmación adicional al eliminar
+        deleteButton.addEventListener('click', function(e) {
+            if (!confirm('¿Está seguro que desea eliminar este usuario? Esta acción no se puede deshacer.')) {
+                e.preventDefault();
+            }
+        });
+        
+        // Efecto ripple para botones
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const x = e.clientX - e.target.getBoundingClientRect().left;
+                const y = e.clientY - e.target.getBoundingClientRect().top;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    });
+    </script>
 </body>
 </html>

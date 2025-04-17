@@ -459,6 +459,22 @@ class productos
         }
     }
 
+    public function contarTotalProductos() {
+        try {
+            $sql = "SELECT COUNT(*) as count FROM productos WHERE estado = 'activo' ";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            return $row["count"];
+        } catch (Exception $e) {
+            error_log("Error al contar productos: " . $e->getMessage());
+            return 0;
+        } finally {
+            $stmt->close();
+        }
+    }
+
     public function restaurarProducto($id_producto)
     {
         try {

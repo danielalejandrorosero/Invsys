@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Productos | Stock Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../public/css/buscarProducto.css">
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -47,71 +47,59 @@
     <div class="container">
         <!-- Header Card -->
         <div class="card">
-            <div class="card-header">
-                <div class="header-left">
-                    <div class="header-icon">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="header-content">
-                        <h1>Buscar Productos</h1>
-                        <p>Encuentra y gestiona los productos del inventario</p>
-                    </div>
-                </div>
-                <a href="../../Views/usuarios/index.php" class="btn btn-secondary">
-                    <i class="fas fa-home"></i> Volver al Dashboard
+            <div class="card-content">
+                <span class="card-title">
+                    <i class="fas fa-search"></i> Buscar Productos
+                </span>
+                <p>Encuentra y gestiona los productos del inventario</p>
+                <a href="../../Views/usuarios/index.php" class="btn-floating btn-small waves-effect waves-light red">
+                    <i class="fas fa-home"></i>
                 </a>
             </div>
         </div>
 
         <!-- Search Card -->
         <div class="card search-card expanded">
-            <div class="search-header">
-                <div class="search-title">
-                    <i class="fas fa-filter"></i> Filtros de búsqueda
+            <div class="card-content">
+                <div class="search-header">
+                    <div class="search-title">
+                        <i class="fas fa-filter"></i> Filtros de búsqueda
+                    </div>
+                    <div class="toggle-icon">
+                        <i class="fas fa-chevron-up"></i>
+                    </div>
                 </div>
-                <div class="toggle-icon">
-                    <i class="fas fa-chevron-up"></i>
-                </div>
-            </div>
-            <div class="search-body">
-                <form action="../../Controller/productos/buscarProductosController.php" method="GET">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="nombre" class="form-label">Nombre del Producto</label>
-                            <div class="input-group">
-                                <i class="fas fa-box input-icon"></i>
-                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Buscar por nombre" value="<?php echo htmlspecialchars(
+                <div class="search-body">
+                    <form action="../../Controller/productos/buscarProductosController.php" method="GET">
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <i class="fas fa-box prefix"></i>
+                                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars(
                                     $_GET["nombre"] ?? ""
                                 ); ?>">
+                                <label for="nombre">Nombre del Producto</label>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="codigo" class="form-label">Código</label>
-                            <div class="input-group">
-                                <i class="fas fa-barcode input-icon"></i>
-                                <input type="text" id="codigo" name="codigo" class="form-control" placeholder="Buscar por código" value="<?php echo htmlspecialchars(
+                            <div class="input-field col s12 m6">
+                                <i class="fas fa-barcode prefix"></i>
+                                <input type="text" id="codigo" name="codigo" value="<?php echo htmlspecialchars(
                                     $_GET["codigo"] ?? ""
                                 ); ?>">
+                                <label for="codigo">Código</label>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="sku" class="form-label">SKU</label>
-                            <div class="input-group">
-                                <i class="fas fa-fingerprint input-icon"></i>
-                                <input type="text" id="sku" name="sku" class="form-control" placeholder="Buscar por SKU" value="<?php echo htmlspecialchars(
+                            <div class="input-field col s12 m6">
+                                <i class="fas fa-fingerprint prefix"></i>
+                                <input type="text" id="sku" name="sku" value="<?php echo htmlspecialchars(
                                     $_GET["sku"] ?? ""
                                 ); ?>">
+                                <label for="sku">SKU</label>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="categoria" class="form-label">Categoría</label>
-                            <div class="input-group">
-                                <i class="fas fa-folder input-icon"></i>
-                                <select id="categoria" name="categoria" class="form-control">
-                                    <option value="">Todas las categorías</option>
+                            <div class="input-field col s12 m6">
+                                <i class="fas fa-folder prefix"></i>
+                                <select id="categoria" name="categoria">
+                                    <option value="" disabled selected>Todas las categorías</option>
                                     <?php foreach ($categorias as $cat): ?>
                                         <option value="<?php echo htmlspecialchars(
                                             $cat["nombre"]
@@ -126,15 +114,13 @@ $cat["nombre"]
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
+                                <label for="categoria">Categoría</label>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="unidad_medida" class="form-label">Unidad de Medida</label>
-                            <div class="input-group">
-                                <i class="fas fa-ruler input-icon"></i>
-                                <select id="unidad_medida" name="unidad_medida" class="form-control">
-                                    <option value="">Todas las unidades</option>
+                            <div class="input-field col s12 m6">
+                                <i class="fas fa-ruler prefix"></i>
+                                <select id="unidad_medida" name="unidad_medida">
+                                    <option value="" disabled selected>Todas las unidades</option>
                                     <?php foreach ($unidades_medida as $um): ?>
                                         <option value="<?php echo htmlspecialchars(
                                             $um["nombre"]
@@ -151,42 +137,47 @@ $um["nombre"]
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
+                                <label for="unidad_medida">Unidad de Medida</label>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-actions">
-                        <button type="button" id="clearSearch" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Limpiar
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i> Buscar Productos
-                        </button>
-                    </div>
-                </form>
+                        <div class="row">
+                            <div class="col s12">
+                                <button type="button" id="clearSearch" class="btn waves-effect waves-light red">
+                                    <i class="fas fa-times"></i> Limpiar
+                                </button>
+                                <button type="submit" class="btn waves-effect waves-light">
+                                    <i class="fas fa-search"></i> Buscar Productos
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
         <!-- Results Card -->
         <div class="card">
-            <div class="card-body">
+            <div class="card-content">
                 <?php if (!empty($productos)): ?>
                     <!-- Table Controls -->
-                    <div class="table-controls">
-                        <div class="showing-entries">
+                    <div class="row">
+                        <div class="col s12 m6">
                             Mostrando <strong><?php echo count(
                                 $productos
                             ); ?></strong> productos
                         </div>
-                        <div class="search-table">
-                            <i class="fas fa-search search-table-icon"></i>
-                            <input type="text" id="tableSearch" placeholder="Buscar en resultados...">
+                        <div class="col s12 m6">
+                            <div class="input-field">
+                                <i class="fas fa-search prefix"></i>
+                                <input type="text" id="tableSearch" placeholder="Buscar en resultados...">
+                            </div>
                         </div>
                     </div>
 
                     <!-- Table with results -->
                     <div class="table-responsive">
-                        <table class="data-table">
+                        <table class="highlight">
                             <thead>
                                 <tr>
                                     <th>Producto</th>
@@ -227,7 +218,7 @@ $um["nombre"]
                                             $producto["stock_minimo"]
                                         ); ?></td>
                                         <td>
-                                            <span class="badge badge-primary">
+                                            <span class="new badge blue" data-badge-caption="">
                                                 <?php echo htmlspecialchars(
                                                     $producto["categoria"]
                                                 ); ?>
@@ -238,19 +229,19 @@ $um["nombre"]
                                                 <a href="../../Controller/productos/verProductoController.php?id=<?php echo $producto[
                                                     "id_producto"
                                                 ] ?? ""; ?>"
-                                                   class="action-btn view" title="Ver detalles">
+                                                   class="btn-floating btn-small waves-effect waves-light blue" title="Ver detalles">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <a href="../../Controller/productos/editarProductoController.php?id=<?php echo $producto[
                                                     "id_producto"
                                                 ] ?? ""; ?>"
-                                                   class="action-btn edit" title="Editar producto">
+                                                   class="btn-floating btn-small waves-effect waves-light orange" title="Editar producto">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <a href="../../Controller/productos/eliminarProductoController.php?id=<?php echo $producto[
                                                     "id_producto"
                                                 ] ?? ""; ?>"
-                                                   class="action-btn delete" title="Eliminar producto"
+                                                   class="btn-floating btn-small waves-effect waves-light red" title="Eliminar producto"
                                                    onclick="return confirm('¿Está seguro que desea eliminar este producto?')">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
@@ -263,22 +254,22 @@ $um["nombre"]
                     </div>
 
                     <!-- Pagination -->
-                    <div class="pagination">
-                        <div class="page-item disabled">
-                            <i class="fas fa-chevron-left"></i>
-                        </div>
-                        <div class="page-item active">1</div>
-                        <div class="page-item disabled">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                    </div>
+                    <ul class="pagination">
+                        <li class="disabled">
+                            <a href="#!"><i class="fas fa-chevron-left"></i></a>
+                        </li>
+                        <li class="active"><a href="#!">1</a></li>
+                        <li class="disabled">
+                            <a href="#!"><i class="fas fa-chevron-right"></i></a>
+                        </li>
+                    </ul>
                 <?php else: ?>
                     <!-- Empty state -->
-                    <div class="empty-state">
-                        <i class="fas fa-search"></i>
-                        <h3>No se encontraron productos</h3>
+                    <div class="center-align">
+                        <i class="fas fa-search fa-3x"></i>
+                        <h5>No se encontraron productos</h5>
                         <p>No hay productos que coincidan con los criterios de búsqueda. Intente con diferentes términos o añada un nuevo producto al inventario.</p>
-                        <a href="../../Controller/productos/agregarProductoController.php" class="btn btn-primary">
+                        <a href="../../Controller/productos/agregarProductoController.php" class="btn waves-effect waves-light">
                             <i class="fas fa-plus"></i> Agregar Nuevo Producto
                         </a>
                     </div>
@@ -286,5 +277,13 @@ $um["nombre"]
             </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('select');
+            M.FormSelect.init(elems);
+        });
+    </script>
 </body>
 </html>

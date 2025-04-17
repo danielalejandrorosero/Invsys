@@ -4,8 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión | Stock Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../public/css/login.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f3fa;
+        }
+
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .login-card {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-header .logo {
+            font-size: 48px;
+            color: #4a6cf7;
+        }
+
+        .login-header h1 {
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        .login-header p {
+            color: #6c757d;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .input-with-icon input {
+            padding-left: 40px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-options .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-options .remember-me input {
+            margin-right: 5px;
+        }
+
+        .form-options .forgot-password {
+            color: #4a6cf7;
+            text-decoration: none;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4a6cf7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background-color: #3151e4;
+        }
+
+        .error-message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .error-message i {
+            margin-right: 10px;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+        }
+    </style>
     <script>
         function togglePassword() {
             const passwordField = document.getElementById('password');
@@ -36,34 +159,30 @@
 
             <div class="login-body">
                 <form action="../../Controller/usuarios/sesionController.php" method="POST">
-                    <div class="form-group">
+                    <div class="input-field">
+                        <i class="fas fa-user prefix"></i>
+                        <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese su nombre de usuario" required>
                         <label for="nombreUsuario">Nombre de Usuario</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese su nombre de usuario" required>
-                        </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="input-field">
+                        <i class="fas fa-lock prefix"></i>
+                        <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+                        <span class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye"></i>
+                        </span>
                         <label for="password">Contraseña</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
-                            <span class="password-toggle" onclick="togglePassword()">
-                                <i class="fas fa-eye"></i>
-                            </span>
-                        </div>
                     </div>
 
                     <div class="form-options">
-                        <div class="remember-me">
+                        <label>
                             <input type="checkbox" id="remember" name="remember">
-                            <label for="remember">Recordarme</label>
-                        </div>
+                            <span>Recordarme</span>
+                        </label>
                         <a href="../../Controller/usuarios/solicitarRecuperacionController.php" class="forgot-password">¿Olvidó su contraseña?</a>
                     </div>
 
-                    <button type="submit" name="login" class="login-button">
+                    <button type="submit" name="login" class="btn waves-effect waves-light blue">
                         <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                     </button>
                 </form>
@@ -84,5 +203,7 @@
             ); ?> Stock Manager. Todos los derechos reservados.
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
