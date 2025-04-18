@@ -22,7 +22,7 @@ class RecuperarPasswordController {
 
             if ($resultado === true) {
                 $mensaje = "Contraseña actualizada con éxito.";
-                header("Location: ../../Views/usuarios/login.php");
+                header("Location: ../../../public/index.php");
                 exit();
             } else {
                 $mensaje = $resultado;

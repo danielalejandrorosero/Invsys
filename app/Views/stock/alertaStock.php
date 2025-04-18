@@ -126,7 +126,7 @@
                         <a href="../../Controller/stock/verInventarioController.php" class="btn blue">
                             <i class="fas fa-warehouse"></i> Ver Inventario
                         </a>
-                        <a href="index.php" class="btn grey">
+                        <a href="../../Views/usuarios/dashboard.php" class="btn grey">
                             <i class="fas fa-home"></i> Dashboard
                         </a>
                     </div>

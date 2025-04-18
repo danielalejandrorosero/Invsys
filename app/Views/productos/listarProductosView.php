@@ -66,7 +66,7 @@
                     <a href="../../Controller/productos/ListarProductosEliminadosController.php" class="btn waves-effect waves-light blue">
                         <i class="fas fa-trash-restore"></i> Ver Productos Eliminados
                     </a>
-                    <a href="../../Views/usuarios/index.php" class="btn waves-effect waves-light grey">
+                    <a href="../../Views/usuarios/dashboard.php" class="btn waves-effect waves-light grey">
                         <i class="fas fa-home"></i> Dashboard
                     </a>
                 </div>
@@ -130,7 +130,6 @@
                         <table class="highlight products-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Producto</th>
                                     <th>Código</th>
                                     <th>SKU</th>
@@ -145,87 +144,28 @@
                             <tbody>
                                 <?php foreach ($productos as $producto): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars(
-                                            $producto["id_producto"]
-                                        ); ?></td>
+                                        <td><?php echo htmlspecialchars($producto["nombre"]); ?></td>
+                                        <td><?php echo htmlspecialchars($producto["codigo"]); ?></td>
+                                        <td><?php echo htmlspecialchars($producto["sku"]); ?></td>
+                                        <td class="price">$<?php echo number_format($producto["precio_compra"], 2); ?></td>
+                                        <td class="price">$<?php echo number_format($producto["precio_venta"], 2); ?></td>
+                                        <td><?php echo htmlspecialchars($producto["categoria_nombre"]); ?></td>
+                                        <td><?php echo htmlspecialchars($producto["proveedor_nombre"]); ?></td>
                                         <td>
-                                            <div class="truncate" title="<?php echo htmlspecialchars(
-                                                $producto["nombre"]
-                                            ); ?>">
-                                                <?php echo htmlspecialchars(
-                                                    $producto["nombre"]
-                                                ); ?>
-                                            </div>
-                                        </td>
-                                        <td><?php echo htmlspecialchars(
-                                            $producto["codigo"]
-                                        ); ?></td>
-                                        <td><?php echo htmlspecialchars(
-                                            $producto["sku"]
-                                        ); ?></td>
-                                        <td class="price">$<?php echo number_format(
-                                            $producto["precio_compra"],
-                                            2
-                                        ); ?></td>
-                                        <td class="price">$<?php echo number_format(
-                                            $producto["precio_venta"],
-                                            2
-                                        ); ?></td>
-                                        <td>
-                                            <span class="new badge blue" data-badge-caption="">
-                                                <?php echo htmlspecialchars(
-                                                    $producto[
-                                                        "categoria_nombre"
-                                                    ]
-                                                ); ?>
-                                            </span>
+                                            Min: <?php echo htmlspecialchars($producto["stock_minimo"]); ?> /
+                                            Max: <?php echo htmlspecialchars($producto["stock_maximo"]); ?>
                                         </td>
                                         <td>
-                                            <div class="truncate" title="<?php echo htmlspecialchars(
-                                                $producto["proveedor_nombre"]
-                                            ); ?>">
-                                                <?php echo htmlspecialchars(
-                                                    $producto[
-                                                        "proveedor_nombre"
-                                                    ]
-                                                ); ?>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="new badge green" data-badge-caption="">
-                                                Min: <?php echo htmlspecialchars(
-                                                    $producto["stock_minimo"]
-                                                ); ?> /
-                                                Max: <?php echo htmlspecialchars(
-                                                    $producto["stock_maximo"]
-                                                ); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="../../Controller/productos/editarProductoController.php?id=<?php echo $producto[
-                                                "id_producto"
-                                            ]; ?>" class="btn-floating btn-small waves-effect waves-light blue" title="Editar">
+                                            <a href="../../Controller/productos/editarProductoController.php?id=<?php echo $producto["id_producto"]; ?>" class="btn-floating btn-small waves-effect waves-light blue" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="../../Controller/productos/VerProductoController.php?id=<?php echo $producto[
-                                                "id_producto"
-                                            ]; ?>" class="btn-floating btn-small waves-effect waves-light green" title="Ver detalles">
+                                            <a href="../../Controller/productos/VerProductoController.php?id=<?php echo $producto["id_producto"]; ?>" class="btn-floating btn-small waves-effect waves-light green" title="Ver detalles">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <button class="btn-floating btn-small waves-effect waves-light red" title="Eliminar"
-                                                    onclick="showDeleteModal('<?php echo $producto[
-                                                        "id_producto"
-                                                    ]; ?>',
-                                                                              '<?php echo htmlspecialchars(
-                                                                                  $producto[
-                                                                                      "nombre"
-                                                                                  ]
-                                                                              ); ?>',
-                                                                              '<?php echo htmlspecialchars(
-                                                                                  $producto[
-                                                                                      "codigo"
-                                                                                  ]
-                                                                              ); ?>')">
+                                                    onclick="showDeleteModal('<?php echo $producto["id_producto"]; ?>',
+                                                                              '<?php echo htmlspecialchars($producto["nombre"]); ?>',
+                                                                              '<?php echo htmlspecialchars($producto["codigo"]); ?>')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
@@ -236,14 +176,32 @@
                     </div>
 
                     <!-- Pagination -->
-                    <ul class="pagination">
-                        <li class="disabled">
-                            <a href="#!"><i class="fas fa-chevron-left"></i></a>
-                        </li>
-                        <li class="active"><a href="#!">1</a></li>
-                        <li class="disabled">
-                            <a href="#!"><i class="fas fa-chevron-right"></i></a>
-                        </li>
+                    <ul class="pagination center-align">
+                        <?php if ($page > 1): ?>
+                            <li class="waves-effect">
+                                <a href="?page=<?php echo $page - 1; ?>"><i class="fas fa-chevron-left"></i></a>
+                            </li>
+                        <?php else: ?>
+                            <li class="disabled">
+                                <a href="#!"><i class="fas fa-chevron-left"></i></a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                            <li class="<?php echo $i === $page ? 'active' : 'waves-effect'; ?>">
+                                <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $totalPaginas): ?>
+                            <li class="waves-effect">
+                                <a href="?page=<?php echo $page + 1; ?>"><i class="fas fa-chevron-right"></i></a>
+                            </li>
+                        <?php else: ?>
+                            <li class="disabled">
+                                <a href="#!"><i class="fas fa-chevron-right"></i></a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 <?php endif; ?>
             </div>

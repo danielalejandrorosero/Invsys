@@ -154,7 +154,7 @@
                         <button class="btn blue">
                             <i class="fas fa-file-export"></i> Exportar
                         </button>
-                        <a href="index.php" class="btn grey">
+                        <a href="../../Views/usuarios/dashboard.php" class="btn grey">
                             <i class="fas fa-home"></i> Dashboard
                         </a>
                     </div>

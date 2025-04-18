@@ -21,7 +21,7 @@ class Sesiones
             time() - $_SESSION["LAST_ACTIVITY"] > $this->session_lifetime
         ) {
             $this->cerrarSesion();
-            header("Location: ../../Views/usuarios/login.php");
+            header("Location: ../public/index.php");
             exit();
         }
         $_SESSION["LAST_ACTIVITY"] = time();

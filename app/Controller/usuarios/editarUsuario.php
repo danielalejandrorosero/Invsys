@@ -35,7 +35,7 @@ class EditarUsuarioController
             if ($id_usuario_sesion != $id_usuario && $nivel_sesion != 1) {
                 $_SESSION["error"] =
                     "No tienes permisos para editar este usuario.";
-                header("Location: ../../Views/usuarios/index.php");
+                header("Location: ../../Views/usuarios/dashboard.php");
                 exit();
             }
 
@@ -63,7 +63,7 @@ class EditarUsuarioController
 
             if ($resultado === true) {
                 $_SESSION["mensaje"] = "Usuario actualizado exitosamente.";
-                header("Location: ../../Views/usuarios/login.php");
+                header("Location: ../../../public/index.php");
                 exit();
             } else {
                 $_SESSION["error"] = $resultado;

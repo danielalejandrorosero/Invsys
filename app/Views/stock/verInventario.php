@@ -53,7 +53,7 @@
                     <a href="../../Controller/stock/movimientoStockController.php" class="btn waves-effect waves-light blue">
                         <i class="fas fa-exchange-alt"></i> Movimientos
                     </a>
-                    <a href="../../Views/usuarios/index.php" class="btn waves-effect waves-light grey">
+                    <a href="../../Views/usuarios/dashboard.php" class="btn waves-effect waves-light grey">
                         <i class="fas fa-home"></i> Dashboard
                     </a>
                 </div>

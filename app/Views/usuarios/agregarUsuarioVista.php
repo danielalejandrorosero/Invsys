@@ -43,7 +43,7 @@
                     <i class="fas fa-user-plus"></i> Agregar Usuario
                 </span>
                 <p>Complete el formulario para crear un nuevo usuario</p>
-                <a href="../../Views/usuarios/index.php" class="btn-floating btn-small waves-effect waves-light red">
+                <a href="../../Views/usuarios/dashboard.php" class="btn-floating btn-small waves-effect waves-light red">
                     <i class="fas fa-arrow-left"></i>
                 </a>
             </div>

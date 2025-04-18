@@ -1,12 +1,11 @@
 <?php
-// debugear
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+
 
 require_once __DIR__ . "/../../../config/cargarConfig.php";
 require_once __DIR__ . "/../../Models/usuarios/Usuarios.php";
 
-session_start();
+
+
 
 class LoginController
 {
@@ -26,14 +25,14 @@ class LoginController
             if (empty($nombreUsuario)) {
                 $_SESSION["error"] =
                     "El nombre de usuario no puede estar vacío.";
-                header("Location: ../../../Views/usuarios/login.php");
+                header("Location: ../../../public/index.php");
 
                 exit();
             }
 
             if (empty($password)) {
                 $_SESSION["error"] = "La contraseña no puede estar vacía.";
-                header("Location: ../../Views/login.php");
+                header("Location: ../../../public/index.php");
                 exit();
             }
 
@@ -48,11 +47,11 @@ class LoginController
                 $_SESSION["nombreUsuario"] = $usuario["nombreUsuario"];
                 $_SESSION["nivel_usuario"] = $usuario["nivel_usuario"];
                 // index
-                header("Location: ../../Views/usuarios/index.php");
+                header("Location: ../../Views/usuarios/dashboard.php");
                 exit();
             } else {
                 $_SESSION["error"] = "Usuario o contraseña incorrectos.";
-                header("Location: ../../Views/usuarios/login.php");
+                header("Location: ../../../public/index.php");
                 exit();
             }
         }

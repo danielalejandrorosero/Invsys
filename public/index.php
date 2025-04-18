@@ -158,7 +158,7 @@
             </div>
 
             <div class="login-body">
-                <form action="../../Controller/usuarios/sesionController.php" method="POST">
+                <form action="../app/Controller/usuarios/sesionController.php" method="POST">
                     <div class="input-field">
                         <i class="fas fa-user prefix"></i>
                         <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese su nombre de usuario" required>
@@ -179,7 +179,7 @@
                             <input type="checkbox" id="remember" name="remember">
                             <span>Recordarme</span>
                         </label>
-                        <a href="../../Controller/usuarios/solicitarRecuperacionController.php" class="forgot-password">¿Olvidó su contraseña?</a>
+                        <a href="../app/Controller/usuarios/solicitarRecuperacionController.php" class="forgot-password">¿Olvidó su contraseña?</a>
                     </div>
 
                     <button type="submit" name="login" class="btn waves-effect waves-light blue">

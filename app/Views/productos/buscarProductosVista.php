@@ -52,7 +52,7 @@
                     <i class="fas fa-search"></i> Buscar Productos
                 </span>
                 <p>Encuentra y gestiona los productos del inventario</p>
-                <a href="../../Views/usuarios/index.php" class="btn-floating btn-small waves-effect waves-light red">
+                <a href="../../Views/usuarios/dashboard.php" class="btn-floating btn-small waves-effect waves-light red">
                     <i class="fas fa-home"></i>
                 </a>
             </div>

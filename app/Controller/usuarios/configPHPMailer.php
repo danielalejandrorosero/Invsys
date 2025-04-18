@@ -22,7 +22,7 @@ class MailService {
             $mail->isHTML(true);
             $mail->Subject = 'Recupera tu contraseña';
             $mail->Body = "<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-                           <p><a href='http://localhost/InventoryManagementSystem/app/Views/usuarios/recuperarPassword.php?token=$token'>Recuperar Contraseña</a></p>";
+                           <p><a href='http://192.168.0.18/InventoryManagementSystem/app/Views/usuarios/recuperarPassword.php?token=$token'>Recuperar Contraseña</a></p>";
 
             if ($mail->send()) {
                 return true;

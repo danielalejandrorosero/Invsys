@@ -223,7 +223,7 @@
                         <button class="btn red">
                             <i class="fas fa-file-pdf"></i> Exportar PDF
                         </button>
-                        <a href="../../Views/usuarios/index.php" class="btn blue">
+                        <a href="../../Views/usuarios/dashboard.php" class="btn blue">
                             <i class="fas fa-home"></i> Dashboard
                         </a>
                     </div>

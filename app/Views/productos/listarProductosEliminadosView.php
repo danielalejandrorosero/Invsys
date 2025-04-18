@@ -38,7 +38,7 @@
                     <a href="../../Controller/productos/ListarProductosController.php" class="btn waves-effect waves-light">
                         <i class="fas fa-box"></i> Ver Productos Activos
                     </a>
-                    <a href="../../Views/usuarios/index.php" class="btn waves-effect waves-light grey">
+                    <a href="../../Views/usuarios/dashboard.php" class="btn waves-effect waves-light grey">
                         <i class="fas fa-home"></i> Dashboard
                     </a>
                 </div>

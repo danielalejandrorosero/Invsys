@@ -238,7 +238,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="index.php" class="btn grey">
+                        <a href="../../Views/usuarios/dashboard.php" class="btn grey">
                             <i class="fas fa-arrow-left"></i> Cancelar
                         </a>
                         <button type="submit" class="btn blue">

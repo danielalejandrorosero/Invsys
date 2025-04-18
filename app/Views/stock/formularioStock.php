@@ -164,7 +164,7 @@
                         <a href="../../Controller/stock/ajustarStockController.php" class="btn blue">
                             <i class="fas fa-edit"></i> Ajustar Stock
                         </a>
-                        <a href="../../Views/usuarios/index.php" class="btn grey">
+                        <a href="../../Views/usuarios/dashboard.php" class="btn grey">
                             <i class="fas fa-home"></i> Dashboard
                         </a>
                     </div>

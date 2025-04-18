@@ -48,7 +48,7 @@
                     <i class="fas fa-box"></i> Agregar Producto
                 </span>
                 <p>Complete el formulario para agregar un nuevo producto al inventario</p>
-                <a href="../../Views/usuarios/index.php" class="btn-floating btn-small waves-effect waves-light red">
+                <a href="../../Views/usuarios/dashboard.php" class="btn-floating btn-small waves-effect waves-light red">
                     <i class="fas fa-arrow-left"></i>
                 </a>
             </div>

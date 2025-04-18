@@ -10,6 +10,6 @@ session_unset();
 session_destroy();
 
 // Redirigir al login correctamente
-header("Location: ../../Views/usuarios/login.php");
+header("Location: ../../../public/index.php");
 exit();
 ?>

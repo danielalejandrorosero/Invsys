@@ -20,7 +20,17 @@ class ListarProductosController
     {
         nivelRequerido(1);
 
-        $productos = $this->productosModel->obtenerTodosProductos();
+        // Parámetros de paginación
+        $limit = 10; // Número de productos por página
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        // Obtener productos y total de productos
+        $productos = $this->productosModel->obtenerProductosConPaginacion($limit, $offset);
+        $totalProductos = $this->productosModel->contarProductos();
+
+        // Calcular el número total de páginas
+        $totalPaginas = ceil($totalProductos / $limit);
 
         // cargar vista
         require_once __DIR__ . "/../../Views/productos/listarProductosView.php";

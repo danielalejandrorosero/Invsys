@@ -32,24 +32,7 @@ $rutaImagen =
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/index.css">
-
-    <script>
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('show');
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            <?php if (!empty($productosBajoStock)): ?>
-                var productos = <?php echo json_encode($productosBajoStock); ?>;
-                productos.forEach(function (producto) {
-                    M.toast({
-                        html: 'Stock bajo: ' + producto.nombre + ' - Cantidad: ' + producto.cantidad_disponible,
-                        displayLength: 8000
-                    });
-                });
-            <?php endif; ?>
-        });
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Botón para móviles -->
@@ -63,15 +46,11 @@ $rutaImagen =
             <h2>Stock Manager</h2>
             <div class="user-info">
                 <div class="avatar">
-                    <img src="<?php echo htmlspecialchars(
-                        $rutaImagen
-                    ); ?>" alt="Avatar" class="circle responsive-img">
+                    <img src="<?php echo htmlspecialchars($rutaImagen); ?>" alt="Avatar" class="circle responsive-img">
                 </div>
                 <div class="user-details">
                     <h3><?php echo htmlspecialchars($nombreUsuario); ?></h3>
-                    <p>Nivel: <?php echo htmlspecialchars(
-                        $nivel_usuario
-                    ); ?></p>
+                    <p>Nivel: <?php echo htmlspecialchars($nivel_usuario); ?></p>
                 </div>
             </div>
         </div>
@@ -101,7 +80,7 @@ $rutaImagen =
                 <li><a href="../../Controller/productos/editarProductoController.php"><i class="fas fa-edit"></i> Editar Producto</a></li>
                 <li><a href="../../Controller/productos/eliminarProductoController.php"><i class="fas fa-trash-alt"></i> Eliminar Producto</a></li>
                 <li><a href="../../Controller/productos/RestaurarProductoController.php"><i class="fas fa-trash-restore"></i> Restaurar Producto</a></li>
-                <li><a href="../../Controller/productos/ListarProductosController.php"><i class="fas fa-users"></i> Listar Productos</a></li>
+                <li><a href="../../Controller/productos/ListarProductosController.php"><i class="fas fa-list"></i> Listar Productos</a></li>
             </ul>
 
             <h3>Imágenes</h3>
@@ -133,9 +112,7 @@ $rutaImagen =
 
             <div class="card stat-card">
                 <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Alertas</div>
-                <div class="number"><?php echo count(
-                    $productosBajoStock
-                ); ?></div>
+                <div class="number"><?php echo count($productosBajoStock); ?></div>
                 <div class="label">Productos con stock bajo</div>
                 <a href="alertStock.php" class="btn red">Ver Detalles</a>
             </div>
@@ -156,5 +133,37 @@ $rutaImagen =
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('show');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if (!empty($productosBajoStock)): ?>
+                var productos = <?php echo json_encode($productosBajoStock); ?>;
+                productos.forEach(function (producto) {
+                    M.toast({
+                        html: 'Stock bajo: ' + producto.nombre + ' - Cantidad: ' + producto.cantidad_disponible,
+                        displayLength: 8000
+                    });
+                });
+            <?php endif; ?>
+            
+            // Detectar tamaño de pantalla al cargar
+            checkScreenSize();
+            
+            // Detectar cambios en el tamaño de la pantalla
+            window.addEventListener('resize', checkScreenSize);
+        });
+        
+        // Función para verificar el ancho de la pantalla
+        function checkScreenSize() {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.sidebar').classList.remove('show');
+            } else {
+                document.querySelector('.sidebar').classList.add('show');
+            }
+        }
+    </script>
 </body>
 </html>
