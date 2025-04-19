@@ -43,7 +43,7 @@ $rutaImagen =
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <h2>Stock Manager</h2>
+            <h2>InvSys</h2>
             <div class="user-info">
                 <div class="avatar">
                     <img src="<?php echo htmlspecialchars($rutaImagen); ?>" alt="Avatar" class="circle responsive-img">
@@ -127,7 +127,7 @@ $rutaImagen =
         <!-- Actividad Reciente -->
         <div class="card">
             <div class="card-title"><i class="fas fa-clock"></i> Actividad Reciente</div>
-            <p>Bienvenido al sistema de gestión de stock. Utilice el menú de la izquierda para navegar por las diferentes funcionalidades.</p>
+            <p>Bienvenido al sisteme de InvSys. Utilice el menú de la izquierda para navegar por las diferentes funcionalidades.</p>
         </div>
     </div>
 

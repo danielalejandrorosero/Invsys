@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión | Stock Manager</title>
+    <title>Iniciar Sesión | InvSys</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -153,7 +153,7 @@
                 <div class="logo">
                     <i class="fas fa-boxes"></i>
                 </div>
-                <h1>Stock Manager</h1>
+                <h1>InvSys</h1>
                 <p>Ingrese sus credenciales para acceder</p>
             </div>
 
@@ -200,7 +200,7 @@
         <div class="login-footer">
             &copy; <?php echo date(
                 "Y"
-            ); ?> Stock Manager. Todos los derechos reservados.
+            ); ?> InvSys. Todos los derechos reservados.
         </div>
     </div>
 

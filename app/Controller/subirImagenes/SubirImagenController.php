@@ -28,13 +28,13 @@ class SubirImagenController {
         if ($tipo == 'usuario') {
             $id = $_SESSION['id_usuario'];
             $destinoBase = __DIR__ . '/../../../public/uploads/imagenes/usuarios/';
-            $redirectSuccess =  __DIR__ . '/../../Controller/usuarios/listarUsuarios.php';
+            $redirectSuccess = '../../Controller/usuarios/listarUsuarios    .php';
             $view = 'subirImagenUsuarioView.php';
             $data = $this->usuarioModel->obtenerUsuarios();
         } elseif ($tipo == 'producto') {
             $id = isset($_POST['id_producto']) ? (int)$_POST['id_producto'] : null; 
             $destinoBase = __DIR__ . '/../../../public/uploads/imagenes/productos/';
-            $redirectSuccess =  __DIR__ . '/../../Controller/productos/listarProductos.php';
+            $redirectSuccess = '../../Controller/productos/ListarProductosController.php';
             $view = 'subirImagenProductoView.php';
             $data = $this->productoModel->obtenerProductos();
         } else {

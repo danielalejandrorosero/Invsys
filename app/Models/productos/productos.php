@@ -437,47 +437,55 @@ class productos
     public function obtenerProductosConPaginacion($limit, $offset)
     {
         try {
-            $sql = "SELECT p.*,
-                        c.nombre as categoria_nombre,
-                        pr.nombre as proveedor_nombre,
-                        um.nombre as unidad_medida_nombre
-                    FROM productos p
-                    LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
-                    LEFT JOIN proveedores pr ON p.id_proveedor = pr.id_proveedor
-                    LEFT JOIN unidades_medida um ON p.id_unidad_medida = um.id_unidad
-                    WHERE p.estado = 'activo'
-                    ORDER BY p.id_producto ASC
-                    LIMIT ? OFFSET ?";
+            $sql = "SELECT
+                p.*,
+                c.nombre AS categoria_nombre,
+                pr.nombre AS proveedor_nombre,
+                um.nombre AS unidad_medida_nombre,
+                COALESCE(ip.nombre_imagen, 'default.png') AS imagen_destacada
+            FROM productos p
+            LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
+            LEFT JOIN proveedores pr ON p.id_proveedor = pr.id_proveedor
+            LEFT JOIN unidades_medida um ON p.id_unidad_medida = um.id_unidad
+            LEFT JOIN imagenes_productos ip ON ip.id_producto = p.id_producto
+            WHERE p.estado = 'activo'
+            ORDER BY p.id_producto ASC
+            LIMIT ? OFFSET ?;";
+
             $resultado = $this->conn->prepare($sql);
             $resultado->bind_param("ii", $limit, $offset);
             $resultado->execute();
             $productos = $resultado->get_result()->fetch_all(MYSQLI_ASSOC);
             return $productos;
         } catch (Exception $e) {
-            error_log("Error al obtener productos con paginación: " . $e->getMessage());
+            error_log(
+                "Error al obtener productos con paginación: " . $e->getMessage()
+            );
             return [];
         } finally {
             $resultado->close();
         }
     }
 
-
     public function contarProductos()
-{
-    try {
-        $sql = "SELECT COUNT(*) AS total FROM productos WHERE estado = 'activo'";
-        $resultado = $this->conn->query($sql);
-        $row = $resultado->fetch_assoc();
-        return $row['total'];
-    } catch (Exception $e) {
-        error_log("Error al contar productos: " . $e->getMessage());
-        return 0;
-    }
-}
-
-    public function contarTotalProductos() {
+    {
         try {
-            $sql = "SELECT COUNT(*) as count FROM productos WHERE estado = 'activo' ";
+            $sql =
+                "SELECT COUNT(*) AS total FROM productos WHERE estado = 'activo'";
+            $resultado = $this->conn->query($sql);
+            $row = $resultado->fetch_assoc();
+            return $row["total"];
+        } catch (Exception $e) {
+            error_log("Error al contar productos: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function contarTotalProductos()
+    {
+        try {
+            $sql =
+                "SELECT COUNT(*) as count FROM productos WHERE estado = 'activo' ";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -531,7 +539,6 @@ class productos
             $resultado = $this->conn->prepare($sql);
             $resultado->execute();
 
-            // Esta es la corrección clave: usar get_result() y luego fetch_all()
             $result = $resultado->get_result();
             $productos = $result->fetch_all(MYSQLI_ASSOC);
 

@@ -22,28 +22,6 @@
                 });
             }
 
-            // Delete confirmation modal
-            const modal = document.getElementById('deleteModal');
-            const productNameEl = document.getElementById('productName');
-            const productCodeEl = document.getElementById('productCode');
-            const productIdEl = document.getElementById('productId');
-            const confirmDeleteBtn = document.getElementById('confirmDelete');
-            const cancelDeleteBtn = document.getElementById('cancelDelete');
-
-            // Function to show modal
-            window.showDeleteModal = function(id, name, code) {
-                productNameEl.textContent = name;
-                productCodeEl.textContent = code;
-                productIdEl.textContent = id;
-                const instance = M.Modal.getInstance(modal);
-                instance.open();
-
-                // Update confirm button action
-                confirmDeleteBtn.onclick = function() {
-                    window.location.href = '../../Controller/productos/eliminarProductoController.php?id=' + id;
-                };
-            };
-
             // Initialize modal
             var elems = document.querySelectorAll('.modal');
             M.Modal.init(elems);
@@ -130,6 +108,7 @@
                         <table class="highlight products-table">
                             <thead>
                                 <tr>
+                                    <th>Imagen</th>
                                     <th>Producto</th>
                                     <th>Código</th>
                                     <th>SKU</th>
@@ -144,28 +123,69 @@
                             <tbody>
                                 <?php foreach ($productos as $producto): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($producto["nombre"]); ?></td>
-                                        <td><?php echo htmlspecialchars($producto["codigo"]); ?></td>
-                                        <td><?php echo htmlspecialchars($producto["sku"]); ?></td>
-                                        <td class="price">$<?php echo number_format($producto["precio_compra"], 2); ?></td>
-                                        <td class="price">$<?php echo number_format($producto["precio_venta"], 2); ?></td>
-                                        <td><?php echo htmlspecialchars($producto["categoria_nombre"]); ?></td>
-                                        <td><?php echo htmlspecialchars($producto["proveedor_nombre"]); ?></td>
                                         <td>
-                                            Min: <?php echo htmlspecialchars($producto["stock_minimo"]); ?> /
-                                            Max: <?php echo htmlspecialchars($producto["stock_maximo"]); ?>
+                                            <img src="../../../public/uploads/imagenes/productos/<?php echo $producto[
+                                                "imagen_destacada"
+                                            ]; ?>"
+                                                 alt="Imagen del producto"
+                                                 style="width: 50px; height: 50px; border-radius: 8px;">
+                                        </td>
+                                        <td><?php echo htmlspecialchars(
+                                            $producto["nombre"]
+                                        ); ?></td>
+                                        <td><?php echo htmlspecialchars(
+                                            $producto["codigo"]
+                                        ); ?></td>
+                                        <td><?php echo htmlspecialchars(
+                                            $producto["sku"]
+                                        ); ?></td>
+                                        <td class="price">$<?php echo number_format(
+                                            $producto["precio_compra"],
+                                            2
+                                        ); ?></td>
+                                        <td class="price">$<?php echo number_format(
+                                            $producto["precio_venta"],
+                                            2
+                                        ); ?></td>
+                                        <td><?php echo htmlspecialchars(
+                                            $producto["categoria_nombre"]
+                                        ); ?></td>
+                                        <td><?php echo htmlspecialchars(
+                                            $producto["proveedor_nombre"]
+                                        ); ?></td>
+                                        <td>
+                                            Min: <?php echo htmlspecialchars(
+                                                $producto["stock_minimo"]
+                                            ); ?> /
+                                            Max: <?php echo htmlspecialchars(
+                                                $producto["stock_maximo"]
+                                            ); ?>
                                         </td>
                                         <td>
-                                            <a href="../../Controller/productos/editarProductoController.php?id=<?php echo $producto["id_producto"]; ?>" class="btn-floating btn-small waves-effect waves-light blue" title="Editar">
+                                            <a href="../../Controller/productos/editarProductoController.php?id=<?php echo $producto[
+                                                "id_producto"
+                                            ]; ?>" class="btn-floating btn-small waves-effect waves-light blue" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="../../Controller/productos/VerProductoController.php?id=<?php echo $producto["id_producto"]; ?>" class="btn-floating btn-small waves-effect waves-light green" title="Ver detalles">
+                                            <a href="../../Controller/productos/VerProductoController.php?id=<?php echo $producto[
+                                                "id_producto"
+                                            ]; ?>" class="btn-floating btn-small waves-effect waves-light green" title="Ver detalles">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <button class="btn-floating btn-small waves-effect waves-light red" title="Eliminar"
-                                                    onclick="showDeleteModal('<?php echo $producto["id_producto"]; ?>',
-                                                                              '<?php echo htmlspecialchars($producto["nombre"]); ?>',
-                                                                              '<?php echo htmlspecialchars($producto["codigo"]); ?>')">
+                                                    onclick="showDeleteModal('<?php echo $producto[
+                                                        "id_producto"
+                                                    ]; ?>',
+                                                                              '<?php echo htmlspecialchars(
+                                                                                  $producto[
+                                                                                      "nombre"
+                                                                                  ]
+                                                                              ); ?>',
+                                                                              '<?php echo htmlspecialchars(
+                                                                                  $producto[
+                                                                                      "codigo"
+                                                                                  ]
+                                                                              ); ?>')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
@@ -179,7 +199,8 @@
                     <ul class="pagination center-align">
                         <?php if ($page > 1): ?>
                             <li class="waves-effect">
-                                <a href="?page=<?php echo $page - 1; ?>"><i class="fas fa-chevron-left"></i></a>
+                                <a href="?page=<?php echo $page -
+                                    1; ?>"><i class="fas fa-chevron-left"></i></a>
                             </li>
                         <?php else: ?>
                             <li class="disabled">
@@ -188,14 +209,17 @@
                         <?php endif; ?>
 
                         <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
-                            <li class="<?php echo $i === $page ? 'active' : 'waves-effect'; ?>">
+                            <li class="<?php echo $i === $page
+                                ? "active"
+                                : "waves-effect"; ?>">
                                 <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
                             </li>
                         <?php endfor; ?>
 
                         <?php if ($page < $totalPaginas): ?>
                             <li class="waves-effect">
-                                <a href="?page=<?php echo $page + 1; ?>"><i class="fas fa-chevron-right"></i></a>
+                                <a href="?page=<?php echo $page +
+                                    1; ?>"><i class="fas fa-chevron-right"></i></a>
                             </li>
                         <?php else: ?>
                             <li class="disabled">
@@ -207,30 +231,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h4><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h4>
-            <p>¿Está seguro de que desea eliminar el siguiente producto? Esta acción no se puede deshacer fácilmente.</p>
-            <div class="product-info">
-                <div class="product-name" id="productName">Nombre del Producto</div>
-                <div class="product-details">
-                    <div><strong>Código:</strong> <span id="productCode">XXXX</span></div>
-                    <div><strong>ID:</strong> <span id="productId">1</span></div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button id="confirmDelete" class="modal-close waves-effect waves-green btn red">
-                <i class="fas fa-trash"></i> Sí, Eliminar
-            </button>
-            <button id="cancelDelete" class="modal-close waves-effect waves-green btn grey">
-                <i class="fas fa-times"></i> Cancelar
-            </button>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

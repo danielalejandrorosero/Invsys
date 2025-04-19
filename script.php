@@ -18,7 +18,7 @@ $loginData = [
 // Archivo de cookies para mantener la sesión
 $cookieFile = "cookie.txt";
 
-// Paso 1: Iniciar sesión
+// Paso 1: Iniciar sesión   
 echo "Intentando iniciar sesión...\n";
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $urlLogin);
@@ -81,3 +81,5 @@ for ($i = 0; $i < $totalProductos; $i++) {
 curl_close($ch);
 echo "Script finalizado.\n";
 ?>
+
+
