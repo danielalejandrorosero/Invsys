@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Usuario | Stock Manager</title>
+    <title>Editar Usuario | InvSys</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/editarUsuario.css">
@@ -15,7 +15,7 @@
                 <div class="card-panel blue darken-3 white-text">
                     <div class="center-align">
                         <i class="fas fa-boxes fa-3x"></i>
-                        <h5>StockManager</h5>
+                        <h5>InvSys</h5>
                     </div>
                     <div class="user-profile center-align">
                         <div class="user-avatar">
@@ -118,7 +118,7 @@
                                 <button type="submit" name="actualizarUsuario" class="btn waves-effect waves-light blue">
                                     <i class="fas fa-save"></i> Guardar Cambios
                                 </button>
-                                <a href="index.php" class="btn waves-effect waves-light grey">
+                                <a href="../../Views/usuarios/dashboard.php" class="btn waves-effect waves-light grey">
                                     <i class="fas fa-times"></i> Cancelar
                                 </a>
                             </div>

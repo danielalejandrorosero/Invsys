@@ -28,7 +28,7 @@ class SubirImagenController {
         if ($tipo == 'usuario') {
             $id = $_SESSION['id_usuario'];
             $destinoBase = __DIR__ . '/../../../public/uploads/imagenes/usuarios/';
-            $redirectSuccess = '../../Controller/usuarios/listarUsuarios    .php';
+            $redirectSuccess = '../../Controller/usuarios/listarUsuarios.php';
             $view = 'subirImagenUsuarioView.php';
             $data = $this->usuarioModel->obtenerUsuarios();
         } elseif ($tipo == 'producto') {

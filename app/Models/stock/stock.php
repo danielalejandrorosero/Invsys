@@ -32,13 +32,19 @@ class Stock {
             }
         }
     }
-
     public function verInventario($id_almacen) {
         try {
-            $stmt = $this->conn->prepare("SELECT p.nombre AS producto, sa.cantidad_disponible AS cantidad 
-                                          FROM stock_almacen sa
-                                          JOIN productos p ON sa.id_producto = p.id_producto
-                                          WHERE sa.id_almacen = ?");
+            $stmt = $this->conn->prepare("
+                SELECT 
+                    p.id_producto,
+                    p.nombre AS producto,
+                    sa.cantidad_disponible AS cantidad,
+                    p.stock_minimo,
+                    p.stock_maximo
+                FROM stock_almacen sa
+                JOIN productos p ON sa.id_producto = p.id_producto
+                WHERE sa.id_almacen = ? AND p.estado = 'activo'
+            ");
             $stmt->bind_param("i", $id_almacen);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -79,10 +85,27 @@ class Stock {
             if ($cantidad < 0) {
                 throw new Exception("La cantidad debe ser mayor o igual a 0.");
             }
-
-            $sql = "UPDATE stock_almacen SET cantidad_disponible = ? WHERE id_producto = ? AND id_almacen = ?";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("iii", $cantidad, $id_producto, $id_almacen);
+    
+            // Verificar si el producto ya existe en el almacén
+            $checkStmt = $this->conn->prepare("SELECT COUNT(*) FROM stock_almacen WHERE id_producto = ? AND id_almacen = ?");
+            $checkStmt->bind_param("ii", $id_producto, $id_almacen);
+            $checkStmt->execute();
+            $result = $checkStmt->get_result();
+            $exists = $result->fetch_row()[0] > 0;
+            $checkStmt->close();
+            
+            if ($exists) {
+                // Si existe, actualizar
+                $sql = "UPDATE stock_almacen SET cantidad_disponible = ? WHERE id_producto = ? AND id_almacen = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("iii", $cantidad, $id_producto, $id_almacen);
+            } else {
+                // Si no existe, insertar
+                $sql = "INSERT INTO stock_almacen (id_producto, id_almacen, cantidad_disponible) VALUES (?, ?, ?)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("iii", $id_producto, $id_almacen, $cantidad);
+            }
+            
             $resultado = $stmt->execute();
             return $resultado;
         } catch (Exception $e) {

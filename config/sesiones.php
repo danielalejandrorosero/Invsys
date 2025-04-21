@@ -21,7 +21,7 @@ class Sesiones
             time() - $_SESSION["LAST_ACTIVITY"] > $this->session_lifetime
         ) {
             $this->cerrarSesion();
-            header("Location: ../public/index.php");
+            header("Location: " . $this->obtenerBaseUrl());
             exit();
         }
         $_SESSION["LAST_ACTIVITY"] = time();
@@ -50,6 +50,17 @@ class Sesiones
     {
         session_unset();
         session_destroy();
+    }
+
+    private function obtenerBaseUrl()
+    {
+        $protocolo =
+            !empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== "off"
+                ? "https"
+                : "http";
+        $host = $_SERVER["HTTP_HOST"];
+        $basePath = "/InventoryManagementSystem/public/";
+        return $protocolo . "://" . $host . $basePath;
     }
 }
 
