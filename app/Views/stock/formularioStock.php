@@ -179,58 +179,34 @@
                                 </h2>
 
                                 <div class="warehouse-selector">
-                                    <?php foreach (
-                                        $almacenes
-                                        as $index => $almacen
-                                    ): ?>
-                                        <label class="warehouse-card <?php echo $index ===
-                                        0
-                                            ? "selected"
-                                            : ""; ?>">
+                                    <?php foreach ($almacenes as $index => $almacen): ?>
+                                        <label class="warehouse-card <?php echo $index === 0 ? "selected" : ""; ?>">
                                             <input type="radio"
                                                    name="id_almacen"
-                                                   value="<?php echo htmlspecialchars(
-                                                       $almacen["id_almacen"]
-                                                   ); ?>"
+                                                   value="<?php echo htmlspecialchars($almacen["id_almacen"]); ?>"
                                                    class="warehouse-radio"
-                                                   <?php echo $index === 0
-                                                       ? "checked"
-                                                       : ""; ?>>
+                                                   <?php echo $index === 0 ? "checked" : ""; ?>>
 
                                             <div class="warehouse-icon">
                                                 <i class="fas fa-warehouse"></i>
                                             </div>
                                             <div class="warehouse-name">
-                                                <?php echo htmlspecialchars(
-                                                    $almacen["nombre"]
-                                                ); ?>
+                                                <?php echo htmlspecialchars($almacen["nombre"]); ?>
                                             </div>
                                             <div class="warehouse-location">
-                                                <?php echo htmlspecialchars(
-                                                    $almacen["ubicacion"] ??
-                                                        "Sin ubicación especificada"
-                                                ); ?>
+                                                <?php echo htmlspecialchars($almacen["ubicacion"] ?? "Sin ubicación especificada"); ?>
                                             </div>
 
-                                            <?php if (
-                                                isset($almacen["productos"]) &&
-                                                isset($almacen["alerta_stock"])
-                                            ): ?>
-                                                <div class="warehouse-stats">
-                                                    <div class="warehouse-stat">
-                                                        <span>Productos:</span>
-                                                        <span class="stat-value"><?php echo $almacen[
-                                                            "productos"
-                                                        ]; ?></span>
-                                                    </div>
-                                                    <div class="warehouse-stat">
-                                                        <span>Alertas:</span>
-                                                        <span class="stat-value"><?php echo $almacen[
-                                                            "alerta_stock"
-                                                        ]; ?></span>
-                                                    </div>
+                                            <div class="warehouse-stats">
+                                                <div class="warehouse-stat">
+                                                    <span>Productos:</span>
+                                                    <span class="stat-value"><?php echo isset($almacen["productos"]) ? $almacen["productos"] : 0; ?></span>
                                                 </div>
-                                            <?php endif; ?>
+                                                <div class="warehouse-stat">
+                                                    <span>Alertas:</span>
+                                                    <span class="stat-value"><?php echo isset($almacen["alerta_stock"]) ? $almacen["alerta_stock"] : 0; ?></span>
+                                                </div>
+                                            </div>
                                         </label>
                                     <?php endforeach; ?>
                                 </div>
@@ -249,7 +225,7 @@
                                 <div class="summary-icon">
                                     <i class="fas fa-box"></i>
                                 </div>
-                                <div class="summary-value">128</div>
+                                <div class="summary-value"><?php echo htmlspecialchars($productos); ?></div>
                                 <div class="summary-label">Total de Productos</div>
                             </div>
 
@@ -257,7 +233,7 @@
                                 <div class="summary-icon">
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </div>
-                                <div class="summary-value">12</div>
+                                <div class="summary-value"><?php echo count($productosBajoStock); ?></div>
                                 <div class="summary-label">Productos con Stock Bajo</div>
                             </div>
 
@@ -265,9 +241,7 @@
                                 <div class="summary-icon">
                                     <i class="fas fa-building"></i>
                                 </div>
-                                <div class="summary-value"><?php echo count(
-                                    $almacenes
-                                ); ?></div>
+                                <div class="summary-value"><?php echo count($almacenes); ?></div>
                                 <div class="summary-label">Almacenes Disponibles</div>
                             </div>
 
@@ -275,7 +249,7 @@
                                 <div class="summary-icon">
                                     <i class="fas fa-sync-alt"></i>
                                 </div>
-                                <div class="summary-value">45</div>
+                                <div class="summary-value"><?php echo count($inventarioGlobal); ?></div>
                                 <div class="summary-label">Movimientos Recientes</div>
                             </div>
                         </div>

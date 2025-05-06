@@ -13,6 +13,18 @@
         .form-title {
             margin-bottom: 20px;
         }
+        #almacen-origen-info {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #e8f5e9;
+            display: none;
+        }
+        #error-mensaje {
+            color: #d32f2f;
+            margin: 10px 0;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -41,12 +53,13 @@
         <?php endif; ?>
 
         <!-- Formulario de transferencia -->
-        <form action="" method="POST">
+        <form action="" method="POST" id="transferencia-form">
             <input type="hidden" name="transferirStock" value="1">
+            <input type="hidden" id="id_almacen_origen" name="id_almacen_origen" value="">
 
             <!-- Seleccionar Producto -->
             <div class="input-field">
-                <select name="id_producto" required>
+                <select name="id_producto" id="id_producto" required>
                     <option value="" disabled selected>Selecciona un producto</option>
                     <?php foreach ($productos as $producto): ?>
                         <option value="<?php echo $producto['id_producto']; ?>">
@@ -57,22 +70,20 @@
                 <label>Producto</label>
             </div>
 
-            <!-- Seleccionar Almacén de Origen -->
-            <div class="input-field">
-                <select name="id_almacen_origen" required>
-                    <option value="" disabled selected>Selecciona el almacén de origen</option>
-                    <?php foreach ($almacenes as $almacen): ?>
-                        <option value="<?php echo $almacen['id_almacen']; ?>">
-                            <?php echo htmlspecialchars($almacen['nombre']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <label>Almacén de Origen</label>
+            <!-- Información del almacén de origen (se muestra después de seleccionar producto) -->
+            <div id="almacen-origen-info" class="card-panel">
+                <h6>Almacén de origen:</h6>
+                <p><strong id="nombre-almacen-origen"></strong></p>
+            </div>
+            
+            <!-- Mensaje de error si no hay stock -->
+            <div id="error-mensaje" class="card-panel red lighten-4 red-text text-darken-4">
+                <i class="fas fa-exclamation-circle"></i> No hay stock disponible de este producto.
             </div>
 
             <!-- Seleccionar Almacén de Destino -->
             <div class="input-field">
-                <select name="id_almacen_destino" required>
+                <select name="id_almacen_destino" id="id_almacen_destino" required>
                     <option value="" disabled selected>Selecciona el almacén de destino</option>
                     <?php foreach ($almacenes as $almacen): ?>
                         <option value="<?php echo $almacen['id_almacen']; ?>">
@@ -103,7 +114,71 @@
             // Inicializar select
             var elems = document.querySelectorAll('select');
             M.FormSelect.init(elems);
+            
+            // Manejar cambio en el select de productos
+            document.getElementById('id_producto').addEventListener('change', function() {
+                const productoId = this.value;
+                if (productoId) {
+                    obtenerAlmacenOrigen(productoId);
+                }
+            });
+            
+            // Validar que no se elija el mismo almacén de origen y destino
+            document.getElementById('transferencia-form').addEventListener('submit', function(e) {
+                const idAlmacenOrigen = document.getElementById('id_almacen_origen').value;
+                const idAlmacenDestino = document.getElementById('id_almacen_destino').value;
+                
+                if (idAlmacenOrigen === idAlmacenDestino) {
+                    e.preventDefault();
+                    M.toast({html: 'El almacén de origen y destino no pueden ser el mismo', classes: 'red'});
+                }
+            });
         });
+        
+        // Función para obtener el almacén de origen mediante AJAX
+        function obtenerAlmacenOrigen(productoId) {
+            // Crear objeto FormData para enviar datos
+            const formData = new FormData();
+            formData.append('obtenerAlmacenOrigen', '1');
+            formData.append('id_producto', productoId);
+            
+            // Realizar petición AJAX
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    // Mostrar mensaje de error
+                    document.getElementById('error-mensaje').style.display = 'block';
+                    document.getElementById('almacen-origen-info').style.display = 'none';
+                    document.getElementById('id_almacen_origen').value = '';
+                } else {
+                    // Mostrar información del almacén de origen
+                    document.getElementById('error-mensaje').style.display = 'none';
+                    document.getElementById('almacen-origen-info').style.display = 'block';
+                    document.getElementById('nombre-almacen-origen').textContent = data.nombre;
+                    document.getElementById('id_almacen_origen').value = data.id_almacen;
+                    
+                    // Actualizar opciones del almacén de destino para evitar seleccionar el mismo
+                    const selectDestino = document.getElementById('id_almacen_destino');
+                    for (let i = 0; i < selectDestino.options.length; i++) {
+                        if (selectDestino.options[i].value == data.id_almacen) {
+                            selectDestino.options[i].disabled = true;
+                        } else {
+                            selectDestino.options[i].disabled = false;
+                        }
+                    }
+                    // Reinicializar el select de Materialize
+                    M.FormSelect.init(selectDestino);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                M.toast({html: 'Error al obtener información del almacén', classes: 'red'});
+            });
+        }
     </script>
 </body>
 </html>

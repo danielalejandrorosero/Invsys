@@ -1,6 +1,4 @@
 <?php
-
-
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
 require_once __DIR__ . '/../../Models/productos/productos.php';
@@ -40,18 +38,21 @@ class StockController {
 
         // Validar datos de entrada
         $id_producto = isset($_POST['id_producto']) ? (int) $_POST['id_producto'] : 0;
-        $id_almacen_origen = isset($_POST['id_almacen_origen']) ? (int) $_POST['id_almacen_origen'] : 0;
         $id_almacen_destino = isset($_POST['id_almacen_destino']) ? (int) $_POST['id_almacen_destino'] : 0;
         $cantidad = isset($_POST['cantidad']) ? (int) $_POST['cantidad'] : 0;
         $id_usuario = $_SESSION['id_usuario'];
+
+        // Obtener automáticamente el almacén de origen
+        $almacen_origen = $this->stockModel->obtenerAlmacenOrigen($id_producto);
+        $id_almacen_origen = $almacen_origen ? $almacen_origen['id_almacen'] : 0;
 
         // Validaciones lógicas
         if ($id_producto <= 0 || !$this->productoModel->productoExiste($id_producto)) {
             $error[] = "Error: El producto seleccionado no es válido.";
         }
 
-        if ($id_almacen_origen <= 0 || !$this->stockModel->almacenExiste($id_almacen_origen)) {
-            $error[] = "Error: El almacén de origen no es válido.";
+        if ($id_almacen_origen <= 0) {
+            $error[] = "Error: No hay stock disponible del producto en ningún almacén.";
         }
 
         if ($id_almacen_destino <= 0 || !$this->stockModel->almacenExiste($id_almacen_destino)) {
@@ -87,16 +88,21 @@ class StockController {
         $id_producto = isset($_POST['id_producto']) ? (int) $_POST['id_producto'] : 0;
 
         if ($id_producto <= 0 || !$this->productoModel->productoExiste($id_producto)) {
-            $_SESSION['errores'][] = "Error: El producto seleccionado no es válido.";
-            header("Location: " . $_SERVER['PHP_SELF']);
+            echo json_encode(['error' => 'Producto no válido']);
             exit();
         }
 
         $almacen_origen = $this->stockModel->obtenerAlmacenOrigen($id_producto);
-        $productos = $this->productoModel->obtenerProductos();
-        $almacenes = $this->stockModel->obtenerAlmacenes();
-
-        require_once __DIR__ . '/../../Views/stock/transferirStockVista.php';
+        
+        if ($almacen_origen) {
+            echo json_encode([
+                'id_almacen' => $almacen_origen['id_almacen'],
+                'nombre' => $almacen_origen['nombre']
+            ]);
+        } else {
+            echo json_encode(['error' => 'No hay stock disponible para este producto']);
+        }
+        exit();
     }
 
     private function mostrarVistaInicial() {

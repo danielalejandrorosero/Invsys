@@ -9,7 +9,7 @@ require_once __DIR__ . "/../../Models/productos/productos.php";
 $stock = new Stock($conn);
 $productos = new Productos($conn);
 
-$productosBajoStock = $stock->obtenerProductosBajoStockDetallado();
+$productosBajoStock = $stock->obtenerProductosBajoStock();
 
 $nombreUsuario = $_SESSION["nombreUsuario"] ?? "Nombre del Usuario";
 $nivel_usuario = $_SESSION["nivel_usuario"] ?? "Nivel del Usuario";

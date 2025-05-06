@@ -23,12 +23,15 @@ class productos
             error_log("Error al validar producto: " . $e->getMessage());
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
     public function obtenerProductos()
     {
+        $result = null;
         try {
             $sql =
                 "SELECT id_producto, nombre FROM productos WHERE estado = 'activo'";
@@ -37,6 +40,10 @@ class productos
         } catch (Exception $e) {
             error_log("Error al obtener productos: " . $e->getMessage());
             return [];
+        } finally {
+            if (isset($result) && $result !== false) {
+                $result->free();
+            }
         }
     }
 
@@ -78,6 +85,9 @@ class productos
         }
     }
 
+    // NOTA: Este método es duplicado de validarProducto(), considerar unificar en el futuro
+    // COMENTADO: No usar este método, utilizar validarProducto() en su lugar
+    /*
     public function nombreProductoExiste($id_producto)
     {
         try {
@@ -94,9 +104,12 @@ class productos
             );
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
+    */
 
     public function agregarProducto(
         $nombre,
@@ -136,7 +149,9 @@ class productos
             error_log("Error al agregar producto: " . $e->getMessage());
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
@@ -159,7 +174,9 @@ class productos
             );
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
@@ -181,7 +198,9 @@ class productos
             );
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
@@ -203,7 +222,9 @@ class productos
             );
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
@@ -224,7 +245,9 @@ class productos
             );
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
@@ -245,13 +268,16 @@ class productos
             );
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
     // Nuevos métodos para listas dinámicas
     public function obtenerCategorias()
     {
+        $result = null;
         try {
             $sql = "SELECT id_categoria, nombre FROM categorias";
             $result = $this->conn->query($sql);
@@ -259,11 +285,16 @@ class productos
         } catch (Exception $e) {
             error_log("Error al obtener categorías: " . $e->getMessage());
             return [];
+        } finally {
+            if (isset($result) && $result !== false) {
+                $result->free();
+            }
         }
     }
 
     public function obtenerProveedores()
     {
+        $result = null;
         try {
             $sql = "SELECT id_proveedor, nombre FROM proveedores";
             $result = $this->conn->query($sql);
@@ -271,11 +302,16 @@ class productos
         } catch (Exception $e) {
             error_log("Error al obtener proveedores: " . $e->getMessage());
             return [];
+        } finally {
+            if (isset($result) && $result !== false) {
+                $result->free();
+            }
         }
     }
 
     public function obtenerUnidadesMedida()
     {
+        $result = null;
         try {
             $sql = "SELECT id_unidad, nombre FROM unidades_medida";
             $result = $this->conn->query($sql);
@@ -285,6 +321,10 @@ class productos
                 "Error al obtener unidades de medida: " . $e->getMessage()
             );
             return [];
+        } finally {
+            if (isset($result) && $result !== false) {
+                $result->free();
+            }
         }
     }
 
@@ -365,8 +405,7 @@ class productos
             error_log("Error al buscar productos: " . $e->getMessage());
             return [];
         } finally {
-            // Verificar que $stmt exista antes de cerrarlo
-            if (isset($stmt) && $stmt !== null) {
+            if (isset($stmt) && $stmt !== false) {
                 $stmt->close();
             }
         }
@@ -410,7 +449,9 @@ class productos
             error_log("Error al verificar código: " . $e->getMessage());
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
@@ -429,7 +470,9 @@ class productos
             error_log("Error al verificar SKU: " . $e->getMessage());
             return false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
@@ -447,7 +490,11 @@ class productos
             LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
             LEFT JOIN proveedores pr ON p.id_proveedor = pr.id_proveedor
             LEFT JOIN unidades_medida um ON p.id_unidad_medida = um.id_unidad
-            LEFT JOIN imagenes_productos ip ON ip.id_producto = p.id_producto
+            LEFT JOIN (
+                SELECT id_producto, MIN(nombre_imagen) AS nombre_imagen
+                FROM imagenes_productos
+                GROUP BY id_producto
+            ) ip ON p.id_producto = ip.id_producto
             WHERE p.estado = 'activo'
             ORDER BY p.id_producto ASC
             LIMIT ? OFFSET ?;";
@@ -459,16 +506,43 @@ class productos
             return $productos;
         } catch (Exception $e) {
             error_log(
-                "Error al obtener productos con paginación: " . $e->getMessage()
+                "Error al obtener productos: " . $e->getMessage()
             );
             return [];
         } finally {
-            $resultado->close();
+            if (isset($resultado) && $resultado !== false) {
+                $resultado->close();
+            }
         }
     }
 
+    // NOTA: Este método es similar a validarProducto() y nombreProductoExiste(), considerar unificar
+    // COMENTADO: No usar este método, utilizar validarProducto() en su lugar
+    /*
+    public function productoExiste($id_producto) {
+        try {
+            $stmt = $this->conn->prepare("SELECT id_producto FROM productos WHERE id_producto =?");
+            $stmt->bind_param("i", $id_producto);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->num_rows > 0;
+        } catch (Exception $e) {
+            error_log("Error al verificar existencia de producto: " . $e->getMessage());
+            return false;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+    */
+
+    // NOTA: Este método es duplicado de contarTotalProductos(), considerar unificar
+    // COMENTADO: No usar este método, utilizar contarTotalProductos() en su lugar
+    /*
     public function contarProductos()
     {
+        $resultado = null;
         try {
             $sql =
                 "SELECT COUNT(*) AS total FROM productos WHERE estado = 'activo'";
@@ -478,9 +552,15 @@ class productos
         } catch (Exception $e) {
             error_log("Error al contar productos: " . $e->getMessage());
             return 0;
+        } finally {
+            if (isset($resultado) && $resultado !== false) {
+                $resultado->free();
+            }
         }
     }
+    */
 
+    // NOTA: Este método es duplicado de contarProductos(), considerar unificar
     public function contarTotalProductos()
     {
         try {
@@ -495,7 +575,9 @@ class productos
             error_log("Error al contar productos: " . $e->getMessage());
             return 0;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
     }
 
@@ -525,6 +607,7 @@ class productos
 
     public function obtenerProductosEliminados()
     {
+        $resultado = null;
         try {
             $sql = "SELECT p.*,
                         c.nombre as categoria_nombre,
@@ -542,13 +625,16 @@ class productos
             $result = $resultado->get_result();
             $productos = $result->fetch_all(MYSQLI_ASSOC);
 
-            $resultado->close();
             return $productos;
         } catch (Exception $e) {
             error_log(
                 "Error al obtener productos eliminados: " . $e->getMessage()
             );
             return [];
+        } finally {
+            if (isset($resultado) && $resultado !== false) {
+                $resultado->close();
+            }
         }
     }
 
@@ -592,7 +678,9 @@ class productos
             error_log("Error al actualizar producto: " . $e->getMessage());
             $resultado = false;
         } finally {
-            $stmt->close();
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
         }
         return $resultado;
     }

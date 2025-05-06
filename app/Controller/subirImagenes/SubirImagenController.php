@@ -28,7 +28,7 @@ class SubirImagenController {
         if ($tipo == 'usuario') {
             $id = $_SESSION['id_usuario'];
             $destinoBase = __DIR__ . '/../../../public/uploads/imagenes/usuarios/';
-            $redirectSuccess = '../../Controller/usuarios/listarUsuarios.php';
+            $redirectSuccess = '../../Views/usuarios/dashboard.php?img_updated=1';
             $view = 'subirImagenUsuarioView.php';
             $data = $this->usuarioModel->obtenerUsuarios();
         } elseif ($tipo == 'producto') {
@@ -45,7 +45,7 @@ class SubirImagenController {
             if ($tipo === 'producto') {
                 if (!$id || $id <= 0) {
                     $error[] = "Producto inválido.";
-                } elseif (!$this->productoModel->nombreProductoExiste($id)) {
+                } elseif (!$this->productoModel->validarProducto($id)) {
                     $error[] = "El producto no existe.";
                 }
             } elseif ($tipo === 'usuario' && !$id) {
@@ -89,6 +89,17 @@ class SubirImagenController {
                     if (move_uploaded_file($archivoTmp, $destino)) {
                         if ($this->imagenModel->subirImagen($tipo, $id, $nombreArchivoSeguro, $destino)) {
                             $_SESSION['mensaje'] = "Imagen subida correctamente.";
+                            
+                            // Actualizar la variable de sesión para la imagen del usuario
+                            if ($tipo === 'usuario') {
+                                // Guardar la ruta relativa para que sea accesible desde cualquier parte
+                                $rutaRelativa = 'public/uploads/imagenes/usuarios/' . $nombreArchivoSeguro;
+                                $_SESSION['rutaImagen'] = $rutaRelativa;
+                                
+                                // Opcional: Cambiar la redirección para usuarios al dashboard
+                                $redirectSuccess = '../../Views/usuarios/dashboard.php';
+                            }
+                            
                             header("Location: $redirectSuccess");
                             exit();
                         } else {
@@ -116,7 +127,8 @@ class SubirImagenController {
 }
 
     
-$tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'producto'; 
+$tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'producto';  // 
+
 $controller = new SubirImagenController($conn);
 $controller->subirImagen($tipo);
 ?>

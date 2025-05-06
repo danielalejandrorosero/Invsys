@@ -1,4 +1,4 @@
-    <?php class Usuario
+<?php class Usuario
     {
         private $conn;
 
@@ -240,29 +240,34 @@
         public function verificarCredenciales($nombreUsuario, $password)
         {
             try {
+                // Primero verificamos las credenciales del usuario
                 $stmt = $this->conn->prepare(
-                    "SELECT id_usuario, nombreUsuario, password, nivel_usuario FROM usuarios WHERE nombreUsuario = ?"
+                    "SELECT u.id_usuario, u.nombreUsuario, u.password, u.nivel_usuario, i.ruta_imagen 
+                    FROM usuarios u 
+                    LEFT JOIN imagenes_usuarios i ON u.id_usuario = i.id_usuario 
+                    WHERE u.nombreUsuario = ?"
                 );
                 $stmt->bind_param("s", $nombreUsuario);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 $usuario = $resultado->fetch_assoc();
-
+        
                 if (!$usuario) {
                     return false; // Usuario no encontrado
                 }
-
+        
                 if (!password_verify($password, $usuario["password"])) {
                     return false; // Contraseña incorrecta
                 }
-
-                return $usuario; // Usuario autenticado
+        
+                return $usuario; // Usuario autenticado con su imagen
             } catch (Exception $e) {
                 return false; // Error en la base de datos
             } finally {
                 $stmt->close();
             }
         }
+
 
         // solicitar recuperación de contra
         public function generarToken($correo)

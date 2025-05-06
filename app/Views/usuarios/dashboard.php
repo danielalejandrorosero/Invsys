@@ -7,17 +7,23 @@ require_once __DIR__ . "/../../Models/stock/stock.php";
 require_once __DIR__ . "/../../Models/productos/productos.php";
 require_once __DIR__ . "/../../Models/usuarios/Usuarios.php";
 
-// OBTENERR LA IMAGEN DEL USUARIO
-$usuario = new Usuario($conn);
+// Verificar si el usuario está autenticado (una sola vez)
+if (!isset($_SESSION["id_usuario"])) {
+    header("Location: ../../../public/index.php");
+    exit();
+}
 
+// Inicializar modelos una sola vez
+$usuario = new Usuario($conn);
 $stock = new Stock($conn);
 $productos = new Productos($conn);
 
+// Obtener datos para el dashboard en una sola sección
 $productosBajoStock = $stock->obtenerProductosBajoStock();
 $totalProductos = $productos->contarTotalProductos();
 $transferenciaPendientes = $stock->contarTransferenciasPendientes();
 
-// Obtener los últimos movimientos para mostrar en actividad reciente
+// Obtener los últimos movimientos para mostrar en actividad reciente (optimizado)
 $ultimosMovimientos = $stock->obtenerMovimientos(null, null, null);
 $movimientosRecientes = [];
 $contador = 0;
@@ -30,10 +36,9 @@ if ($ultimosMovimientos && $ultimosMovimientos->num_rows > 0) {
     }
 }
 
+// Datos del usuario (consolidados)
 $nombreUsuario = $_SESSION["nombreUsuario"] ?? "Nombre del Usuario";
 $nivel_usuario = $_SESSION["nivel_usuario"] ?? "Nivel del Usuario";
-
-// Ruta de la imagen del usuario - Simplificada como en listarProductosView.php
 $nombreArchivo = !empty($_SESSION["rutaImagen"]) 
     ? basename($_SESSION["rutaImagen"]) 
     : "default-avatar.png";
@@ -48,12 +53,106 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/index.css">
+    <link rel="stylesheet" href="../../../public/css/dark-mode.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Favicon para mejorar la identidad visual -->
     <link rel="shortcut icon" href="../../../public/img/favicon.ico" type="image/x-icon">
-    <!-- Meta tags para SEO y accesibilidad -->
     <meta name="description" content="Panel de control del sistema de gestión de inventario InvSys">
     <meta name="theme-color" content="#2c3e50">
+    
+    <style>
+        /* Estilos consolidados para el dashboard */
+        .activity-content .collection {
+            border: none;
+            margin-top: 0;
+        }
+        
+        .activity-content .collection-item {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .activity-content .collection-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .movement-icon {
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        .movement-title {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .movement-details {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .movement-date {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        
+        .btn-floating.btn-small {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+        }
+        
+        .btn-floating.btn-small i {
+            line-height: 30px;
+            font-size: 14px;
+        }
+        
+        /* Estilos para las tarjetas de estadísticas */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-card .label {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        /* Animaciones optimizadas */
+        .pulse-warning {
+            animation: pulse-warning 2s infinite;
+        }
+        
+        .pulse-info {
+            animation: pulse-info 2s infinite;
+        }
+        
+        @keyframes pulse-warning {
+            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+        
+        @keyframes pulse-info {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(33, 150, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        }
+    </style>
 </head>
 <body>
     <!-- Botón para móviles -->
@@ -67,8 +166,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             <h2>InvSys</h2>
             <div class="user-info">
                 <div class="avatar">
-                        <!-- Depues de colocar  la funcion para actualziar la imagen y no perder la imagen tras cerrar sesion-->
-                            <img src="../../../public/uploads/imagenes/usuarios/<?php echo htmlspecialchars($nombreArchivo); ?>?v=<?php echo time(); ?>" alt="Avatar" class="circle responsive-img">
+                    <img src="../../../public/uploads/imagenes/usuarios/<?php echo htmlspecialchars($nombreArchivo); ?>?v=<?php echo time(); ?>" alt="Avatar" class="circle responsive-img">
                 </div>
                 <div class="user-details">
                     <h3><?php echo htmlspecialchars($nombreUsuario); ?></h3>
@@ -125,7 +223,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             <p class="welcome-message">Bienvenido, <strong><?php echo htmlspecialchars($nombreUsuario); ?></strong>. Última actualización: <?php echo date('d/m/Y H:i'); ?></p>
         </div>
 
-        <!-- Accesos Rápidos -->
+        <!-- Accesos Rápidos (optimizados) -->
         <div class="quick-actions">
             <a href="../../Controller/productos/agregarProductoController.php" class="quick-action-btn"><i class="fas fa-plus-circle"></i> Nuevo Producto</a>
             <a href="../../Controller/stock/ajustarStockController.php" class="quick-action-btn"><i class="fas fa-edit"></i> Ajustar Stock</a>
@@ -133,7 +231,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             <a href="../../Controller/stock/transferirStock.php" class="quick-action-btn"><i class="fas fa-truck"></i> Transferir</a>
         </div>
 
-        <!-- Tarjetas del Dashboard -->
+        <!-- Tarjetas del Dashboard (optimizadas) -->
         <div class="card-container">
             <div class="card stat-card hoverable pulse">
                 <div class="card-title"><i class="fas fa-boxes"></i> Inventario</div>
@@ -146,7 +244,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                 <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Alertas</div>
                 <div class="number <?php echo count($productosBajoStock) > 0 ? 'text-warning' : ''; ?>"><?php echo count($productosBajoStock); ?></div>
                 <div class="label">Productos con stock bajo</div>
-                <a href="alertStock.php" class="btn red waves-effect waves-light">Ver Detalles <i class="fas fa-eye"></i></a>
+                <a href="../../Controller/stock/verInventarioController.php?filtro=bajo_stock" class="btn red waves-effect waves-light">Ver Detalles <i class="fas fa-eye"></i></a>
             </div>
 
             <div class="card stat-card hoverable <?php echo $transferenciaPendientes > 0 ? 'pulse-info' : ''; ?>">
@@ -157,7 +255,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             </div>
         </div>
 
-        <!-- Actividad Reciente -->
+        <!-- Actividad Reciente (optimizada) -->
         <div class="card hoverable">
             <div class="card-title"><i class="fas fa-clock"></i> Actividad Reciente</div>
             <div class="activity-content">
@@ -171,57 +269,85 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                     </div>
                 <?php else: ?>
                     <ul class="collection">
-                        <?php foreach ($movimientosRecientes as $movimiento): ?>
-                            <li class="collection-item avatar">
-                                <?php 
-                                $iconClass = '';
-                                $tipoTexto = '';
-                                switch ($movimiento['tipo_movimiento']) {
-                                    case 'entrada':
-                                        $iconClass = 'fas fa-arrow-circle-down green-text';
-                                        $tipoTexto = 'Entrada';
-                                        break;
-                                    case 'salida':
-                                        $iconClass = 'fas fa-arrow-circle-up red-text';
-                                        $tipoTexto = 'Salida';
-                                        break;
-                                    case 'transferencia':
-                                        $iconClass = 'fas fa-exchange-alt blue-text';
-                                        $tipoTexto = 'Transferencia';
-                                        break;
-                                    case 'ajuste':
-                                        $iconClass = 'fas fa-sync orange-text';
-                                        $tipoTexto = 'Ajuste';
-                                        break;
-                                    default:
-                                        $iconClass = 'fas fa-circle grey-text';
-                                        $tipoTexto = ucfirst($movimiento['tipo_movimiento']);
-                                }
-                                ?>
-                                <i class="<?php echo $iconClass; ?> circle"></i>
-                                <span class="title"><strong><?php echo htmlspecialchars($tipoTexto); ?></strong> - <?php echo htmlspecialchars($movimiento['producto']); ?></span>
-                                <p>
-                                    Cantidad: <strong><?php echo htmlspecialchars($movimiento['cantidad']); ?></strong><br>
-                                    <?php if ($movimiento['tipo_movimiento'] == 'transferencia'): ?>
-                                        De: <?php echo htmlspecialchars($movimiento['almacen_origen'] ?? 'N/A'); ?> → 
-                                        A: <?php echo htmlspecialchars($movimiento['almacen_destino'] ?? 'N/A'); ?><br>
-                                    <?php elseif (!empty($movimiento['almacen_origen'])): ?>
-                                        Almacén: <?php echo htmlspecialchars($movimiento['almacen_origen']); ?><br>
-                                    <?php endif; ?>
-                                    <small class="grey-text"><?php echo date('d/m/Y H:i', strtotime($movimiento['fecha_movimiento'])); ?> - Por: <?php echo htmlspecialchars($movimiento['usuario']); ?></small>
-                                </p>
-                                <a href="../../Controller/stock/movimientoStockController.php" class="secondary-content"><i class="fas fa-eye"></i></a>
+                        <?php foreach ($movimientosRecientes as $movimiento): 
+                            // Definir iconos y colores una sola vez
+                            $iconClass = '';
+                            $iconColor = '';
+                            $tipoTexto = '';
+                            
+                            switch ($movimiento['tipo_movimiento']) {
+                                case 'entrada':
+                                    $iconClass = 'fas fa-arrow-circle-down';
+                                    $iconColor = 'green-text';
+                                    $tipoTexto = 'Entrada';
+                                    break;
+                                case 'salida':
+                                    $iconClass = 'fas fa-arrow-circle-up';
+                                    $iconColor = 'red-text';
+                                    $tipoTexto = 'Salida';
+                                    break;
+                                case 'transferencia':
+                                    $iconClass = 'fas fa-exchange-alt';
+                                    $iconColor = 'blue-text';
+                                    $tipoTexto = 'Transferencia';
+                                    break;
+                                case 'ajuste':
+                                    $iconClass = 'fas fa-sync';
+                                    $iconColor = 'orange-text';
+                                    $tipoTexto = 'Ajuste';
+                                    break;
+                                default:
+                                    $iconClass = 'fas fa-circle';
+                                    $iconColor = 'grey-text';
+                                    $tipoTexto = ucfirst($movimiento['tipo_movimiento']);
+                            }
+                        ?>
+                            <li class="collection-item">
+                                <div class="row" style="margin-bottom: 0;">
+                                    <div class="col s1 m1">
+                                        <i class="<?php echo $iconClass . ' ' . $iconColor; ?> movement-icon"></i>
+                                    </div>
+                                    <div class="col s9 m10">
+                                        <div class="movement-title">
+                                            <strong><?php echo htmlspecialchars($tipoTexto); ?></strong> - 
+                                            <?php echo htmlspecialchars($movimiento['producto'] ?? 'Producto no especificado'); ?>
+                                        </div>
+                                        <div class="movement-details">
+                                            Cantidad: <strong><?php echo htmlspecialchars($movimiento['cantidad'] ?? '0'); ?></strong>
+                                            <?php if ($movimiento['tipo_movimiento'] == 'transferencia'): ?>
+                                                <br>De: <?php echo htmlspecialchars($movimiento['almacen_origen'] ?? 'N/A'); ?> → 
+                                                A: <?php echo htmlspecialchars($movimiento['almacen_destino'] ?? 'N/A'); ?>
+                                            <?php elseif (!empty($movimiento['almacen_origen'])): ?>
+                                                <br>Almacén: <?php echo htmlspecialchars($movimiento['almacen_origen']); ?>
+                                            <?php endif; ?>
+                                            <div class="movement-date grey-text">
+                                                <small>
+                                                    <?php echo date('d/m/Y H:i', strtotime($movimiento['fecha_movimiento'])); ?> - 
+                                                    Por: <?php echo htmlspecialchars($movimiento['usuario'] ?? 'Usuario desconocido'); ?>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col s2 m1 right-align">
+                                        <a href="../../Controller/stock/movimientoStockController.php?id=<?php echo $movimiento['id_movimiento'] ?? ''; ?>" 
+                                           class="btn-floating btn-small waves-effect waves-light blue">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </li>
                         <?php endforeach; ?>
                     </ul>
-                    <div class="center-align">
-                        <a href="../../Controller/stock/movimientoStockController.php" class="btn-flat waves-effect">Ver todos los movimientos <i class="fas fa-arrow-right"></i></a>
+                    <div class="center-align" style="margin-top: 15px;">
+                        <a href="../../Controller/stock/movimientoStockController.php" class="btn waves-effect waves-light">
+                            <i class="fas fa-list-ul left"></i> Ver todos los movimientos
+                        </a>
                     </div>
                 <?php endif; ?>
             </div>
         </div>
         
-        <!-- Gráfico de Resumen -->
+        <!-- Gráfico de Resumen (optimizado) -->
         <div class="card hoverable">
             <div class="card-title"><i class="fas fa-chart-pie"></i> Resumen de Inventario</div>
             <div class="card-content">
@@ -230,19 +356,28 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts (optimizados) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="../../../public/js/dark-mode.js"></script>
     <script>
+        // Función para alternar la barra lateral
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('show');
         }
 
+        // Función para verificar el ancho de la pantalla
+        function checkScreenSize() {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.sidebar').classList.remove('show');
+            } else {
+                document.querySelector('.sidebar').classList.add('show');
+            }
+        }
+
+        // Inicialización cuando el DOM está listo
         document.addEventListener('DOMContentLoaded', function () {
-            // Inicializar componentes de Materialize
-            M.AutoInit();
-            
-            // Inicializar componentes de Materialize
+            // Inicializar componentes de Materialize (una sola vez)
             M.AutoInit();
             
             // Mostrar notificaciones de stock bajo
@@ -255,7 +390,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                             displayLength: 8000,
                             classes: 'red darken-2 rounded'
                         });
-                    }, index * 300); // Mostrar notificaciones con un pequeño retraso entre ellas
+                    }, index * 300 + 1000);
                 });
             <?php endif; ?>
             
@@ -286,11 +421,27 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                     labels: ['Productos con stock normal', 'Productos con stock bajo', 'Transferencias pendientes'],
                     chart: {
                         type: 'donut',
-                        height: 250
+                        height: 250,
+                        animations: {
+                            enabled: true,
+                            easing: 'easeinout',
+                            speed: 800,
+                            animateGradually: {
+                                enabled: true,
+                                delay: 150
+                            },
+                            dynamicAnimation: {
+                                enabled: true,
+                                speed: 350
+                            }
+                        }
                     },
                     colors: ['#4caf50', '#ff9800', '#2196f3'],
                     legend: {
-                        position: 'bottom'
+                        position: 'bottom',
+                        formatter: function(seriesName, opts) {
+                            return [seriesName, ': ', opts.w.globals.series[opts.seriesIndex]].join('')
+                        }
                     },
                     responsive: [{
                         breakpoint: 480,
@@ -309,24 +460,31 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                                 return val + " unidades";
                             }
                         }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val, opts) {
+                            return opts.w.globals.series[opts.seriesIndex]
+                        }
                     }
                 };
                 
                 const chart = new ApexCharts(document.getElementById('chart-container'), options);
                 chart.render();
             }
-        });
-        
-        // Función para verificar el ancho de la pantalla
-        function checkScreenSize() {
-            if (window.innerWidth <= 768) {
-                document.querySelector('.sidebar').classList.remove('show');
-            } else {
-                document.querySelector('.sidebar').classList.add('show');
+            
+            // Verificar si la imagen se actualizó (parámetro en la URL)
+            if (window.location.search.includes('img_updated')) {
+                M.toast({
+                    html: '<i class="fas fa-check-circle"></i> ¡Imagen de perfil actualizada correctamente!',
+                    displayLength: 3000,
+                    classes: 'green darken-2 rounded'
+                });
+                
+                // Limpiar la URL (eliminar el parámetro)
+                window.history.replaceState({}, document.title, window.location.pathname);
             }
-        }
-        
-        // La función para búsqueda rápida ahora está integrada en la inicialización del DOM
+        });
     </script>
 </body>
 </html>

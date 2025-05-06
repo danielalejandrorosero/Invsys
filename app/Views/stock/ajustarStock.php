@@ -211,23 +211,15 @@
                         </h2>
 
                         <form action="" method="post">
-                            <input type="hidden" name="id_producto" value="<?php echo isset(
-                                $id_producto
-                            )
-                                ? $id_producto
-                                : ""; ?>">
+                            <input type="hidden" name="id_producto" value="<?php echo isset($id_producto) ? $id_producto : ""; ?>">
 
                             <div class="input-field">
                                 <i class="fas fa-building prefix"></i>
                                 <select name="id_almacen" id="id_almacen" required>
                                     <option value="" disabled selected>Seleccione un almacén</option>
                                     <?php foreach ($almacenes as $almacen): ?>
-                                        <option value="<?php echo $almacen[
-                                            "id_almacen"
-                                        ]; ?>">
-                                            <?php echo htmlspecialchars(
-                                                $almacen["nombre"]
-                                            ); ?>
+                                        <option value="<?php echo $almacen["id_almacen"]; ?>">
+                                            <?php echo htmlspecialchars($almacen["nombre"]); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -236,15 +228,36 @@
                             </div>
 
                             <div class="input-field">
+                                <p>
+                                    <label>
+                                        <input name="tipo_ajuste" type="radio" value="absoluto" checked />
+                                        <span>Establecer cantidad absoluta</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input name="tipo_ajuste" type="radio" value="incremento" />
+                                        <span>Incrementar stock</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input name="tipo_ajuste" type="radio" value="decremento" />
+                                        <span>Disminuir stock</span>
+                                    </label>
+                                </p>
+                            </div>
+
+                            <div class="input-field">
                                 <i class="fas fa-hashtag prefix"></i>
                                 <input type="number" id="cantidad" name="cantidad" min="0" required>
-                                <label for="cantidad">Nueva cantidad:</label>
-                                <span class="helper-text">Ingrese la nueva cantidad total de este producto en el almacén seleccionado</span>
+                                <label for="cantidad">Cantidad:</label>
+                                <span class="helper-text" id="cantidad-helper">Ingrese la nueva cantidad total de este producto en el almacén seleccionado</span>
                             </div>
 
                             <div class="alert alert-info">
                                 <i class="fas fa-info-circle"></i>
-                                <div>
+                                <div id="ajuste-info">
                                     <strong>Nota:</strong> Este ajuste sobrescribirá la cantidad actual del producto en el almacén seleccionado.
                                     Para aumentar o disminuir el stock de forma relativa, utilice la sección de movimientos.
                                 </div>
@@ -271,6 +284,26 @@
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.querySelectorAll('select');
             var instances = M.FormSelect.init(elems);
+            
+            // Actualizar texto de ayuda según el tipo de ajuste
+            var radioButtons = document.querySelectorAll('input[name="tipo_ajuste"]');
+            var cantidadHelper = document.getElementById('cantidad-helper');
+            var ajusteInfo = document.getElementById('ajuste-info');
+            
+            radioButtons.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'absoluto') {
+                        cantidadHelper.textContent = 'Ingrese la nueva cantidad total de este producto en el almacén seleccionado';
+                        ajusteInfo.innerHTML = '<strong>Nota:</strong> Este ajuste sobrescribirá la cantidad actual del producto en el almacén seleccionado.';
+                    } else if (this.value === 'incremento') {
+                        cantidadHelper.textContent = 'Ingrese la cantidad a añadir al stock actual';
+                        ajusteInfo.innerHTML = '<strong>Nota:</strong> Esta cantidad se sumará al stock actual del producto en el almacén.';
+                    } else if (this.value === 'decremento') {
+                        cantidadHelper.textContent = 'Ingrese la cantidad a restar del stock actual';
+                        ajusteInfo.innerHTML = '<strong>Nota:</strong> Esta cantidad se restará del stock actual del producto en el almacén.';
+                    }
+                });
+            });
         });
     </script>
 </body>

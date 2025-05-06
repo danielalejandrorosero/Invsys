@@ -34,7 +34,7 @@ CREATE TABLE `alertas_stock` (
   `mensaje` text NOT NULL,
   `fecha_alerta` timestamp NULL DEFAULT current_timestamp(),
   `estado` enum('pendiente','enviada') DEFAULT 'pendiente'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `alertas_stock`
@@ -56,7 +56,7 @@ CREATE TABLE `almacenes` (
   `id_almacen` int(11) NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `ubicacion` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+)  ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `almacenes`
@@ -76,7 +76,7 @@ CREATE TABLE `categorias` (
   `id_categoria` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `descripcion` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+)  ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `categorias`
@@ -99,7 +99,7 @@ CREATE TABLE `clientes` (
   `email` varchar(150) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
   `direccion` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `clientes`
@@ -121,7 +121,7 @@ CREATE TABLE `compras` (
   `fecha_compra` timestamp NULL DEFAULT current_timestamp(),
   `estado` enum('pendiente','en proceso','recibido','cancelado') DEFAULT 'pendiente',
   `total` decimal(12,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `compras`
@@ -144,7 +144,7 @@ CREATE TABLE `detalle_compras` (
   `cantidad` int(11) NOT NULL,
   `precio_unitario` decimal(10,2) NOT NULL,
   `subtotal` decimal(12,2) GENERATED ALWAYS AS (`cantidad` * `precio_unitario`) STORED
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+)  ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `detalle_compras`
@@ -167,7 +167,7 @@ CREATE TABLE `detalle_ventas` (
   `cantidad` int(11) NOT NULL,
   `precio_unitario` decimal(10,2) NOT NULL,
   `subtotal` decimal(12,2) GENERATED ALWAYS AS (`cantidad` * `precio_unitario`) STORED
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `detalle_ventas`
@@ -189,7 +189,7 @@ CREATE TABLE `grupos` (
   `nombre_grupo` varchar(255) NOT NULL,
   `nivel_grupo` int(11) NOT NULL,
   `estado_grupo` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1: activo, 0: inactivo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `grupos`
@@ -211,7 +211,7 @@ CREATE TABLE `imagenes_productos` (
   `id_producto` int(11) NOT NULL,
   `nombre_imagen` varchar(255) NOT NULL,
   `ruta_imagen` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `imagenes_productos`
@@ -236,7 +236,7 @@ CREATE TABLE `imagenes_usuarios` (
   `id_usuario` int(11) NOT NULL,
   `nombre_imagen` varchar(255) NOT NULL,
   `ruta_imagen` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `imagenes_usuarios`
@@ -260,7 +260,7 @@ CREATE TABLE `movimientos_stock` (
   `cantidad` int(11) NOT NULL,
   `fecha_movimiento` timestamp NULL DEFAULT current_timestamp(),
   `id_usuario` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `movimientos_stock`
@@ -300,7 +300,7 @@ CREATE TABLE `productos` (
   `fecha_actualizacion` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `id_proveedor` int(11) DEFAULT NULL,
   `estado` enum('activo','eliminado') DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `productos`
@@ -326,7 +326,7 @@ CREATE TABLE `proveedores` (
   `telefono` varchar(20) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
   `direccion` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB ;
 
 --
 -- Volcado de datos para la tabla `proveedores`
@@ -347,7 +347,7 @@ CREATE TABLE `stock_almacen` (
   `id_almacen` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad_disponible` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB ;
 
 --
 -- Volcado de datos para la tabla `stock_almacen`
@@ -382,7 +382,7 @@ INSERT INTO `stock_almacen` (`id_stock`, `id_almacen`, `id_producto`, `cantidad_
 CREATE TABLE `unidades_medida` (
   `id_unidad` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `unidades_medida`
@@ -412,7 +412,7 @@ CREATE TABLE `usuarios` (
   `nombreUsuario` varchar(50) NOT NULL,
   `token_recuperacion` varchar(255) DEFAULT NULL,
   `expira_token` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `usuarios`
@@ -433,7 +433,7 @@ CREATE TABLE `ventas` (
   `id_cliente` int(11) DEFAULT NULL,
   `fecha_venta` timestamp NULL DEFAULT current_timestamp(),
   `total` decimal(12,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+)  ENGINE=InnoDB;
 
 --
 -- Volcado de datos para la tabla `ventas`

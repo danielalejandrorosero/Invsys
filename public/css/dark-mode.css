@@ -1,0 +1,199 @@
+/* Estilos para el modo oscuro */
+:root {
+    --dark-bg-primary: #121212;
+    --dark-bg-secondary: #1e1e1e;
+    --dark-bg-card: #2d2d2d;
+    --dark-text-primary: #e0e0e0;
+    --dark-text-secondary: #aaaaaa;
+    --dark-border: #444444;
+    --dark-hover: #3a3a3a;
+    --dark-input-bg: #333333;
+    --dark-input-text: #e0e0e0;
+    --dark-shadow: rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode {
+    background-color: var(--dark-bg-primary);
+    color: var(--dark-text-primary);
+}
+
+/* Sidebar en modo oscuro */
+body.dark-mode .sidebar {
+    background-color: var(--dark-bg-secondary);
+    border-right: 1px solid var(--dark-border);
+}
+
+body.dark-mode .sidebar-header h2,
+body.dark-mode .sidebar-menu h3,
+body.dark-mode .user-details h3,
+body.dark-mode .user-details p {
+    color: var(--dark-text-primary);
+}
+
+body.dark-mode .sidebar-menu ul li a {
+    color: var(--dark-text-secondary);
+}
+
+body.dark-mode .sidebar-menu ul li a:hover {
+    background-color: var(--dark-hover);
+}
+
+/* Contenido principal en modo oscuro */
+body.dark-mode .main-content {
+    background-color: var(--dark-bg-primary);
+}
+
+body.dark-mode .header h1,
+body.dark-mode .header p {
+    color: var(--dark-text-primary);
+}
+
+/* Tarjetas en modo oscuro */
+body.dark-mode .card {
+    background-color: var(--dark-bg-card);
+    box-shadow: 0 2px 5px var(--dark-shadow);
+}
+
+body.dark-mode .card .card-title {
+    color: var(--dark-text-primary);
+}
+
+body.dark-mode .card .card-content {
+    color: var(--dark-text-primary);
+}
+
+body.dark-mode .card .label {
+    color: var(--dark-text-secondary);
+}
+
+/* Tablas en modo oscuro */
+body.dark-mode table.highlight tbody tr:hover {
+    background-color: var(--dark-hover);
+}
+
+body.dark-mode table th {
+    color: var(--dark-text-primary);
+    background-color: var(--dark-bg-secondary);
+}
+
+body.dark-mode table td {
+    color: var(--dark-text-primary);
+    border-bottom: 1px solid var(--dark-border);
+}
+
+/* Formularios en modo oscuro */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="password"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="number"],
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .select-dropdown {
+    background-color: var(--dark-input-bg) !important;
+    color: var(--dark-input-text) !important;
+    border-bottom: 1px solid var(--dark-border) !important;
+}
+
+body.dark-mode .dropdown-content {
+    background-color: var(--dark-bg-secondary);
+}
+
+body.dark-mode .dropdown-content li > a, 
+body.dark-mode .dropdown-content li > span {
+    color: var(--dark-text-primary);
+}
+
+body.dark-mode .dropdown-content li:hover, 
+body.dark-mode .dropdown-content li.active {
+    background-color: var(--dark-hover);
+}
+
+body.dark-mode label {
+    color: var(--dark-text-primary) !important;
+}
+
+body.dark-mode .input-field > label {
+    color: var(--dark-text-secondary);
+}
+
+body.dark-mode .input-field > label.active {
+    color: var(--dark-text-primary) !important;
+}
+
+/* Botones en modo oscuro */
+body.dark-mode .btn:not(.blue):not(.red):not(.green):not(.orange) {
+    background-color: var(--dark-bg-secondary);
+    color: var(--dark-text-primary);
+}
+
+/* Colecciones y listas en modo oscuro */
+body.dark-mode .collection {
+    border: 1px solid var(--dark-border);
+}
+
+body.dark-mode .collection .collection-item {
+    background-color: var(--dark-bg-card);
+    border-bottom: 1px solid var(--dark-border);
+}
+
+body.dark-mode .collection .collection-item:hover {
+    background-color: var(--dark-hover);
+}
+
+/* Paginación en modo oscuro */
+body.dark-mode .pagination .page-btn {
+    background-color: var(--dark-bg-secondary);
+    color: var(--dark-text-primary);
+    border: 1px solid var(--dark-border);
+}
+
+body.dark-mode .pagination .page-btn.active {
+    background-color: #2196f3;
+    color: white;
+}
+
+/* Tabs en modo oscuro */
+body.dark-mode .tabs {
+    background-color: var(--dark-bg-secondary);
+}
+
+body.dark-mode .tabs .tab a {
+    color: var(--dark-text-secondary);
+}
+
+body.dark-mode .tabs .tab a:hover,
+body.dark-mode .tabs .tab a.active {
+    color: var(--dark-text-primary);
+}
+
+body.dark-mode .tabs .indicator {
+    background-color: #2196f3;
+}
+
+/* Botón de modo oscuro */
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #2196f3;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Animación para el cambio de modo */
+.dark-mode-transition {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}

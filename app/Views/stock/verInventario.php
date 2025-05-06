@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar tooltips
+            var elems = document.querySelectorAll('.tooltipped');
+            var instances = M.Tooltip.init(elems);
+            
             // Table search
             const searchInput = document.getElementById('tableSearch');
             if (searchInput) {
@@ -195,8 +199,7 @@
                                 <?php foreach ($inventario as $item):
 
                                     $stock_minimo = $item["stock_minimo"] ?? 10;
-                                    $stock_maximo =
-                                        $item["stock_maximo"] ?? 100;
+                                    $stock_maximo = $item["stock_maximo"] ?? 100;
                                     $cantidad = $item["cantidad"];
 
                                     $stockStatus = "green";
@@ -210,6 +213,9 @@
                                         $stockLabel = "Bajo";
                                     }
 
+                                    // Destacar visualmente los productos sin stock
+                                    $rowClass = $cantidad <= 0 ? 'class="red lighten-5"' : '';
+                                    
                                     $firstLetter = mb_substr(
                                         $item["producto"],
                                         0,
@@ -217,7 +223,7 @@
                                         "UTF-8"
                                     );
                                     ?>
-                                    <tr>
+                                    <tr <?php echo $rowClass; ?>>
                                         <td>
                                             <div class="user-info">
                                                 <div class="user-avatar circle">
@@ -244,24 +250,22 @@
                                         </td>
                                         <td>
                                             <div class="progress">
-                                                <div class="determinate" style="width: <?php echo round(
-                                                    ($cantidad /
-                                                        $stock_maximo) *
-                                                        100
-                                                ); ?>%"></div>
+                                                <div class="determinate" style="width: <?php echo $stock_maximo > 0 ? round(
+                                                    ($cantidad / $stock_maximo) * 100
+                                                ) : 0; ?>%"></div>
                                             </div>
-                                            <span><?php echo round(
-                                                ($cantidad / $stock_maximo) *
-                                                    100
-                                            ); ?>%</span>
+                                            <span><?php echo $stock_maximo > 0 ? round(
+                                                ($cantidad / $stock_maximo) * 100
+                                            ) : 0; ?>%</span>
                                         </td>
                                         <td>
                                             <a href="../../Controller/stock/ajustarStockController.php?id=<?php echo $item[
                                                 "id_producto"
                                             ] ??
-                                                ""; ?>" class="btn-floating btn-small waves-effect waves-light blue">
+                                                ""; ?>" class="btn-floating btn-small waves-effect waves-light blue" title="Ajustar Stock">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            
                                         </td>
                                     </tr>
                                 <?php

@@ -27,7 +27,7 @@ class ListarProductosController
 
         // Obtener productos y total de productos
         $productos = $this->productosModel->obtenerProductosConPaginacion($limit, $offset);
-        $totalProductos = $this->productosModel->contarProductos();
+        $totalProductos = $this->productosModel->contarTotalProductos();
 
         // Calcular el número total de páginas
         $totalPaginas = ceil($totalProductos / $limit);

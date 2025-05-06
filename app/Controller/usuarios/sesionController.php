@@ -41,19 +41,31 @@ class LoginController
                 $password
             );
 
+            // En el controlador de sesión, después de verificar las credenciales
             if ($usuario) {
                 session_regenerate_id(true);
                 $_SESSION["id_usuario"] = $usuario["id_usuario"];
                 $_SESSION["nombreUsuario"] = $usuario["nombreUsuario"];
                 $_SESSION["nivel_usuario"] = $usuario["nivel_usuario"];
-                // index
+                
+                // Guardar la ruta de la imagen si existe
+                if (!empty($usuario["ruta_imagen"])) {
+                    $_SESSION["rutaImagen"] = $usuario["ruta_imagen"];
+                }
+                
+                // Redirección al dashboard
                 header("Location: ../../Views/usuarios/dashboard.php");
                 exit();
             } else {
-                $_SESSION["error"] = "Usuario o contraseña incorrectos.";
+                // Manejo explícito cuando las credenciales son incorrectas
+                $_SESSION["error"] = "Nombre de usuario o contraseña incorrectos.";
                 header("Location: ../../../public/index.php");
                 exit();
             }
+        } else {
+            // Si alguien intenta acceder directamente a este controlador sin POST
+            header("Location: ../../../public/index.php");
+            exit();
         }
     }
 }
