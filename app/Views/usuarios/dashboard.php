@@ -54,6 +54,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/index.css">
     <link rel="stylesheet" href="../../../public/css/dark-mode.css">
+    <link rel="stylesheet" href="../../../public/css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="../../../public/img/favicon.ico" type="image/x-icon">
     <meta name="description" content="Panel de control del sistema de gestión de inventario InvSys">
@@ -354,7 +355,38 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                 <div id="chart-container" style="height: 250px;"></div>
             </div>
         </div>
+        
+        <!-- Botón para abrir el chat -->
+        <div class="chat-button-container">
+            <button id="open-chat-btn" class="btn waves-effect waves-light">
+                <i class="fas fa-comment-dots left"></i> Asistente de Inventario
+            </button>
+        </div>
+        
+        <!-- Ventana de chat (inicialmente oculta) -->
+        <div id="chat-container" class="chat-container">
+            <div class="chat-header">
+                <h5>Asistente de Inventario</h5>
+                <button id="close-chat-btn" class="btn-flat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    Hola, soy tu asistente de inventario. ¿En qué puedo ayudarte hoy?
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chat-input-field" placeholder="Escribe tu consulta aquí...">
+                <button id="send-chat-btn" class="btn waves-effect waves-light">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
     </div>
+
+    <!-- Incluir el JavaScript del chat -->
+    <script src="../../../public/js/chatbot.js"></script>
 
     <!-- Scripts (optimizados) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

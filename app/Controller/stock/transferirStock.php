@@ -47,7 +47,7 @@ class StockController {
         $id_almacen_origen = $almacen_origen ? $almacen_origen['id_almacen'] : 0;
 
         // Validaciones lógicas
-        if ($id_producto <= 0 || !$this->productoModel->productoExiste($id_producto)) {
+        if ($id_producto <= 0 || !$this->productoModel->validarProducto($id_producto)) {
             $error[] = "Error: El producto seleccionado no es válido.";
         }
 
@@ -87,7 +87,7 @@ class StockController {
     private function mostrarAlmacenOrigen() {
         $id_producto = isset($_POST['id_producto']) ? (int) $_POST['id_producto'] : 0;
 
-        if ($id_producto <= 0 || !$this->productoModel->productoExiste($id_producto)) {
+        if ($id_producto <= 0 || !$this->productoModel->validarProducto($id_producto)) {
             echo json_encode(['error' => 'Producto no válido']);
             exit();
         }
