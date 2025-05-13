@@ -61,97 +61,117 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
     <meta name="theme-color" content="#2c3e50">
     
     <style>
-        /* Estilos consolidados para el dashboard */
-        .activity-content .collection {
-            border: none;
-            margin-top: 0;
-        }
-        
-        .activity-content .collection-item {
-            border-bottom: 1px solid #e0e0e0;
-            padding: 15px;
-            transition: background-color 0.3s ease;
-        }
-        
-        .activity-content .collection-item:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .movement-icon {
-            font-size: 24px;
-            text-align: center;
-        }
-        
-        .movement-title {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        
-        .movement-details {
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .movement-date {
-            margin-top: 5px;
-            font-size: 12px;
-        }
-        
-        .btn-floating.btn-small {
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-        }
-        
-        .btn-floating.btn-small i {
-            line-height: 30px;
-            font-size: 14px;
-        }
-        
+        /* Estilos flat y minimalistas para el dashboard */
         /* Estilos para las tarjetas de estadísticas */
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            padding: 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card .number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        
-        .stat-card .label {
-            color: #666;
-            margin-bottom: 15px;
-        }
-        
-        /* Animaciones optimizadas */
         .pulse-warning {
-            animation: pulse-warning 2s infinite;
+            border-left: 4px solid #ff9800;
         }
         
         .pulse-info {
-            animation: pulse-info 2s infinite;
+            border-left: 4px solid #2196f3;
         }
         
-        @keyframes pulse-warning {
-            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 152, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        /* Estilos para el chat */
+        .chat-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
         }
         
-        @keyframes pulse-info {
-            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(33, 150, 243, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        #open-chat-btn {
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            box-shadow: none;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            text-transform: none;
+        }
+        
+        .chat-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 320px;
+            height: 400px;
+            background-color: white;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header h5 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            max-width: 80%;
+        }
+        
+        .bot-message {
+            background-color: #f0f0f0;
+            align-self: flex-start;
+        }
+        
+        .user-message {
+            background-color: #e3f2fd;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        #chat-input-field {
+            flex: 1;
+            border: 1px solid #eaeaea;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-right: 10px;
+        }
+        
+        #send-chat-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none;
         }
     </style>
 </head>
