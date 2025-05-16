@@ -155,6 +155,31 @@ class productos
         }
     }
 
+
+    // buscar producto por codigo 
+    public function buscarProductoPorCodigo($codigo)   {
+
+        $stmt = null; // Inicializar $stmt para prevenir variable indefinida
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM productos WHERE codigo = ? OR sku = ?");
+            $stmt->bind_param("ss", $codigo, $codigo);
+            $stmt->execute();
+
+            $resultado = $stmt->get_result();
+            $producto = $resultado->fetch_assoc();
+
+            return $producto;
+        } catch (Exception $e) {
+            error_log(
+                "Error al buscar producto por código: ". $e->getMessage()
+            );
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+
     public function categoriaExiste($id_categoria)
     {
         try {

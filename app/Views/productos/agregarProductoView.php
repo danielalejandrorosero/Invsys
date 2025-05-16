@@ -475,5 +475,154 @@
             showSection(0);
         });
     </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuración para el lector de código de barras
+    
+    // Variable para almacenar el código escaneado
+    let scanBuffer = '';
+    let scanTimeout = null;
+    const SCAN_TIMEOUT_MS = 50; // Tiempo máximo entre caracteres para considerar que es un escaneo
+    
+    // Definir patrón para el código de barras - acepta cualquier secuencia de dígitos
+    const patronCodigo = /^\d+$/; // Acepta cualquier número de dígitos
+    
+    // Función para procesar el código escaneado
+    function procesarCodigoEscaneado(codigo) {
+        // Verificar si el código contiene solo dígitos
+        if (patronCodigo.test(codigo)) {
+            // Obtener el campo de código
+            const campoCodigo = document.getElementById('codigo');
+            
+            if (campoCodigo) {
+                // Asignar el código escaneado al campo
+                campoCodigo.value = codigo;
+                // Activar el evento change para que Materialize actualice las etiquetas
+                campoCodigo.dispatchEvent(new Event('change'));
+                
+                // Mostrar notificación de éxito
+                M.toast({
+                    html: '¡Código escaneado correctamente!',
+                    classes: 'green',
+                    displayLength: 2000
+                });
+                
+                // Resaltar visualmente el campo
+                resaltarCampo(campoCodigo);
+                
+                // Mover el foco al siguiente campo (nombre del producto)
+                setTimeout(() => {
+                    document.getElementById('nombre').focus();
+                }, 500);
+            }
+        } else {
+            // Código no reconocido (contiene caracteres no numéricos)
+            M.toast({
+                html: 'El código debe contener solo números',
+                classes: 'orange',
+                displayLength: 2000
+            });
+        }
+    }
+    
+    // Función para resaltar visualmente un campo
+    function resaltarCampo(campo) {
+        // Agregar clase de resaltado
+        const inputField = campo.closest('.input-field');
+        if (inputField) {
+            inputField.classList.add('scanner-highlight');
+            
+            // Quitar la clase después de un tiempo
+            setTimeout(() => {
+                inputField.classList.remove('scanner-highlight');
+            }, 1000);
+        }
+    }
+    
+    // Prevenir que el escáner escriba en el campo de nombre
+    const nombreInput = document.getElementById('nombre');
+    if (nombreInput) {
+        nombreInput.addEventListener('input', function(e) {
+            // Si detectamos un patrón que parece ser un código escaneado, limpiamos el campo
+            const valor = this.value;
+            if (patronCodigo.test(valor) && valor.length > 5) {
+                this.value = ''; // Limpiar el campo
+                M.toast({
+                    html: 'Por favor, ingrese el nombre del producto manualmente',
+                    classes: 'blue',
+                    displayLength: 2000
+                });
+            }
+        });
+    }
+    
+    // Escuchar eventos de teclado a nivel de documento para capturar escaneos
+    document.addEventListener('keydown', function(e) {
+        // Si es Enter y hay algo en el buffer, procesar como código escaneado
+        if (e.key === 'Enter' && scanBuffer.length > 0) {
+            e.preventDefault(); // Prevenir envío de formulario
+            
+            const codigo = scanBuffer.trim();
+            scanBuffer = ''; // Limpiar buffer
+            
+            procesarCodigoEscaneado(codigo);
+            return;
+        }
+        
+        // Si es un carácter imprimible, agregarlo al buffer
+        if (e.key.length === 1 || e.key === '-' || e.key === '_') {
+            // Reiniciar el timeout cada vez que se presiona una tecla
+            if (scanTimeout) {
+                clearTimeout(scanTimeout);
+            }
+            
+            scanBuffer += e.key;
+            
+            // Configurar un timeout para detectar el fin del escaneo
+            // (los escáneres suelen enviar caracteres muy rápidamente)
+            scanTimeout = setTimeout(() => {
+                // Si no se reciben más caracteres en el tiempo definido y no hay Enter,
+                // asumimos que es una entrada manual y limpiamos el buffer
+                scanBuffer = '';
+            }, SCAN_TIMEOUT_MS);
+        }
+    });
+    
+    // Agregar estilos para el campo resaltado
+    const style = document.createElement('style');
+    style.textContent = `
+        .scanner-highlight {
+            animation: scanner-pulse 1s ease;
+        }
+        
+        @keyframes scanner-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+        
+        /* Estilos para los campos con validación correcta */
+        .input-field input.valid {
+            border-bottom: 1px solid #4CAF50 !important;
+            box-shadow: 0 1px 0 0 #4CAF50 !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Validación adicional para el campo de código
+    const codigoInput = document.getElementById('codigo');
+    if (codigoInput) {
+        codigoInput.addEventListener('change', function() {
+            if (patronCodigo.test(this.value)) {
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            } else {
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
