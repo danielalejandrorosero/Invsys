@@ -1,1 +1,35 @@
+# Archivos de entorno
 .env
+.env.backup
+.env.production
+
+# Dependencias de Composer
+/vendor/
+composer.lock
+
+# Archivos de configuración local
+/.idea/
+/.vscode/
+/.phpunit.result.cache
+/phpunit.xml
+
+# Archivos de caché y logs
+/storage/*.key
+/storage/logs/*
+/storage/app/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/bootstrap/cache/*
+/logs/
+*.log
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.swp
+*.swo
+*.tmp
+*~
