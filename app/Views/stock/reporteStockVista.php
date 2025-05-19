@@ -1,3 +1,11 @@
+
+
+<?php
+// Iniciar sesión si no está iniciada
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -217,10 +225,10 @@
                         <button class="btn grey" id="printReport">
                             <i class="fas fa-print"></i> Imprimir
                         </button>
-                        <button class="btn green">
+                        <button class="btn green" id="exportExcel">
                             <i class="fas fa-file-excel"></i> Exportar Excel
                         </button>
-                        <button class="btn red">
+                        <button class="btn red" id="exportPDF">
                             <i class="fas fa-file-pdf"></i> Exportar PDF
                         </button>
                         <a href="../../Views/usuarios/dashboard.php" class="btn blue">
@@ -228,6 +236,18 @@
                         </a>
                     </div>
                 </div>
+                
+                <?php if(isset($_SESSION['error'])): ?>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card-panel red lighten-4">
+                            <span class="red-text text-darken-4">
+                                <i class="fas fa-exclamation-circle"></i> <?php echo $_SESSION['error']; ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <?php unset($_SESSION['error']); endif; ?>
 
                 <!-- Filter Section -->
                 <div class="row">
@@ -279,9 +299,13 @@
                     <div class="col s12 m6">
                         <p>
                             <?php
-                            $total_items = $resultado
-                                ? $resultado->num_rows
-                                : 0;
+                            // Inicializamos $resultado como un array vacío si no está definido
+                            if (!isset($resultado)) {
+                                $resultado = [];
+                            }
+                            
+                            // Verificamos que $resultado sea un objeto mysqli_result antes de acceder a num_rows
+                            $total_items = ($resultado && $resultado instanceof mysqli_result) ? $resultado->num_rows : 0;
                             echo "<strong>{$total_items}</strong> productos encontrados";
 
                             // Build filter description
@@ -315,8 +339,7 @@
                     </div>
                 </div>
 
-                <?php if ($resultado && $resultado->num_rows > 0): ?>
-                    <!-- Table Results -->
+                <?php if (isset($resultado) && $resultado instanceof mysqli_result && $resultado->num_rows > 0): ?>                    <!-- Table Results -->
                     <div class="table-responsive">
                         <table class="highlight">
                             <thead>
@@ -430,5 +453,118 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Agregar manejadores para los botones de exportación
+        document.getElementById('exportPDF').addEventListener('click', function() {
+            window.location.href = '../../Controller/exportarArchivos/exportarPDFController.php?filtro=' + 
+                encodeURIComponent(JSON.stringify(getFilterParams()));
+        });
+        
+        document.getElementById('exportExcel').addEventListener('click', function() {
+            window.location.href = '../../Controller/exportarArchivos/exportarEXCELController.php?filtro=' + 
+                encodeURIComponent(JSON.stringify(getFilterParams()));
+        });
+        
+        document.getElementById('printReport').addEventListener('click', function() {
+            window.print();
+        });
+        
+        // Función para obtener parámetros de filtro actuales
+        function getFilterParams() {
+            return {
+                almacen: document.getElementById('almacen').value,
+                categoria: document.getElementById('categoria').value,
+                proveedor: document.getElementById('proveedor').value
+            };
+        }
+    });
+</script>
+
+<!-- Tabla de Resultados -->
+<div class="row">
+    <div class="col s12">
+        <?php if (!empty($productos)): ?>
+            <table class="striped responsive-table">
+                <thead>
+                    <tr>
+                        <th class="sortable">Código <i class="fas fa-sort"></i></th>
+                        <th class="sortable">Producto <i class="fas fa-sort"></i></th>
+                        <th class="sortable">Categoría <i class="fas fa-sort"></i></th>
+                        <th class="sortable">Almacén <i class="fas fa-sort"></i></th>
+                        <th class="sortable">Stock <i class="fas fa-sort"></i></th>
+                        <th class="sortable">Valor <i class="fas fa-sort"></i></th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($productos as $producto): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($producto['codigo']); ?></td>
+                            <td><?php echo htmlspecialchars($producto['nombre']); ?></td>
+                            <td><?php echo htmlspecialchars($producto['categoria']); ?></td>
+                            <td><?php echo htmlspecialchars($producto['almacen']); ?></td>
+                            <td class="stock-cell" 
+                                data-quantity="<?php echo $producto['cantidad']; ?>" 
+                                data-min="<?php echo $producto['stock_minimo']; ?>" 
+                                data-max="<?php echo $producto['stock_maximo']; ?>">
+                                <?php echo $producto['cantidad']; ?>
+                            </td>
+                            <td><?php echo number_format($producto['valor_total'], 2); ?> €</td>
+                            <td>
+                                <a href="../../Controller/stock/ajustarStockController.php?id=<?php echo $producto['id']; ?>" class="btn-small blue">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="../../Controller/productos/verDetalleProductoController.php?id=<?php echo $producto['id']; ?>" class="btn-small green">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            
+            <!-- Paginación -->
+            <div class="pagination">
+                <div class="page-info">
+                    Mostrando <?php echo count($productos); ?> de <?php echo $totalProductos; ?> productos
+                </div>
+                <div class="page-controls">
+                    <span class="page-item disabled"><i class="fas fa-chevron-left"></i></span>
+                    <span class="page-item active">1</span>
+                    <span class="page-item">2</span>
+                    <span class="page-item">3</span>
+                    <span class="page-item"><i class="fas fa-chevron-right"></i></span>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="empty-state">
+                <i class="fas fa-search"></i>
+                <h5>No se encontraron productos</h5>
+                <p>Intente con diferentes criterios de búsqueda o limpie los filtros</p>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- Elimina esta sección duplicada -->
+<!--
+<div class="col s12 m6 right-align">
+    <button class="btn grey" id="printReport">
+        <i class="fas fa-print"></i> Imprimir
+    </button>
+    <button class="btn green" id="exportExcel">
+        <i class="fas fa-file-excel"></i> Exportar Excel
+    </button>
+    <button class="btn red" id="exportPDF">
+        <i class="fas fa-file-pdf"></i> Exportar PDF
+    </button>
+    <a href="../../Views/usuarios/dashboard.php" class="btn blue">
+        <i class="fas fa-home"></i> Dashboard
+    </a>
+</div>
+-->
 </body>
 </html>

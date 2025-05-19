@@ -366,15 +366,16 @@ class Stock {
             }
 
             $stmt->execute();
-            return $stmt->get_result();
+            $result = $stmt->get_result();
+            // Cerramos el statement después de obtener el resultado
+            $stmt->close();
+            return $result;
         } catch (Exception $e) {
             error_log("Error al generar reporte: " . $e->getMessage());
             return [];
-        } finally {
-            if (isset($stmt) && $stmt !== false) {
-                $stmt->close();
-            }
         }
+        // Eliminamos el finally para evitar que se cierre el statement prematuramente
+        // ya que el resultado se sigue utilizando en la vista
     }
 
     public function obtenerAlmacenOrigen($id_producto) {
