@@ -65,4 +65,3 @@ class Sesiones
 }
 
 $sesion = new Sesiones();
-?>

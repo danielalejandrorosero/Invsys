@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# Solo permitir acceso desde ngrok a InventoryManagementSystem/public
+RewriteCond %{HTTP_HOST} \.ngrok-free\.app$ [NC]
+RewriteCond %{REQUEST_URI} !^/InventoryManagementSystem/public/ [NC]
+RewriteCond %{REQUEST_URI} !^/InventoryManagementSystem/public$ [NC]
+RewriteRule ^ - [F,L]
+
+# Bloquear phpMyAdmin desde ngrok
+RewriteCond %{HTTP_HOST} \.ngrok-free\.app$ [NC]
+RewriteCond %{REQUEST_URI} ^/phpmyadmin [NC]
+RewriteRule ^ - [F,L]
+
+# Redireccionar raíz a la aplicación cuando venga de ngrok
+RewriteCond %{HTTP_HOST} \.ngrok-free\.app$ [NC]
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^ /InventoryManagementSystem/public/ [R=301,L]

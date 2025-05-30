@@ -174,7 +174,7 @@ body.dark-mode .tabs .indicator {
 .dark-mode-toggle {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px; /* Cambiado de right a left para moverlo a la esquina izquierda */
     width: 50px;
     height: 50px;
     border-radius: 50%;
