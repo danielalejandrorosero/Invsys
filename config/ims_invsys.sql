@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-05-2025 a las 02:01:07
+-- Tiempo de generación: 31-05-2025 a las 07:09:30
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -427,13 +427,14 @@ INSERT INTO `productos` (`id_producto`, `nombre`, `codigo`, `sku`, `descripcion`
 (23, 'Prod111ucto de Pruebaddd', 'TEST1dd11d23', 'SKU1211ddd3', 'Esddte es un producto de p11rueba', 100.00, 150.00, 1, 10, 100, 1, '2025-05-10 01:40:12', '2025-05-10 01:40:12', 1, 'activo'),
 (24, 'talco para pies', '819293017318', 'SKU175617', 'talco para pies paraa niños', 1111.00, 111.00, 1, 11, 111, 3, '2025-05-15 03:25:35', '2025-05-15 03:25:35', 2, 'activo'),
 (25, 'Zapatos', '12188283182828', 'Si', 'Zapatos', 200000.00, 250000.00, 1, 2, 100, 2, '2025-05-26 07:18:27', '2025-05-26 07:35:02', 2, 'eliminado'),
-(26, 'Zapatos', '121882831828228', '182NQNW18318', 'Zapatos de gigante', 200000.00, 250000.00, 1, 6, 1000, 2, '2025-05-26 07:32:02', '2025-05-26 07:32:02', 2, 'activo');
+(26, 'Zapatos', '121882831828228', '182NQNW18318', 'Zapatos de gigante', 200000.00, 250000.00, 1, 6, 1000, 2, '2025-05-26 07:32:02', '2025-05-26 07:32:02', 2, 'activo'),
+(27, 'prueba', '112312312312', '123123123123', 'nose', 111.00, 111.00, 4, 11, 11, 1, '2025-05-30 01:22:06', '2025-05-30 01:22:06', 4, 'activo');
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `proveedores`
---  
+--
 
 CREATE TABLE `proveedores` (
   `id_proveedor` int(11) NOT NULL,
@@ -441,16 +442,19 @@ CREATE TABLE `proveedores` (
   `contacto` varchar(100) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
-  `direccion` text DEFAULT NULL
+  `direccion` text DEFAULT NULL,
+  `estado` enum('activo','eliminado') NOT NULL DEFAULT 'activo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `proveedores`
 --
 
-INSERT INTO `proveedores` (`id_proveedor`, `nombre`, `contacto`, `telefono`, `email`, `direccion`) VALUES
-(1, 'Proveedor Tech', 'Juan Pérez', '6012345678', 'proveedor.tech@example.com', 'Carrera 7 #40-50, Bogotá'),
-(2, 'Proveedor Ropa', 'María Gómez', '6054321098', 'proveedor.ropa@example.com', 'Calle 80 #10-20, Medellín');
+INSERT INTO `proveedores` (`id_proveedor`, `nombre`, `contacto`, `telefono`, `email`, `direccion`, `estado`) VALUES
+(1, 'Proveedor Tech', 'Juan Pérez', '6012345678', 'proveedor.tech@example.com', 'Carrera 7 #40-50, Bogotá', ''),
+(2, 'Proveedor Ropa', 'María Gómez', '6054321098', 'proveedor.ropa@example.com', 'Calle 80 #10-20, Medellín', 'activo'),
+(4, 'proveedor de tecnologia', 'daniel alejandro', '3215102025', 'danielalejandroroseroortiz80@gmail.com', 'cra 9 1-36 barrio el carmen', ''),
+(5, 'talco para pies', 'daniel alejandro', '3215102025', 'ddd@gmail.com', 'cra 9 1-36 barrio el carmen', '');
 
 -- --------------------------------------------------------
 
@@ -472,14 +476,16 @@ CREATE TABLE `stock_almacen` (
 INSERT INTO `stock_almacen` (`id_stock`, `id_almacen`, `id_producto`, `cantidad_disponible`) VALUES
 (1, 1, 12, 111),
 (2, 1, 3, 111),
-(3, 2, 2, 990000),
+(3, 2, 2, 1),
 (4, 2, 3, 471),
 (7, 2, 1, 10011),
 (10, 1, 1, 989),
 (18, 1, 2, 8656),
 (25, 1, 18, 10),
 (27, 1, 26, 998),
-(28, 2, 26, 203);
+(28, 2, 26, 203),
+(35, 2, 12, 10100),
+(36, 1, 24, 3);
 
 -- --------------------------------------------------------
 
@@ -773,19 +779,19 @@ ALTER TABLE `movimientos_stock`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
-  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `stock_almacen`
 --
 ALTER TABLE `stock_almacen`
-  MODIFY `id_stock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id_stock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de la tabla `unidades_medida`
