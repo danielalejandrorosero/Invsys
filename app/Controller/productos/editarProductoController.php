@@ -144,4 +144,3 @@ class EditarProductoController
 
 $controller = new EditarProductoController($conn);
 $controller->editarProducto();
-?>

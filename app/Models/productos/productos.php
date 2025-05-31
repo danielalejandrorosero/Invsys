@@ -354,87 +354,87 @@ class productos
     }
 
     // buscar productos
-    public function buscarProductos(
-        $nombre = null,
-        $codigo = null,
-        $sku = null,
-        $categoria = null,
-        $unidad_medida = null
-    ) {
-        $stmt = null; // Inicializar $stmt para prevenir variable indefinida
+        public function buscarProductos(
+            $nombre = null,
+            $codigo = null,
+            $sku = null,
+            $categoria = null,
+            $unidad_medida = null
+        ) {
+            $stmt = null; // Inicializar $stmt para prevenir variable indefinida
 
-        try {
-            $sql = "SELECT p.nombre, p.codigo, p.sku, p.descripcion, p.precio_compra, p.precio_venta,
-                           p.stock_minimo, p.stock_maximo, c.nombre AS categoria, u.nombre AS unidad_medida
-                    FROM productos p
-                    JOIN categorias c ON p.id_categoria = c.id_categoria
-                    JOIN unidades_medida u ON p.id_unidad_medida = u.id_unidad";
+            try {
+                $sql = "SELECT p.nombre, p.codigo, p.sku, p.descripcion, p.precio_compra, p.precio_venta,
+                            p.stock_minimo, p.stock_maximo, c.nombre AS categoria, u.nombre AS unidad_medida
+                        FROM productos p
+                        JOIN categorias c ON p.id_categoria = c.id_categoria
+                        JOIN unidades_medida u ON p.id_unidad_medida = u.id_unidad";
 
-            // Primero agregamos el filtro de estado activo
-            $conditions = ["p.estado = 'activo'"];
-            $params = [];
-            $types = "";
+                // Primero agregamos el filtro de estado activo
+                $conditions = ["p.estado = 'activo'"];
+                $params = [];
+                $types = "";
 
-            if (!empty($nombre)) {
-                $conditions[] = "p.nombre LIKE ?";
-                $params[] = "%$nombre%";
-                $types .= "s";
-            }
+                if (!empty($nombre)) {
+                    $conditions[] = "p.nombre LIKE ?";
+                    $params[] = "%$nombre%";
+                    $types .= "s";
+                }
 
-            if (!empty($codigo)) {
-                $conditions[] = "p.codigo LIKE ?";
-                $params[] = "%$codigo%";
-                $types .= "s";
-            }
+                if (!empty($codigo)) {
+                    $conditions[] = "p.codigo LIKE ?";
+                    $params[] = "%$codigo%";
+                    $types .= "s";
+                }
 
-            if (!empty($sku)) {
-                $conditions[] = "p.sku LIKE ?";
-                $params[] = "%$sku%";
-                $types .= "s";
-            }
+                if (!empty($sku)) {
+                    $conditions[] = "p.sku LIKE ?";
+                    $params[] = "%$sku%";
+                    $types .= "s";
+                }
 
-            if (!empty($categoria)) {
-                $conditions[] = "c.nombre LIKE ?";
-                $params[] = "%$categoria%";
-                $types .= "s";
-            }
+                if (!empty($categoria)) {
+                    $conditions[] = "c.nombre LIKE ?";
+                    $params[] = "%$categoria%";
+                    $types .= "s";
+                }
 
-            if (!empty($unidad_medida)) {
-                $conditions[] = "u.nombre LIKE ?";
-                $params[] = "%$unidad_medida%";
-                $types .= "s";
-            }
+                if (!empty($unidad_medida)) {
+                    $conditions[] = "u.nombre LIKE ?";
+                    $params[] = "%$unidad_medida%";
+                    $types .= "s";
+                }
 
-            // Siempre añadimos las condiciones porque al menos tenemos p.estado = 'activo'
-            $sql .= " WHERE " . implode(" AND ", $conditions);
-            $sql .= " ORDER BY p.nombre ASC";
+                // Siempre añadimos las condiciones porque al menos tenemos p.estado = 'activo'
+                $sql .= " WHERE " . implode(" AND ", $conditions);
+                $sql .= " ORDER BY p.nombre ASC";
 
-            $stmt = $this->conn->prepare($sql);
+                $stmt = $this->conn->prepare($sql);
 
-            if (!$stmt) {
-                throw new Exception(
-                    "Error al preparar la consulta: " . $this->conn->error
-                );
-            }
+                if (!$stmt) {
+                    throw new Exception(
+                        "Error al preparar la consulta: " . $this->conn->error
+                    );
+                }
 
-            if (!empty($params)) {
-                $stmt->bind_param($types, ...$params);
-            }
+                if (!empty($params)) {
+                    $stmt->bind_param($types, ...$params);
+                }
 
-            $stmt->execute();
-            $resultado = $stmt->get_result();
-            $productos = $resultado->fetch_all(MYSQLI_ASSOC);
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+                $productos = $resultado->fetch_all(MYSQLI_ASSOC);
 
-            return $productos;
-        } catch (Exception $e) {
-            error_log("Error al buscar productos: " . $e->getMessage());
-            return [];
-        } finally {
-            if (isset($stmt) && $stmt !== false) {
-                $stmt->close();
+                return $productos;
+            } catch (Exception $e) {
+                error_log("Error al buscar productos: " . $e->getMessage());
+                return [];
+            } finally {
+                if (isset($stmt) && $stmt !== false) {
+                    $stmt->close();
+                }
             }
         }
-    }
 
     public function obtenerProductoPorId($id_producto)
     {

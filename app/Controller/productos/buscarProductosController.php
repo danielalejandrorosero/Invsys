@@ -61,4 +61,3 @@ class BuscarProductosController
 
 $controller = new BuscarProductosController($conn);
 $controller->buscarProductos();
-?>
