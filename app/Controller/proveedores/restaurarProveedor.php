@@ -1,50 +1,49 @@
 <?php
-
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/proveedor/proveedores.php';
 
-
+// debugear
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
 class RestaurarProveedorController {
     private $proveedorModel;
-
-
+    
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
     }
-
+    
     public function restaurarProveedor() {
         nivelRequerido(1);
-
+        
+        // validar y obtener el id del proveedor
         if (!isset($_GET["id"]) || empty($_GET["id"])) {
-            header("Location: ../../Controller/proveedores/listarProveedores.php");
+            header("Location: ../../Controller/proveedores/ListarProveedoresEliminadosController.php");
             exit();
         }
-
-        $id_proveedor = (int) $_GET["id"];
         
-        // Verificar que el proveedor exista
+        $id_proveedor = (int) $_GET["id"];
         $proveedor = $this->proveedorModel->obtenerProveedorPorId($id_proveedor);
         
         if (!$proveedor) {
-            $_SESSION["errores"] = ["El proveedor no existe"];
-            header("Location: ../../Controller/proveedores/listarProveedores.php");
+            header("Location: ../../Controller/proveedores/ListarProveedoresEliminadosController.php");
             exit();
         }
-
-        // Restaurar el proveedor
-        if ($this->proveedorModel->restaurarProveedor($id_proveedor)) {
-            $_SESSION["mensaje"] = "Proveedor restaurado correctamente";
-        } else {
-            $_SESSION["errores"] = ["Error al restaurar el proveedor. ID: " . $id_proveedor];
+        
+        // procesar la restauracion del proveedor
+        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["confirmarRestaurar"])) {
+            if ($this->proveedorModel->restaurarProveedor($id_proveedor)) {
+                $_SESSION["mensaje"] = "Proveedor restaurado exitosamente";
+                header("Location: ../../Controller/proveedores/listarProveedores.php");
+                exit();
+            } else {
+                $_SESSION["errores"] = ["Error al restaurar el proveedor"];
+            }
         }
-
-        // Redireccionar al listado
-        header("Location: ../../Controller/proveedores/listarProveedores.php");
-        exit();
+        
+        require_once __DIR__ . "/../../Views/proveedores/restaurarProveedorVista.php";
     }
 }
-
 
 $controller = new RestaurarProveedorController($conn);
 $controller->restaurarProveedor();
