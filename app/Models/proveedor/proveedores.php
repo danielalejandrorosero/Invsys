@@ -101,8 +101,8 @@ class Proveedor
     
             $result = $checkStmt->get_result();
             if ($result->num_rows > 0) {
-                // Eliminar lógicamente: cambiar estado a 0
-                $stmt = $this->conn->prepare("UPDATE proveedores SET estado = 0 WHERE id_proveedor = ?");
+                // Eliminar lógicamente: cambiar estado a 'eliminado'
+                $stmt = $this->conn->prepare("UPDATE proveedores SET estado = 'eliminado' WHERE id_proveedor = ?");
                 $stmt->bind_param("i", $id_proveedor);
                 $stmt->execute();
                 return $stmt->affected_rows > 0;
@@ -205,4 +205,4 @@ class Proveedor
 
 }
 
-// alter table para hacer activo y eliminado el proveedor para no eliminarlo en si 
+// alter table para hacer activo y eliminado el proveedor para no eliminarlo en si

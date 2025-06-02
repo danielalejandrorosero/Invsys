@@ -54,7 +54,7 @@ class AgregarProveedorController {
 
                     if ($this->proveedorModel->registrarProveedor($nombre, $contacto, $direccion, $telefono, $email)) {
                         $_SESSION['mensaje'] = 'Proveedor agregado correctamente';
-                        header('Location: ../../Controller/proveedores/ListarProveedoresController.php');
+                        header('Location: ../../Controller/proveedores/listarProveedores.php');
                         exit();
                     } else {
                         $error['general'] = 'Error al agregar el proveedor. Intente nuevamente.';
