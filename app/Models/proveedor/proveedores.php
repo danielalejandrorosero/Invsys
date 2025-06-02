@@ -122,6 +122,24 @@ class Proveedor
             }
         }
     }
+
+
+    public function restaurarProveedor($id_proveedor) {
+        $stmt = null;
+        try {
+            $stmt = $this->conn->prepare("UPDATE proveedores SET estado = 'activo' WHERE id_proveedor = ?");
+            $stmt->bind_param("i", $id_proveedor);
+            $stmt->execute();
+            return $stmt->affected_rows > 0;
+        } catch (Exception $e) {
+            error_log("Error al restaurar proveedor: " . $e->getMessage());
+            return false;
+        } finally {
+            if ($stmt !== null) {
+                $stmt->close();
+            }
+        }
+    }
     
 
 

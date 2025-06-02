@@ -120,8 +120,8 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             <ul>
                 <li><a href="../../Controller/proveedores/agregarProveedor.php"><i class="fas fa-store"></i> Crear Proveedor</a></li>
                 <li><a href="../../Controller/proveedores/listarProveedores.php"><i class="fas fa-list"></i> Listar Proveedores</a></li>
-                <li><a href="../../Controller/proveedores/editarProveedorController.php"><i class="fas fa-edit"></i> Editar Proveedor</a></li>
-                <li><a href="../../Controller/proveedores/eliminarProveedorController.php"><i class="fas fa-trash-alt"></i> Eliminar Proveedor</a></li>
+                <li><a href="../../Controller/proveedores/listarProveedores.php"><i class="fas fa-edit"></i> Editar Proveedor</a></li>
+                <li><a href="../../Controller/proveedores/eliminarProveedor.php"><i class="fas fa-trash-alt"></i> Eliminar Proveedor</a></li>
                 <li><a href="../../Controller/proveedores/RestaurarProveedorController.php"><i class="fas fa-trash-restore"></i> Restaurar Proveedor</a></li>
             </ul>
 

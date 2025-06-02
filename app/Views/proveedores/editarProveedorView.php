@@ -327,7 +327,7 @@ if (!isset($proveedor) || !$proveedor) {
                     <button type="submit" name="editar_proveedor" class="btn btn-primary">
                         Actualizar Proveedor
                     </button>
-                    <a href="../../Controller/proveedores/ListarProveedoresController.php" class="btn btn-secondary">
+                    <a href="../../Controller/proveedores/listarProveedores.php" class="btn btn-secondary">
                         Cancelar
                     </a>
                 </div>

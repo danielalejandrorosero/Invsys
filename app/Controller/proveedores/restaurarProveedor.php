@@ -3,16 +3,19 @@
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/proveedor/proveedores.php';
 
-class EliminarProveedorController {
+
+
+class RestaurarProveedorController {
     private $proveedorModel;
+
 
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
     }
 
-    public function eliminarProveedor() {
+    public function restaurarProveedor() {
         nivelRequerido(1);
-        
+
         if (!isset($_GET["id"]) || empty($_GET["id"])) {
             header("Location: ../../Controller/proveedores/listarProveedores.php");
             exit();
@@ -29,11 +32,11 @@ class EliminarProveedorController {
             exit();
         }
 
-        // Eliminar el proveedor
-        if ($this->proveedorModel->eliminarProveedor($id_proveedor)) {
-            $_SESSION["mensaje"] = "Proveedor eliminado correctamente";
+        // Restaurar el proveedor
+        if ($this->proveedorModel->restaurarProveedor($id_proveedor)) {
+            $_SESSION["mensaje"] = "Proveedor restaurado correctamente";
         } else {
-            $_SESSION["errores"] = ["Error al eliminar el proveedor. ID: " . $id_proveedor];
+            $_SESSION["errores"] = ["Error al restaurar el proveedor. ID: " . $id_proveedor];
         }
 
         // Redireccionar al listado
@@ -42,7 +45,6 @@ class EliminarProveedorController {
     }
 }
 
-// Iniciar el controlador
-$controller = new EliminarProveedorController($conn);
-$controller->eliminarProveedor();
-?>
+
+$controller = new RestaurarProveedorController($conn);
+$controller->restaurarProveedor();

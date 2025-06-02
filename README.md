@@ -63,6 +63,6 @@
 | **Composer** | 2.0+ | Gestión de dependencias |
 | **PHPMailer** | 6.8+ | Envío de correos |
 | **Guzzle** | 7.0+ | Cliente HTTP |
-| **Slim Framework** | 4.0+ | Microframework |
+
 
 ## 📁 Estructura del Proyecto
