@@ -2,9 +2,7 @@
 require_once __DIR__ . "/../../../config/cargarConfig.php";
 require_once __DIR__ . "/../../Models/productos/productos.php";
 
-// debugear
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+
 
 class RestaurarProductoController
 {

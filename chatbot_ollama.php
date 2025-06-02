@@ -378,4 +378,3 @@ EOT;
 // Ejecutar chatbot
 $chatbot = new InventoryChatbot();
 $chatbot->handleRequest();
-?>

@@ -89,6 +89,23 @@ class Proveedor
         }
     }
 
+    public function obtenerProveedoresEliminados() {
+        $stmt = null;
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM proveedores WHERE estado = 'eliminado'");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error al obtener proveedores eliminados: " . $e->getMessage());
+            return [];
+        } finally {
+            if ($stmt !== null) {
+                $stmt->close();
+            }
+        }
+    }
+
     public function eliminarProveedor($id_proveedor) {
         $stmt = null;
         $checkStmt = null;
