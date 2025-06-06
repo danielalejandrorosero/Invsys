@@ -468,7 +468,6 @@ if (isset($_SESSION['errores'])) {
                 <table class="table" id="proveedoresTable">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nombre</th>
                             <th>Contacto</th>
                             <th>Información de Contacto</th>
@@ -479,18 +478,30 @@ if (isset($_SESSION['errores'])) {
                     <tbody>
                         <?php foreach ($proveedores as $proveedor): ?>
                         <tr>
-                            <td><span class="provider-id"><?php echo htmlspecialchars($proveedor['id_proveedor']); ?></span></td>
                             <td>
-                                <span class="provider-name"><?php echo htmlspecialchars($proveedor['nombre']); ?></span>
+                                <div class="provider-name">
+                                    <i class="fas fa-building"></i>
+                                    <?php echo htmlspecialchars($proveedor['nombre']); ?>
+                                </div>
                             </td>
-                            <td><?php echo htmlspecialchars($proveedor['contacto']); ?></td>
+                            <td>
+                                <div class="contact-person">
+                                    <i class="fas fa-user"></i>
+                                    <?php echo htmlspecialchars($proveedor['contacto']); ?>
+                                </div>
+                            </td>
                             <td>
                                 <div class="contact-info">
                                     <div><i class="fas fa-envelope"></i> <?php echo htmlspecialchars($proveedor['email']); ?></div>
                                     <div><i class="fas fa-phone"></i> <?php echo htmlspecialchars($proveedor['telefono']); ?></div>
                                 </div>
                             </td>
-                            <td><?php echo htmlspecialchars($proveedor['direccion']); ?></td>
+                            <td>
+                                <div class="address-info">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <?php echo htmlspecialchars($proveedor['direccion']); ?>
+                                </div>
+                            </td>
                             <td class="actions">
                                 <a href="../../Controller/proveedores/editarProveedorController.php?id=<?php echo $proveedor["id_proveedor"]; ?>" class="btn btn-secondary btn-sm" title="Editar">
                                     <i class="fas fa-edit"></i>

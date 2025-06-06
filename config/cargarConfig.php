@@ -21,6 +21,5 @@ function incluirModoOscuro() {
     });
 }
 
-// Llamar a la función para incluir el modo oscuro
+
 incluirModoOscuro();
-?>

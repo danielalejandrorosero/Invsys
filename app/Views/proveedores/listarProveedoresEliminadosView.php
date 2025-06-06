@@ -108,68 +108,48 @@
                         <table class="highlight proveedores-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Estado</th>
                                     <th>Nombre</th>
-                                    <th>RUC/NIT</th>
-                                    <th>Teléfono</th>
-                                    <th>Email</th>
-                                    <th>Dirección</th>
                                     <th>Contacto</th>
+                                    <th>Información de Contacto</th>
+                                    <th>Dirección</th>
+                                    <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($proveedores as $proveedor): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars(
-                                            $proveedor["id_proveedor"]
-                                        ); ?></td>
-                                        <td>
-                                            <span class="new badge red" data-badge-caption="">
-                                                <i class="fas fa-trash"></i> Eliminado
-                                            </span>
+                                    <td>
+                                        <div class="provider-name">
+                                            <i class="fas fa-building"></i>
+                                            <?php echo htmlspecialchars($proveedor['nombre'] ?? 'N/A'); ?>
+                                        </div>
                                         </td>
                                         <td>
-                                            <div class="truncate" title="<?php echo htmlspecialchars(
-                                                $proveedor["nombre"]
-                                            ); ?>">
-                                                <?php echo htmlspecialchars(
-                                                    $proveedor["nombre"]
-                                                ); ?>
+                                        <div class="contact-person">
+                                            <i class="fas fa-user"></i>
+                                            <?php echo htmlspecialchars($proveedor['contacto'] ?? 'N/A'); ?>
                                             </div>
                                         </td>
-                                        <td><?php echo htmlspecialchars(
-                                            $proveedor["ruc"] ?? "N/A"
-                                        ); ?></td>
-                                        <td><?php echo htmlspecialchars(
-                                            $proveedor["telefono"] ?? "N/A"
-                                        ); ?></td>
-                                        <td>
-                                            <div class="truncate" title="<?php echo htmlspecialchars(
-                                                $proveedor["email"] ?? "N/A"
-                                            ); ?>">
-                                                <?php echo htmlspecialchars(
-                                                    $proveedor["email"] ?? "N/A"
-                                                ); ?>
+                                    <td>
+                                        <div class="contact-info">
+                                            <div><i class="fas fa-envelope"></i> <?php echo htmlspecialchars($proveedor['email'] ?? 'N/A'); ?></div>
+                                            <div><i class="fas fa-phone"></i> <?php echo htmlspecialchars($proveedor['telefono'] ?? 'N/A'); ?></div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="truncate" title="<?php echo htmlspecialchars(
-                                                $proveedor["direccion"] ?? "N/A"
-                                            ); ?>">
-                                                <?php echo htmlspecialchars(
-                                                    $proveedor["direccion"] ?? "N/A"
-                                                ); ?>
+                                        <div class="address-info">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <?php echo htmlspecialchars($proveedor['direccion'] ?? 'N/A'); ?>
                                             </div>
                                         </td>
-                                        <td><?php echo htmlspecialchars(
-                                            $proveedor["contacto"] ?? "N/A"
-                                        ); ?></td>
+                                    <td>
+                                        <span class="badge red">Eliminado</span>
+                                    </td>
                                         <td>
-                                            <a href="../../Controller/proveedores/restaurarProveedor.php?id=<?php echo $proveedor[
-                                                "id_proveedor"
-                                            ]; ?>" class="btn-floating btn-small waves-effect waves-light green" title="Restaurar">
+                                        <a href="../../Controller/proveedores/restaurarProveedor.php?id=<?php echo $proveedor['id_proveedor']; ?>" 
+                                           class="btn-floating btn-small waves-effect waves-light green" 
+                                           title="Restaurar">
                                                 <i class="fas fa-trash-restore"></i>
                                             </a>
                                         </td>

@@ -641,7 +641,7 @@ class productos
                         FROM productos p
                         LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
                         LEFT JOIN proveedores pr ON p.id_proveedor = pr.id_proveedor
-                        LEFT JOIN unidades_medida um ON p.id_unidad_medida = um.id_unidad
+                        LEFT JOIN uni   dades_medida um ON p.id_unidad_medida = um.id_unidad
                         WHERE p.estado = 'eliminado'
                         ORDER BY p.id_producto DESC";
             $resultado = $this->conn->prepare($sql);

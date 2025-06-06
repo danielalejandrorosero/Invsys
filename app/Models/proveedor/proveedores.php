@@ -106,6 +106,67 @@ class Proveedor
         }
     }
 
+    // historial de proveedores
+
+    public function obtenerHistorialProveedores($id_proveedor, $limit = 10, $offset = 0, $orden = 'nombre', $filtro_estado = 'activo') {
+        $proveedor_info = [];
+        $productos_proveedor = [];
+        $stmt_proveedor = null;
+        $stmt_productos = null;
+
+        try {
+            // 1. Obtener información del proveedor
+            $stmt_proveedor = $this->conn->prepare("
+                SELECT id_proveedor, nombre, contacto, telefono, email, direccion, estado 
+                FROM proveedores 
+                WHERE id_proveedor = ? AND estado != 'eliminado'
+            ");
+            $stmt_proveedor->bind_param("i", $id_proveedor);
+            $stmt_proveedor->execute();
+            $result_proveedor = $stmt_proveedor->get_result();
+            
+            if ($result_proveedor->num_rows > 0) {
+                $proveedor_info = $result_proveedor->fetch_assoc();
+
+                // 2. Obtener productos asociados al proveedor con paginación y ordenamiento
+                $stmt_productos = $this->conn->prepare("
+                    SELECT nombre, codigo, sku, descripcion, precio_venta 
+                    FROM productos 
+                    WHERE id_proveedor = ? AND estado = ?
+                    ORDER BY $orden
+                    LIMIT ? OFFSET ?
+                ");
+                $stmt_productos->bind_param("isii", $id_proveedor, $filtro_estado, $limit, $offset);
+                $stmt_productos->execute();
+                $result_productos = $stmt_productos->get_result();
+                $productos_proveedor = $result_productos->fetch_all(MYSQLI_ASSOC);
+            } else {
+                return null; 
+            }
+
+            return [
+                'proveedor' => $proveedor_info,
+                'productos' => $productos_proveedor
+            ];
+
+        } catch (Exception $e) {
+            error_log("Error al obtener historial del proveedor: " . $e->getMessage());
+            return null;
+        } finally {
+            if ($stmt_proveedor !== null) {
+                $stmt_proveedor->close();
+            }
+            if ($stmt_productos !== null) {
+                $stmt_productos->close();
+            }
+        }
+    }
+        
+
+
+
+
+
     public function eliminarProveedor($id_proveedor) {
         $stmt = null;
         $checkStmt = null;

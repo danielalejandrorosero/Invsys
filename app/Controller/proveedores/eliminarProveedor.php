@@ -45,4 +45,3 @@ class EliminarProveedorController {
 // Iniciar el controlador
 $controller = new EliminarProveedorController($conn);
 $controller->eliminarProveedor();
-?>

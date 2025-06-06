@@ -118,11 +118,10 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
 
             <h3>Proveedores</h3>
             <ul>
-                <li><a href="../../Controller/proveedores/agregarProveedor.php"><i class="fas fa-store"></i> Crear Proveedor</a></li>
-                <li><a href="../../Controller/proveedores/listarProveedores.php"><i class="fas fa-list"></i> Listar Proveedores</a></li>
-                <li><a href="../../Controller/proveedores/listarProveedores.php"><i class="fas fa-edit"></i> Editar Proveedor</a></li>
-                <li><a href="../../Controller/proveedores/eliminarProveedor.php"><i class="fas fa-trash-alt"></i> Eliminar Proveedor</a></li>
-                <li><a href="../../Controller/proveedores/restaurarProveedor.php"><i class="fas fa-trash-restore"></i> Restaurar Proveedor</a></li>
+                <li><a href="../../Controller/proveedores/listarProveedores.php"><i class="fas fa-list"></i> Ver Proveedores</a></li>
+                <li><a href="../../Controller/proveedores/agregarProveedor.php"><i class="fas fa-plus"></i> Nuevo Proveedor</a></li>
+                <li><a href="../../Controller/proveedores/seleccionarProveedorHistorialController.php"><i class="fas fa-history"></i> Historial de Proveedores</a></li>
+                <li><a href="../../Controller/proveedores/ListarProveedoresEliminadosController.php"><i class="fas fa-trash-alt"></i> Proveedores Eliminados</a></li>
             </ul>
 
 

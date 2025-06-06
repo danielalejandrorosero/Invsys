@@ -64,11 +64,11 @@ class AgregarProveedorController {
                 }
             }
         }
-        
+            
         require_once __DIR__ . '/../../Views/proveedores/agregarProveedorVista.php';
     }
 }
 
 $controller = new AgregarProveedorController($conn);
 $controller->agregarProveedor();
-?>
+

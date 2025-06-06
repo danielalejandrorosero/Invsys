@@ -65,7 +65,7 @@ function encontrarPorGrupoNivel($nivel)
     $stmt->bind_param("i", $nivel);
     $stmt->execute();
     $resultado = $stmt->get_result();
-
+    
     $grupo = $resultado->num_rows > 0 ? $resultado->fetch_assoc() : null;
 
     $stmt->close();

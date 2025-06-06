@@ -46,16 +46,19 @@ document.addEventListener('DOMContentLoaded', function() {
         scrollToBottom();
 
         // Enviar mensaje al servidor
-        fetch('/InventoryManagementSystem/chatbot_ollama.php', {
-            // Corregido: eliminado la 'p' extra
+        fetch('/InventoryManagementSystem/chatbot.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ message: message })
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Respuesta del servidor:', response);
+            return response.json();
+        })
         .then(data => {
+            console.log('Datos recibidos:', data);
             // Eliminar indicador de escritura
             chatMessages.removeChild(typingIndicator);
             
@@ -63,12 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
             addMessage(data.response, 'bot');
         })
         .catch(error => {
+            console.error('Error en la petición:', error);
             // Eliminar indicador de escritura
             chatMessages.removeChild(typingIndicator);
             
-            // Mostrar error específico sobre el modelo no instalado
-            addMessage('Error: No se pudo conectar con el modelo de IA. Por favor, asegúrate de tener Ollama instalado y el modelo cargado en tu sistema.', 'bot');
-            console.error('Error completo:', error);
+            // Mostrar error específico sobre el servicio de Gemini
+            addMessage('Error: No se pudo conectar con el servicio de IA. Por favor, asegúrate de que el servicio Flask esté corriendo y que la API key de Gemini esté configurada correctamente.', 'bot');
         });
     }
 
