@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
     closeChatBtn.addEventListener('click', function() {
         chatContainer.style.display = 'none';
         openChatBtn.style.display = 'block';
+        // Limpiar el historial de mensajes
+        chatMessages.innerHTML = '<div>Hola, soy tu asistente de inventario. ¿En qué puedo ayudarte hoy?</div>';
+        // Limpiar el campo de entrada
+        chatInput.value = '';
     });
 
     // Enviar mensaje al presionar Enter

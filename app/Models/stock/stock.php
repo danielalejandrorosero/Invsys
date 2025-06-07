@@ -11,9 +11,11 @@ class Stock {
         $stmt = null;
         try {
             $sql = "SELECT p.id_producto, p.nombre, sa.cantidad_disponible, p.stock_minimo
-                    FROM stock_almacen sa
-                    JOIN productos p ON sa.id_producto = p.id_producto
-                    WHERE sa.cantidad_disponible <= p.stock_minimo";
+        FROM stock_almacen sa
+        JOIN productos p ON sa.id_producto = p.id_producto
+        WHERE sa.cantidad_disponible <= p.stock_minimo
+        AND p.estado = 'activo'";
+    
     
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();

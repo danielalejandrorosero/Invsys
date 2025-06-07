@@ -273,10 +273,10 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
         
         <!-- Ventana de chat -->
         <div id="chat-container">
-            <div>
+            <div class="chat-header">
                 <h5>Asistente de Inventario</h5>
-                <button id="close-chat-btn">
-                    <i class="fas fa-times"></i>
+                <button id="close-chat-btn" title="Cerrar chat">
+                    <span class="close-x">×</span>
                 </button>
             </div>
             <div id="chat-messages">
@@ -284,9 +284,9 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                     Hola, soy tu asistente de inventario. ¿En qué puedo ayudarte hoy?
                 </div>
             </div>
-            <div>
+            <div class="chat-input-container">
                 <input type="text" id="chat-input-field" placeholder="Escribe tu consulta aquí...">
-                <button id="send-chat-btn">
+                <button id="send-chat-btn" title="Enviar mensaje">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
