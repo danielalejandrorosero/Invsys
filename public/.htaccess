@@ -1,17 +1,88 @@
+# Habilitar el motor de reescritura
 RewriteEngine On
 
-# Solo permitir acceso desde ngrok a InventoryManagementSystem/public
-RewriteCond %{HTTP_HOST} \.ngrok-free\.app$ [NC]
-RewriteCond %{REQUEST_URI} !^/InventoryManagementSystem/public/ [NC]
-RewriteCond %{REQUEST_URI} !^/InventoryManagementSystem/public$ [NC]
-RewriteRule ^ - [F,L]
+# Forzar HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Bloquear phpMyAdmin desde ngrok
-RewriteCond %{HTTP_HOST} \.ngrok-free\.app$ [NC]
-RewriteCond %{REQUEST_URI} ^/phpmyadmin [NC]
-RewriteRule ^ - [F,L]
+# Proteger archivos sensibles
+<FilesMatch "^(\.htaccess|\.htpasswd|\.git|\.env|config\.php|composer\.json|composer\.lock)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
 
-# Redireccionar raíz a la aplicación cuando venga de ngrok
-RewriteCond %{HTTP_HOST} \.ngrok-free\.app$ [NC]
-RewriteCond %{REQUEST_URI} ^/$
-RewriteRule ^ /InventoryManagementSystem/public/ [R=301,L]
+# Prevenir listado de directorios
+Options -Indexes
+
+# Proteger contra ataques XSS
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data:;"
+</IfModule>
+
+# Comprimir archivos
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Cacheo de archivos estáticos
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Redirigir errores a páginas personalizadas
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+ErrorDocument 500 /500.php
+
+# Prevenir acceso a archivos PHP en directorios de uploads
+<Directory "/public/uploads">
+    <FilesMatch "\.php$">
+        Order Allow,Deny
+        Deny from all
+    </FilesMatch>
+</Directory>
+
+# Limitar métodos HTTP
+<LimitExcept GET POST>
+    Order deny,allow
+    Deny from all
+</LimitExcept>
+
+# Proteger contra ataques de fuerza bruta
+<IfModule mod_evasive20.c>
+    DOSHashTableSize 3097
+    DOSPageCount 2
+    DOSSiteCount 50
+    DOSPageInterval 1
+    DOSSiteInterval 1
+    DOSBlockingPeriod 10
+</IfModule>
+
+# Configuración de PHP
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    php_flag display_errors off
+    php_flag log_errors on
+    php_value error_log /path/to/error.log
+</IfModule> 
