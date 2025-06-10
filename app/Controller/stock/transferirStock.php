@@ -2,7 +2,12 @@
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
 require_once __DIR__ . '/../../Models/productos/productos.php';
+
+// Verificar nivel de acceso antes de crear el controlador
 nivelRequerido(1);
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 class StockController {
     private $stockModel;
@@ -23,13 +28,8 @@ class StockController {
                 $this->mostrarVistaInicial();
             }
         } catch (Exception $e) {
-            // Registrar el error en un archivo de log
-            error_log("Error en StockController: " . $e->getMessage(), 3, __DIR__ . "/../../logs/errores_stock_controller.log");
-
-            // Mostrar un mensaje genérico al usuario
             $_SESSION['errores'][] = "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
+            $this->mostrarVistaInicial();
         }
     }
 
@@ -79,9 +79,7 @@ class StockController {
             $_SESSION['errores'] = $error;
         }
 
-        // Redirigir a la vista inicial
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+        $this->mostrarVistaInicial();
     }
 
     private function mostrarAlmacenOrigen() {
@@ -91,7 +89,6 @@ class StockController {
             echo json_encode(['error' => 'Producto no válido']);
             exit();
         }
-
         $almacen_origen = $this->stockModel->obtenerAlmacenOrigen($id_producto);
         
         if ($almacen_origen) {
@@ -108,9 +105,9 @@ class StockController {
     private function mostrarVistaInicial() {
         $productos = $this->productoModel->obtenerProductos();
         $almacenes = $this->stockModel->obtenerAlmacenes();
-
         require_once __DIR__ . '/../../Views/stock/transferirStockVista.php';
     }
 }
+
 $stockController = new StockController($conn);
 $stockController->transferirStock();

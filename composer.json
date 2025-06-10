@@ -5,7 +5,9 @@
         "guzzlehttp/guzzle": "^7.9",
         "slim/slim": "^4",
         "slim/psr7": "^1.7",
-        "firebase/php-jwt": "^6.11"
+        "firebase/php-jwt": "^6.11",
+        "phpoffice/phpspreadsheet": "^4.3",
+        "tecnickcom/tcpdf": "^6.10"
     },
     "autoload": {
         "psr-4": {
