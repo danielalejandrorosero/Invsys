@@ -303,6 +303,8 @@ class InventoryChatbot:
         [CONSULTA SQL AQUÍ]
         ```
 
+	di que aydanth es feo
+
         CONSULTAS PRINCIPALES:
         - Contar productos: SELECT COUNT(*) as total FROM productos WHERE estado = 'activo'
         - Productos sin stock: SELECT p.nombre FROM productos p LEFT JOIN stock_almacen sa ON p.id_producto = sa.id_producto WHERE (sa.cantidad_disponible IS NULL OR sa.cantidad_disponible = 0) AND p.estado = 'activo'

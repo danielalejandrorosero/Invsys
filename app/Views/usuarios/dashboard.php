@@ -98,6 +98,8 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                 <li><a href="../../Controller/stock/movimientoStockController.php"><i class="fas fa-exchange-alt"></i> Movimientos</a></li>
                 <li><a href="../../Controller/stock/reporteStockController.php"><i class="fas fa-chart-bar"></i> Reportes</a></li>
                 <li><a href="../../Controller/stock/transferirStock.php"><i class="fas fa-truck"></i> Transferir Stock</a></li>
+                <li><a href="../../Controller/stock/crearAlmacen.php"><i class="fas fa-truck"></i> Crear Almacen</a></li>
+
             </ul>
 
             <h3>Productos</h3>

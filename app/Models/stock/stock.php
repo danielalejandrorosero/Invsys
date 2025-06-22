@@ -103,6 +103,25 @@ class Stock {
         }
     }
 
+    public function obtenerAlmacenPorId($id_almacen) {
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM almacenes WHERE id_almacen = ?");
+            $stmt->bind_param("i", $id_almacen);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            
+            // Retornar el almacén encontrado o null si no existe
+            return $resultado->fetch_assoc();
+            
+        } catch (Exception $e) {
+            error_log("Error al obtener almacen por id: " . $e->getMessage());
+            return null;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
     // transferneica pendiente
     public function contarTransferenciasPendientes() {
         $resultado = null;
