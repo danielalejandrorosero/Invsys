@@ -24,7 +24,7 @@ class ControlInventarioController {
     }
 
     public function obtenerListas() {
-        $almacenes = $this->stockModel->obtenerAlmacenes();
+        $almacenes = $this->stockModel->obtenerAlmacenesActivos();
         $inventarioGlobal = $this->stockModel->obtenerMovimientosRecientes();
         $productos = $this->productos->contarTotalProductos();
         $productosBajoStock = $this->stockModel->obtenerProductosBajoStock();

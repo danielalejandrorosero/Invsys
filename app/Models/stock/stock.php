@@ -717,8 +717,83 @@ class Stock {
         
         return $stock && $stock['cantidad'] >= $cantidad;
     }
+    public function obtenerAlmacenesActivos() {
+        $stmt = null;
+        try {
+            $stmt = $this->conn->query("SELECT id_almacen, nombre, ubicacion FROM almacenes WHERE estado = 'activo' ORDER BY nombre");
+            return $stmt->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error al obtener almacenes activos: " . $e->getMessage());
+            return [];
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+    
+    public function editarAlmacen($id_almacen, $nombre, $ubicacion) {
+        $stmt = null;
+        try {
+            $sql = "UPDATE almacenes SET nombre = ?, ubicacion = ? WHERE id_almacen = ? AND estado = 'activo'";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ssi", $nombre, $ubicacion, $id_almacen);
+            $stmt->execute();
+            return $stmt->affected_rows > 0;
+        } catch (Exception $e) {
+            error_log("Error al editar almacén: " . $e->getMessage());
+            return false;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+    
+    public function eliminarAlmacen($id_almacen) {
+        $stmt = null;
+        try {
+            $sql = "UPDATE almacenes SET estado = 'eliminado' WHERE id_almacen = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $id_almacen);
+            $stmt->execute();
+            return $stmt->affected_rows > 0;
+        } catch (Exception $e) {
+            error_log("Error al eliminar almacén: " . $e->getMessage());
+            return false;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+    
+    public function almacenTieneProductos($id_almacen) {
+        $stmt = null;
+        try {
+            $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM stock_almacen WHERE id_almacen = ? AND cantidad > 0");
+            $stmt->bind_param("i", $id_almacen);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            $row = $resultado->fetch_assoc();
+            return $row['total'] > 0;
+        } catch (Exception $e) {
+            error_log("Error al verificar productos en almacén: " . $e->getMessage());
+            return false;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+    
+    
+    
+    
+
+
+
 }
-?>
 
 
 
