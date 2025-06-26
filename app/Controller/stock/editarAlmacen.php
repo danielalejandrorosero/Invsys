@@ -9,6 +9,7 @@ class EditarAlmacenController {
 
     public function __construct($conn) {
         $this->stockModel = new Stock($conn);
+        nivelRequerido([1]);
     }
 
     public function editarAlmacen() {

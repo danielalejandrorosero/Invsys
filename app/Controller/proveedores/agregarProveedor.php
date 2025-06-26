@@ -10,7 +10,8 @@ class AgregarProveedorController {
     }
     
     public function agregarProveedor() {
-        nivelRequerido(1);
+        nivelRequerido([1,2,3]);
+        
         $error = [];
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_proveedor'])) {

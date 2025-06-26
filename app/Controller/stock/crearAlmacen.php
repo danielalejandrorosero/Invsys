@@ -14,7 +14,7 @@ class CrearAlmacenController {
     }
 
     public function crearAlmacen() {
-        nivelRequerido(1); 
+        nivelRequerido([1]); 
 
         $error = [];
 

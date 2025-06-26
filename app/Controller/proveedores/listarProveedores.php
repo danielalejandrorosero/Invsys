@@ -11,11 +11,11 @@ class ListarProveedoresController {
 
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
+        nivelRequerido([1,2,3]);
     }
 
 
     public function listarProveedores() {
-        nivelRequerido(1);
 
         // parametros para la paginacion
         $limit = 10;

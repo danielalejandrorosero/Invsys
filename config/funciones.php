@@ -9,7 +9,7 @@ function validarCampos($camposRequeridos)
     }
 }
 
-function nivelRequerido($nivel)
+function nivelRequerido($nivelesPermitidos)
 {
     global $sesion;
 
@@ -44,17 +44,15 @@ function nivelRequerido($nivel)
         exit();
     }
 
-    // Verificar si el usuario tiene el nivel requerido
-    if ((int) $usuarioActual["nivel_usuario"] > (int) $nivel) {
+    // Verificar si el usuario tiene uno de los niveles permitidos
+    if (!in_array((int)$usuarioActual["nivel_usuario"], $nivelesPermitidos)) {
         if (basename($_SERVER["PHP_SELF"]) !== "index.php") {
-            $_SESSION["error"] =
-                "Lo siento, no tienes permisos para ver esta página.";
+            error_log("Usuario no autorizado entro a " . basename($_SERVER["PHP_SELF"]) . ".");
             header("Location: ../../Views/usuarios/dashboard.php");
             exit();
         }
     }
 }
-
 
 function encontrarPorGrupoNivel($nivel)
 {

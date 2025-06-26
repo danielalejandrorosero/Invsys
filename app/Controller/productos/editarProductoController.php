@@ -11,11 +11,11 @@ class EditarProductoController
     public function __construct($conn)
     {
         $this->productoModel = new Productos($conn);
+        nivelRequerido([1,2]);
     }
 
     public function editarProducto()
     {
-        nivelRequerido(1);
         $error = [];
         $producto = null;
 

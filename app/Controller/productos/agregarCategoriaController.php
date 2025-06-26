@@ -1,13 +1,13 @@
 <?php
 
 require_once __DIR__ . '/../../../config/cargarConfig.php';
-require_once __DIR__ . '/../../Models/productos/categorias.php';
+require_once __DIR__ . '/../../Models/productos/productos.php';
 
 class AgregarCategoriaController {
-    private $categoriaModel;
+    private $productoModel;
 
     public function __construct($conn) {
-        $this->categoriaModel = new Categorias($conn);
+        $this->productoModel = new productos($conn);
     }
 
     public function agregarCategoria() {
@@ -30,13 +30,13 @@ class AgregarCategoriaController {
             }
 
             // Verificar si ya existe
-            if (empty($error) && $this->categoriaModel->existeCategoria($nombre)) {
+            if (empty($error) && $this->productoModel->existeCategoria($nombre)) {
                 $error['nombre'] = 'Ya existe una categoría con ese nombre.';
             }
 
             if (empty($error)) {
                 try {
-                    if ($this->categoriaModel->crearCategoria($nombre, $descripcion)) {
+                    if ($this->productoModel->crearCategoria($nombre, $descripcion)) {
                         $_SESSION['mensaje'] = 'Categoría creada correctamente';
                         header('Location: ../../Controller/productos/ListarCategoriasController.php');
                         exit();

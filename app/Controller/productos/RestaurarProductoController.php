@@ -11,6 +11,7 @@ class RestaurarProductoController
     public function __construct($conn)
     {
         $this->productosModel = new Productos($conn);
+        nivelRequerido([1,2]);
     }
 
     public function restaurarProducto()

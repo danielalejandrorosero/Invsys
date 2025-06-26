@@ -11,11 +11,9 @@ class ReporteController {
     private $errores = [];
 
     public function __construct($conn) {
-        // Validar conexión a la base de datos
-        if (!$conn) {
-            throw new Exception("Error: No se pudo conectar a la base de datos");
-        }
+
         $this->stockModel = new Stock($conn);
+        nivelRequerido([1,2]);
     }
 
     public function reporteStockController() {

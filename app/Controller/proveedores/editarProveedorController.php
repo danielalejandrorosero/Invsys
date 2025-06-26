@@ -7,10 +7,10 @@ class EditarProveedorController {
 
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
+        nivelRequerido([1,2]);
     }
 
     public function editarProveedor() {
-        nivelRequerido(1);
         $error = [];
         $proveedor = null;
 

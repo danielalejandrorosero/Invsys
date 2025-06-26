@@ -2,7 +2,6 @@
 
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/usuarios/Usuarios.php';
-nivelRequerido(1);
 
 class UsuariosController {
     private $usuarioModel;
@@ -12,6 +11,8 @@ class UsuariosController {
 
 
         $this->usuarioModel = new Usuario($conn);
+        nivelRequerido([1]);
+
     }
 
     public function agregarUsuario() {

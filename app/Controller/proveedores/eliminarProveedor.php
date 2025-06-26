@@ -8,6 +8,7 @@ class EliminarProveedorController {
 
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
+        nivelRequerido([1,2]);
     }
 
     public function eliminarProveedor() {

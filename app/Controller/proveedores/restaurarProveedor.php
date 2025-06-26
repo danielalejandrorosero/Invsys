@@ -3,18 +3,17 @@ require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/proveedor/proveedores.php';
 
 // debugear
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+
 
 class RestaurarProveedorController {
     private $proveedorModel;
     
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
+        nivelRequerido([1,2]);
     }
     
     public function restaurarProveedor() {
-        nivelRequerido(1);
         
         // validar y obtener el id del proveedor
         if (!isset($_GET["id"]) || empty($_GET["id"])) {

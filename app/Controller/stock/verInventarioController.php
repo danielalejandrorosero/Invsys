@@ -4,7 +4,6 @@
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
 require_once __DIR__ . '/../../Models/productos/productos.php';
-nivelRequerido(1);
 
 class ControlInventarioController {
     private $stockModel;
@@ -13,6 +12,7 @@ class ControlInventarioController {
     public function __construct($conn) {
         $this->stockModel = new Stock($conn);
         $this->productos = new Productos($conn);
+        nivelRequerido([1,2,3]);
     }
 
     public function verInventario() {

@@ -13,10 +13,11 @@ class ControlInventarioController {
     public function __construct($conn) {
         $this->stockModel = new Stock($conn);
         $this->productoModel = new Productos($conn);
+        nivelRequerido([1,2]);
+
     }
 
     public function ajustarStock() {
-        nivelRequerido(1);
         $error = [];
         $almacenes = [];
         $productos = $this->productoModel->obtenerProductos();

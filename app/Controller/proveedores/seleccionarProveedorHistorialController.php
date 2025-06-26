@@ -2,13 +2,13 @@
 
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/proveedor/proveedores.php';
-nivelRequerido(1);
 
 class SeleccionarProveedorHistorialController {
     private $proveedorModel;
 
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
+        nivelRequerido([1,2,3]);
     }
 
     public function mostrarSeleccion() {

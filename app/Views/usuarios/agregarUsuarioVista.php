@@ -83,7 +83,7 @@
                             <select id="nivel_usuario" name="nivel_usuario" required>
                                 <option value="" disabled selected>Seleccione un nivel</option>
                                 <option value="1">Administrador</option>
-                                <option value="2">Usuario Regular</option>
+                                <option value="2">Supervisor</option>
                                 <option value="3">Operador</option>
                             </select>
                             <label for="nivel_usuario">Nivel de Usuario</label>

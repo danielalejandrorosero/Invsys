@@ -8,6 +8,7 @@ class EliminarAlmacenController {
 
     public function __construct($conn) {
         $this->stockModel = new Stock($conn);
+        nivelRequerido([1]);
     }
 
     public function eliminarAlmacen() {

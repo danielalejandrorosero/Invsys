@@ -14,10 +14,10 @@ class EliminarProductoController
     public function __construct($conn)
     {
         $this->productosModel = new Productos($conn);
+        nivelRequerido([1, 2]);
     }
     public function eliminarProducto()
     {
-        nivelRequerido(1);
 
         // Validar y obtener el ID del producto
         if (!isset($_GET["id"]) || empty($_GET["id"])) {

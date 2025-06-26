@@ -16,6 +16,7 @@ class SubirImagenController {
         $this->usuarioModel = new Usuario($conn);
         $this->productoModel = new Productos($conn);
         $this->imagenModel = new Imagen($conn);
+        
     }
 
     public function subirImagen($tipo) {

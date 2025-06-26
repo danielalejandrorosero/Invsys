@@ -4,7 +4,9 @@
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/usuarios/Usuarios.php';
 
-nivelRequerido(1);
+
+
+
 class ListarUsuarios {
     
 
@@ -12,6 +14,7 @@ class ListarUsuarios {
     
     public function __construct($conn) {
         $this->usuarioModel = new Usuario($conn);
+        nivelRequerido([1,2]);
     }  
 
     public function listarUsuarios() {

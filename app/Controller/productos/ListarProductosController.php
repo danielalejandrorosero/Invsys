@@ -17,7 +17,6 @@ class ListarProductosController
 
     public function listarProductos()
     {
-        nivelRequerido(1);
 
         // Parámetros de paginación
         $limit = 10; // Número de productos por página

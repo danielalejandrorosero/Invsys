@@ -12,10 +12,10 @@ class ListarProveedoresEliminadosController {
 
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
+        nivelRequerido([1,2,3]);
     }
 
     public function listarProveedoresEliminados() {
-        nivelRequerido(1);
 
         $proveedores = $this->proveedorModel->obtenerProveedoresEliminados();
 

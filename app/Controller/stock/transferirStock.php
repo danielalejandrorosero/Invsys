@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../Models/stock/stock.php';
 require_once __DIR__ . '/../../Models/productos/productos.php';
 
 // Verificar nivel de acceso antes de crear el controlador
-nivelRequerido(1);
+
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -16,6 +16,7 @@ class StockController {
     public function __construct($conn) {
         $this->stockModel = new Stock($conn);
         $this->productoModel = new Productos($conn);
+        nivelRequerido([1,2]);
     }
 
     public function transferirStock() {

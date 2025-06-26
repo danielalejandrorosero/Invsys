@@ -16,7 +16,6 @@ class BuscarProductosController
 
     public function buscarProductos()
     {
-        nivelRequerido(1);
 
         // Obtener parámetros de búsqueda
         $nombre = isset($_GET["nombre"]) ? $_GET["nombre"] : null;

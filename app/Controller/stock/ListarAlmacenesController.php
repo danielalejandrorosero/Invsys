@@ -11,7 +11,7 @@ class ListarAlmacenesController {
     }
 
     public function listarAlmacenes() {
-        nivelRequerido(1);
+        nivelRequerido([1,2,3]);
         
         try {
             $almacenes = $this->stockModel->obtenerAlmacenesActivos();

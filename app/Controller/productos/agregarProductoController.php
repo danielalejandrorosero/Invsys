@@ -14,11 +14,11 @@
         public function __construct($conn)
         {
             $this->productoModel = new Productos($conn);
+            nivelRequerido([1,2,3]);
         }
 
         public function agregarProducto()
         {
-            nivelRequerido(1);
             $error = [];
 
             if (
