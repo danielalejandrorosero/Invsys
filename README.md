@@ -63,6 +63,6 @@
 | **Composer** | 2.0+ | Gestión de dependencias |
 | **PHPMailer** | 6.8+ | Envío de correos |
 | **Guzzle** | 7.0+ | Cliente HTTP |
-
+| **Python** | 3.10+ | Chatbot inteligente |
 
 ## 📁 Estructura del Proyecto
