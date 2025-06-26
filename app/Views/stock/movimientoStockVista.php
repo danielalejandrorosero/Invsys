@@ -1,17 +1,27 @@
 <?php
-/**
- * Vista de Historial de Movimientos de Stock
- * 
- * Esta vista muestra un listado completo de todos los movimientos de inventario
- * con opciones de filtrado y paginación.
- */
 
-// Valores predeterminados para la paginación
-$pagina_actual = $pagina_actual ?? 1;
+
+
+
+$pagina_actual = max(1, $pagina_actual ?? 1);
 $registros_por_pagina = $registros_por_pagina ?? 10;
-$total_registros = $total_registros ?? ($resultado ? $resultado->num_rows : 0);
-$total_paginas = $total_paginas ?? ceil($total_registros / $registros_por_pagina);
+$total_registros = max(0, $total_registros ?? 0);
+$total_paginas = max(1, $total_paginas ?? 1);
 
+
+if ($pagina_actual > $total_paginas && $total_paginas > 0) {
+    $pagina_actual = $total_paginas;
+}
+if (isset($_GET['debug'])) {
+    echo "<div style='background: #f0f0f0; padding: 10px; margin: 10px 0; border: 1px solid #ccc;'>";
+    echo "<strong>Debug Info:</strong><br>";
+    echo "Página actual: " . $pagina_actual . "<br>";
+    echo "Total páginas: " . $total_paginas . "<br>";
+    echo "Total registros: " . $total_registros . "<br>";
+    echo "Registros por página: " . $registros_por_pagina . "<br>";
+    echo "Parámetros URL: " . htmlspecialchars($params_url) . "<br>";
+    echo "</div>";
+}
 // Construir parámetros de URL para mantener los filtros
 $params_url = '';
 if (isset($_GET['almacen']) && !empty($_GET['almacen'])) {

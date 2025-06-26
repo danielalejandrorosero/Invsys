@@ -22,7 +22,7 @@ class ListarUsuarios {
             echo "<p style='color:red;'>" . $e->getMessage() . "</p>";
         }
     }
-}
+}   
 
 // Instanciar el controlador
 $listarUsuarios = new ListarUsuarios($conn);

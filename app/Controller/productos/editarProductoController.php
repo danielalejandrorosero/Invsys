@@ -21,7 +21,6 @@ class EditarProductoController
 
         // Verificar si se ha proporcionado un ID de producto
         if (!isset($_GET["id"]) || empty($_GET["id"])) {
-            $_SESSION["errores"] = ["ID de producto no proporcionado"];
             header(
                 "Location: ../../Controller/productos/ListarProductosController.php"
             );

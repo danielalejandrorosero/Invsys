@@ -13,6 +13,11 @@ if (!isset($_SESSION["id_usuario"])) {
     exit();
 }
 
+// Inicializar variable de sesión para la alerta de stock bajo
+if (!isset($_SESSION['alerta_stock_mostrada'])) {
+    $_SESSION['alerta_stock_mostrada'] = false;
+}
+
 // Inicializar modelos una sola vez
 $usuario = new Usuario($conn);
 $stock = new Stock($conn);
@@ -54,11 +59,59 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
 
     <link rel="stylesheet" href="../../../public/css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../">
     <link rel="shortcut icon" href="../../../public/img/favicon.ico" type="image/x-icon">
     <meta name="description" content="Panel de control del sistema de gestión de inventario InvSys">
     <meta name="theme-color" content="#2c3e50">
     
-
+    <style>
+        .alert-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .alert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .alert-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .alert-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+    </style>
 </head>
 
 <body>
@@ -100,6 +153,8 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                 <li><a href="../../Controller/stock/transferirStock.php"><i class="fas fa-truck"></i> Transferir Stock</a></li>
                 <li><a href="../../Controller/stock/crearAlmacen.php"><i class="fas fa-truck"></i> Crear Almacen</a></li>
                 <li><a href="../../Controller/stock/ListarAlmacenesController.php"><i class="fas fa-warehouse"></i> Almacenes</a></li>
+                <li><a href="../../Controller/stock/productosSinAlmacenController.php"><i class="fas fa-warehouse"></i> Productos sin Almacen   </a></li>
+                <li><a href="../../Controller/stock/alertaStockController.php"><i class="fas fa-exclamation-triangle"></i> Alertas de Stock</a></li>
 
             </ul>
 
@@ -107,8 +162,6 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             <ul>
                 <li><a href="../../Controller/productos/agregarProductoController.php"><i class="fas fa-plus-circle"></i> Agregar Producto</a></li>
                 <li><a href="../../Controller/productos/buscarProductosController.php"><i class="fas fa-search"></i> Buscar Producto</a></li>
-                <li><a href="../../Controller/productos/editarProductoController.php"><i class="fas fa-edit"></i> Editar Producto</a></li>
-                <li><a href="../../Controller/productos/eliminarProductoController.php"><i class="fas fa-trash-alt"></i> Eliminar Producto</a></li>
                 <li><a href="../../Controller/productos/RestaurarProductoController.php"><i class="fas fa-trash-restore"></i> Restaurar Producto</a></li>
                 <li><a href="../../Controller/productos/ListarProductosController.php"><i class="fas fa-list"></i> Listar Productos</a></li>
             </ul>
@@ -148,6 +201,8 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             <a href="../../Controller/stock/ajustarStockController.php"><i class="fas fa-edit"></i> Ajustar Stock</a>
             <a href="../../Controller/stock/reporteStockController.php"><i class="fas fa-chart-bar"></i> Reportes</a>
             <a href="../../Controller/stock/transferirStock.php"><i class="fas fa-truck"></i> Transferir</a>
+            <a href="../../Controller/stock/alertaStockController.php"><i class="fas fa-exclamation-triangle"></i> Alertas</a>
+
         </div>
 
         <!-- Tarjetas del Dashboard -->
@@ -296,6 +351,128 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
         </div>
     </div>
 
+    <!-- Modal de Alertas -->
+    <div id="alertModal" class="alert-modal">
+        <div class="alert-content">
+            <div style="background: linear-gradient(135deg, #ff6b6b, #ff8e53); color: white; padding: 20px 30px; border-radius: 15px 15px 0 0; display: flex; align-items: center; justify-content: space-between;">
+                <h2 style="margin: 0; font-size: 1.5rem; font-weight: 600;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Alertas de Stock Bajo
+                </h2>
+                <button onclick="closeAlertModal()" style="background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div style="padding: 30px;">
+                <?php if (!empty($productosBajoStock)): ?>
+                    <div style="background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-radius: 10px; padding: 20px; margin-bottom: 25px; border-left: 5px solid #ff9800;">
+                        <h4><i class="fas fa-info-circle"></i> Resumen de Alertas</h4>
+                        <p>Los siguientes productos requieren atención inmediata debido a su bajo nivel de stock.</p>
+                        
+                        <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+                            <div style="text-align: center; padding: 15px;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #ff5722;"><?php echo count($productosBajoStock); ?></div>
+                                <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Productos con Stock Bajo</div>
+                            </div>
+                            <div style="text-align: center; padding: 15px;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #ff5722;">
+                                    <?php 
+                                    $criticos = 0;
+                                    foreach ($productosBajoStock as $producto) {
+                                        if ($producto['cantidad_disponible'] < $producto['stock_minimo'] * 0.5) {
+                                            $criticos++;
+                                        }
+                                    }
+                                    echo $criticos;
+                                    ?>
+                                </div>
+                                <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">Críticos</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        <?php foreach ($productosBajoStock as $producto): 
+                            $isCritical = $producto['cantidad_disponible'] < $producto['stock_minimo'] * 0.5;
+                            $percentage = ($producto['cantidad_disponible'] / $producto['stock_minimo']) * 100;
+                        ?>
+                            <div style="background: <?php echo $isCritical ? '#ffebee' : '#f8f9fa'; ?>; border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 4px solid <?php echo $isCritical ? '#f44336' : '#ff9800'; ?>; display: flex; align-items: center; justify-content: space-between;">
+                                <div style="flex: 1;">
+                                    <div style="font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 5px;">
+                                        <i class="<?php echo $isCritical ? 'fas fa-radiation' : 'fas fa-exclamation-triangle'; ?>"></i>
+                                        <?php echo htmlspecialchars($producto['nombre']); ?>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: 20px; margin-top: 10px;">
+                                        <div style="text-align: center;">
+                                            <div style="font-size: 1.3rem; font-weight: bold; color: <?php echo $isCritical ? '#f44336' : '#ff9800'; ?>;">
+                                                <?php echo htmlspecialchars($producto['cantidad_disponible']); ?>
+                                            </div>
+                                            <div style="font-size: 0.8rem; color: #666; margin-top: 2px;">Disponible</div>
+                                        </div>
+                                        
+                                        <div style="text-align: center;">
+                                            <div style="font-size: 1.3rem; font-weight: bold;">
+                                                <?php echo htmlspecialchars($producto['stock_minimo']); ?>
+                                            </div>
+                                            <div style="font-size: 0.8rem; color: #666; margin-top: 2px;">Mínimo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="flex: 1; margin: 0 20px;">
+                                    <div style="height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-bottom: 5px;">
+                                        <div style="height: 100%; background: linear-gradient(90deg, <?php echo $isCritical ? '#f44336, #ef5350' : '#ff9800, #ffb74d'; ?>); width: <?php echo min($percentage, 100); ?>%;"></div>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: #666; text-align: center;"><?php echo round($percentage, 1); ?>% del mínimo</div>
+                                </div>
+                                
+                                <div style="display: flex; gap: 10px;">
+                                    <a href="../../Controller/stock/ajustarStockController.php?id_producto=<?php echo $producto['id_producto']; ?>" 
+                                       style="background: #2196f3; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 0.9rem;">
+                                        <i class="fas fa-edit"></i> Ajustar
+                                    </a>
+                                    <a href="../../Controller/productos/verProductoController.php?id=<?php echo $producto['id_producto']; ?>" 
+                                       style="background: #9e9e9e; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 0.9rem;">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div style="font-size: 4rem; color: #4caf50; margin-bottom: 20px;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div style="font-size: 1.5rem; color: #333; margin-bottom: 10px;">¡No hay alertas de stock bajo!</div>
+                        <div style="color: #666; margin-bottom: 20px;">
+                            Todos los productos tienen niveles de stock adecuados. 
+                            No hay productos que requieran atención en este momento.
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+            
+            <div style="padding: 20px 30px; background: #f5f5f5; border-radius: 0 0 15px 15px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="background: #ff5722; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.9rem; font-weight: bold;">
+                    <i class="fas fa-bell"></i>
+                    <?php echo count($productosBajoStock); ?> alerta(s)
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <a href="../../Controller/stock/ajustarStockController.php" style="background: #2196f3; color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none;">
+                        <i class="fas fa-edit"></i> Ajustar Stock
+                    </a>
+                    <button onclick="closeAlertModal()" style="background: #9e9e9e; color: white; padding: 10px 20px; border: none; border-radius: 25px; cursor: pointer;">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Incluir el JavaScript del chat -->
     <script src="../../../public/js/chatbot.js"></script>
 
@@ -323,17 +500,14 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             // Inicializar componentes de Materialize
             M.AutoInit();
             
-            // Mostrar notificaciones de stock bajo
-            <?php if (!empty($productosBajoStock)): ?>
-                var productos = <?php echo json_encode($productosBajoStock); ?>;
-                productos.forEach(function (producto, index) {
-                    setTimeout(function() {
-                        M.toast({
-                            html: '<i class="fas fa-exclamation-circle"></i> <b>Stock bajo:</b> ' + producto.nombre + ' - Cantidad: ' + producto.cantidad_disponible,
-                            displayLength: 8000
-                        });
-                    }, index * 300 + 1000);
-                });
+            // Mostrar modal de alertas si hay productos con bajo stock
+            <?php if (!empty($productosBajoStock) && $_SESSION['alerta_stock_mostrada'] === false): ?>
+                // Mostrar modal automáticamente después de 2 segundos
+                setTimeout(function() {
+                    showAlertModal();
+                    // Marcar la alerta como mostrada en la sesión
+                    fetch('marcar_alerta_stock.php');
+                }, 2000);
             <?php endif; ?>
             
             // Detectar tamaño de pantalla al cargar
@@ -414,6 +588,30 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                 
                 // Limpiar la URL
                 window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+        
+        // Función para mostrar el modal de alertas
+        function showAlertModal() {
+            document.getElementById('alertModal').style.display = 'flex';
+        }
+        
+        // Función para cerrar el modal de alertas
+        function closeAlertModal() {
+            document.getElementById('alertModal').style.display = 'none';
+        }
+        
+        // Cerrar modal al hacer clic fuera de él
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('alert-modal')) {
+                closeAlertModal();
+            }
+        });
+        
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAlertModal();
             }
         });
     </script>

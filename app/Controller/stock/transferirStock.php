@@ -89,16 +89,23 @@ class StockController {
             echo json_encode(['error' => 'Producto no válido']);
             exit();
         }
-        $almacen_origen = $this->stockModel->obtenerAlmacenOrigen($id_producto);
         
-        if ($almacen_origen) {
-            echo json_encode([
-                'id_almacen' => $almacen_origen['id_almacen'],
-                'nombre' => $almacen_origen['nombre']
-            ]);
-        } else {
+        // Obtener información del almacén de origen con stock disponible
+        $stock_info = $this->stockModel->obtenerStockProducto($id_producto);
+        
+        if (empty($stock_info)) {
             echo json_encode(['error' => 'No hay stock disponible para este producto']);
+            exit();
         }
+        
+        // Tomar el primer almacén (el que tiene más stock)
+        $almacen_origen = $stock_info[0];
+        
+        echo json_encode([
+            'id_almacen' => $almacen_origen['id_almacen'],
+            'nombre' => $almacen_origen['nombre_almacen'],
+            'cantidad_disponible' => $almacen_origen['cantidad_disponible']
+        ]);
         exit();
     }
 

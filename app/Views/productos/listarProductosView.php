@@ -156,9 +156,6 @@
                                             <a href="../../Controller/productos/editarProductoController.php?id=<?php echo $producto["id_producto"]; ?>" class="btn-floating btn-small blue" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="../../Controller/productos/VerProductoController.php?id=<?php echo $producto["id_producto"]; ?>" class="btn-floating btn-small green" title="Ver">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
                                             <button class="btn-floating btn-small red" title="Eliminar"
                                                 onclick="showDeleteModal('<?php echo $producto["id_producto"]; ?>', '<?php echo addslashes($producto["nombre"]); ?>', '<?php echo $producto["codigo"]; ?>')">
                                                 <i class="fas fa-trash"></i>

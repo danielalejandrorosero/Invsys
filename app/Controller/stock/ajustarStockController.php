@@ -22,6 +22,37 @@ class ControlInventarioController {
         $productos = $this->productoModel->obtenerProductos();
         $mensaje = '';
         $tipo_mensaje = '';
+        $id_producto_selected = '';
+
+        // Verificar si se pasó un id_producto en la URL
+        if (isset($_GET['id_producto']) && !empty($_GET['id_producto'])) {
+            $id_producto_selected = (int) $_GET['id_producto'];
+            // Verificar que el producto existe
+            $producto_existe = false;
+            foreach ($productos as $producto) {
+                if ($producto['id_producto'] == $id_producto_selected) {
+                    $producto_existe = true;
+                    break;
+                }
+            }
+            if ($producto_existe) {
+                $almacenes = $this->stockModel->obtenerAlmacenes();
+                
+                // Obtener información del stock actual del producto
+                $stock_actual = $this->stockModel->obtenerStockProducto($id_producto_selected);
+                
+                // Pre-seleccionar el almacén con más stock y la cantidad actual
+                if (!empty($stock_actual)) {
+                    $almacen_principal = $stock_actual[0]; // El primero tiene más stock (ordenado DESC)
+                    $id_almacen_selected = $almacen_principal['id_almacen'];
+                    $cantidad_selected = $almacen_principal['cantidad_disponible'];
+                    $tipo_ajuste_selected = 'absoluto'; // Por defecto, ajuste absoluto
+                }
+            } else {
+                $error[] = "El producto seleccionado no existe.";
+                $id_producto_selected = '';
+            }
+        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_stock'])) {
             $id_producto = (int) $_POST['id_producto'];

@@ -1,10 +1,13 @@
-
-
 <?php
 // Iniciar sesión si no está iniciada
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
+// Inicializar variables por defecto
+$productos = $productos ?? [];
+$totalProductos = $totalProductos ?? 0;
+$resultado = $resultado ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -15,32 +18,6 @@ if (session_status() == PHP_SESSION_NONE) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .steps-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .step {
-            text-align: center;
-        }
-        .step-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-        }
-        .step.active .step-circle {
-            background-color: #2196f3;
-            color: #fff;
-        }
-        .step-label {
-            font-size: 0.875rem;
-            color: #757575;
-        }
         .search-product {
             display: flex;
             align-items: center;
@@ -49,63 +26,18 @@ if (session_status() == PHP_SESSION_NONE) {
         .search-product i {
             margin-right: 10px;
         }
-        .product-select {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .product-option {
-            flex: 1 1 calc(50% - 10px);
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .product-option.selected {
-            background-color: #e0f7fa;
-        }
-        .product-icon {
-            font-size: 2rem;
-            margin-right: 10px;
-        }
-        .product-details {
-            flex: 1;
-        }
-        .product-name {
-            font-weight: bold;
-        }
-        .product-info {
-            color: #757575;
-        }
-        .error-message {
-            color: red;
-            margin-bottom: 20px;
-        }
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
         .stock-badge {
-            padding: 2px 5px;
+            padding: 2px 8px;
             border-radius: 4px;
             color: #fff;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
-        .stock-normal {
-            background-color: #4caf50;
-        }
-        .stock-warning {
-            background-color: #ff9800;
-        }
-        .stock-danger {
-            background-color: #f44336;
-        }
-        .stock-overflow {
-            background-color: #2196f3;
-        }
+        .stock-normal { background-color: #4caf50; }
+        .stock-warning { background-color: #ff9800; }
+        .stock-danger { background-color: #f44336; }
+        .stock-overflow { background-color: #2196f3; }
+        
         .pagination {
             display: flex;
             justify-content: space-between;
@@ -140,82 +72,36 @@ if (session_status() == PHP_SESSION_NONE) {
             color: #bdbdbd;
             margin-bottom: 20px;
         }
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+        .sortable:hover {
+            background-color: #f5f5f5;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .stats-card {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle sort indicators in table headers
-            const tableHeaders = document.querySelectorAll('.sortable');
-            tableHeaders.forEach(header => {
-                header.addEventListener('click', function() {
-                    // Remove active class from all headers
-                    tableHeaders.forEach(h => {
-                        h.classList.remove('active-asc', 'active-desc');
-                    });
-
-                    // Toggle sort direction for clicked header
-                    if (this.classList.contains('active-asc')) {
-                        this.classList.remove('active-asc');
-                        this.classList.add('active-desc');
-                        this.querySelector('i').className = 'fas fa-sort-down';
-                    } else if (this.classList.contains('active-desc')) {
-                        this.classList.remove('active-desc');
-                        this.querySelector('i').className = 'fas fa-sort';
-                    } else {
-                        this.classList.add('active-asc');
-                        this.querySelector('i').className = 'fas fa-sort-up';
-                    }
-
-                    // Here you would implement the actual sorting logic
-                    // This would typically involve an AJAX call or form submission
-                });
-            });
-
-            // Clear filters button
-            const clearBtn = document.getElementById('clearFilters');
-            if (clearBtn) {
-                clearBtn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-form input, .filter-form select').forEach(input => {
-                        input.value = '';
-                    });
-                    document.getElementById('filterForm').submit();
-                });
-            }
-
-            // Function to apply stock level badges
-            function applyStockBadges() {
-                document.querySelectorAll('.stock-cell').forEach(cell => {
-                    const quantity = parseInt(cell.getAttribute('data-quantity'));
-                    const min = parseInt(cell.getAttribute('data-min'));
-                    const max = parseInt(cell.getAttribute('data-max'));
-
-                    let badgeClass = 'stock-normal';
-                    let status = 'Normal';
-
-                    if (quantity <= 0) {
-                        badgeClass = 'stock-danger';
-                        status = 'Sin Stock';
-                    } else if (quantity < min) {
-                        badgeClass = 'stock-warning';
-                        status = 'Bajo';
-                    } else if (quantity > max) {
-                        badgeClass = 'stock-overflow';
-                        status = 'Exceso';
-                    }
-
-                    const badge = `<span class="stock-badge ${badgeClass}">${status}</span>`;
-                    cell.innerHTML = `${quantity} ${badge}`;
-                });
-            }
-
-            // Initialize the badges
-            applyStockBadges();
-        });
-    </script>
 </head>
 <body>
     <div class="container">
         <div class="card">
             <div class="card-content">
+                <!-- Header -->
                 <div class="row">
                     <div class="col s12 m6">
                         <h4><i class="fas fa-chart-bar"></i> Reporte de Stock</h4>
@@ -226,10 +112,10 @@ if (session_status() == PHP_SESSION_NONE) {
                             <i class="fas fa-print"></i> Imprimir
                         </button>
                         <button class="btn green" id="exportExcel">
-                            <i class="fas fa-file-excel"></i> Exportar Excel
+                            <i class="fas fa-file-excel"></i> Excel
                         </button>
                         <button class="btn red" id="exportPDF">
-                            <i class="fas fa-file-pdf"></i> Exportar PDF
+                            <i class="fas fa-file-pdf"></i> PDF
                         </button>
                         <a href="../../Views/usuarios/dashboard.php" class="btn blue">
                             <i class="fas fa-home"></i> Dashboard
@@ -237,47 +123,36 @@ if (session_status() == PHP_SESSION_NONE) {
                     </div>
                 </div>
                 
+                <!-- Mensajes de Error -->
                 <?php if(isset($_SESSION['error'])): ?>
                 <div class="row">
                     <div class="col s12">
                         <div class="card-panel red lighten-4">
                             <span class="red-text text-darken-4">
-                                <i class="fas fa-exclamation-circle"></i> <?php echo $_SESSION['error']; ?>
+                                <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($_SESSION['error']); ?>
                             </span>
                         </div>
                     </div>
                 </div>
                 <?php unset($_SESSION['error']); endif; ?>
 
-                <!-- Filter Section -->
+                <!-- Filtros -->
                 <div class="row">
                     <form method="GET" class="col s12" id="filterForm">
                         <div class="row">
                             <div class="input-field col s12 m4">
                                 <i class="fas fa-warehouse prefix"></i>
-                                <input type="text" id="almacen" name="almacen" value="<?= isset(
-                                    $_GET["almacen"]
-                                )
-                                    ? htmlspecialchars($_GET["almacen"])
-                                    : "" ?>">
+                                <input type="text" id="almacen" name="almacen" value="<?= htmlspecialchars($_GET['almacen'] ?? '') ?>">
                                 <label for="almacen">Filtrar por almacén</label>
                             </div>
                             <div class="input-field col s12 m4">
                                 <i class="fas fa-tags prefix"></i>
-                                <input type="text" id="categoria" name="categoria" value="<?= isset(
-                                    $_GET["categoria"]
-                                )
-                                    ? htmlspecialchars($_GET["categoria"])
-                                    : "" ?>">
+                                <input type="text" id="categoria" name="categoria" value="<?= htmlspecialchars($_GET['categoria'] ?? '') ?>">
                                 <label for="categoria">Filtrar por categoría</label>
                             </div>
                             <div class="input-field col s12 m4">
                                 <i class="fas fa-truck prefix"></i>
-                                <input type="text" id="proveedor" name="proveedor" value="<?= isset(
-                                    $_GET["proveedor"]
-                                )
-                                    ? htmlspecialchars($_GET["proveedor"])
-                                    : "" ?>">
+                                <input type="text" id="proveedor" name="proveedor" value="<?= htmlspecialchars($_GET['proveedor'] ?? '') ?>">
                                 <label for="proveedor">Filtrar por proveedor</label>
                             </div>
                         </div>
@@ -294,36 +169,71 @@ if (session_status() == PHP_SESSION_NONE) {
                     </form>
                 </div>
 
-                <!-- Table Controls -->
+                <!-- Estadísticas Rápidas -->
+                <?php if (!empty($productos)): 
+                    $stats = [
+                        'total' => count($productos),
+                        'sin_stock' => 0,
+                        'bajo_stock' => 0,
+                        'normal' => 0,
+                        'exceso' => 0
+                    ];
+                    
+                    foreach ($productos as $producto) {
+                        $cantidad = (int)$producto['cantidad'];
+                        $min = (int)$producto['stock_minimo'];
+                        $max = (int)$producto['stock_maximo'];
+                        
+                        if ($cantidad <= 0) $stats['sin_stock']++;
+                        elseif ($cantidad < $min) $stats['bajo_stock']++;
+                        elseif ($cantidad > $max) $stats['exceso']++;
+                        else $stats['normal']++;
+                    }
+                ?>
+                <div class="row">
+                    <div class="col s6 m3">
+                        <div class="stats-card blue lighten-4 center">
+                            <div class="stat-number blue-text"><?= $stats['total'] ?></div>
+                            <div class="stat-label">Total Productos</div>
+                        </div>
+                    </div>
+                    <div class="col s6 m3">
+                        <div class="stats-card green lighten-4 center">
+                            <div class="stat-number green-text"><?= $stats['normal'] ?></div>
+                            <div class="stat-label">Stock Normal</div>
+                        </div>
+                    </div>
+                    <div class="col s6 m3">
+                        <div class="stats-card orange lighten-4 center">
+                            <div class="stat-number orange-text"><?= $stats['bajo_stock'] ?></div>
+                            <div class="stat-label">Stock Bajo</div>
+                        </div>
+                    </div>
+                    <div class="col s6 m3">
+                        <div class="stats-card red lighten-4 center">
+                            <div class="stat-number red-text"><?= $stats['sin_stock'] ?></div>
+                            <div class="stat-label">Sin Stock</div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Información de Resultados -->
                 <div class="row">
                     <div class="col s12 m6">
                         <p>
+                            <strong><?= $totalProductos ?></strong> productos encontrados
                             <?php
-                            // Inicializamos $resultado como un array vacío si no está definido
-                            if (!isset($resultado)) {
-                                $resultado = [];
-                            }
-                            
-                            // Verificamos que $resultado sea un objeto mysqli_result antes de acceder a num_rows
-                            $total_items = ($resultado && $resultado instanceof mysqli_result) ? $resultado->num_rows : 0;
-                            echo "<strong>{$total_items}</strong> productos encontrados";
-
                             // Build filter description
                             $filters = [];
-                            if (!empty($_GET["almacen"])) {
-                                $filters[] =
-                                    "Almacén: " .
-                                    htmlspecialchars($_GET["almacen"]);
+                            if (!empty($_GET['almacen'])) {
+                                $filters[] = "Almacén: " . htmlspecialchars($_GET['almacen']);
                             }
-                            if (!empty($_GET["categoria"])) {
-                                $filters[] =
-                                    "Categoría: " .
-                                    htmlspecialchars($_GET["categoria"]);
+                            if (!empty($_GET['categoria'])) {
+                                $filters[] = "Categoría: " . htmlspecialchars($_GET['categoria']);
                             }
-                            if (!empty($_GET["proveedor"])) {
-                                $filters[] =
-                                    "Proveedor: " .
-                                    htmlspecialchars($_GET["proveedor"]);
+                            if (!empty($_GET['proveedor'])) {
+                                $filters[] = "Proveedor: " . htmlspecialchars($_GET['proveedor']);
                             }
 
                             if (!empty($filters)) {
@@ -333,115 +243,89 @@ if (session_status() == PHP_SESSION_NONE) {
                         </p>
                     </div>
                     <div class="col s12 m6 right-align">
-                        <button class="btn grey">
+                        <button class="btn grey" onclick="location.reload()">
                             <i class="fas fa-sync-alt"></i> Actualizar
                         </button>
                     </div>
                 </div>
 
-                <?php if (isset($resultado) && $resultado instanceof mysqli_result && $resultado->num_rows > 0): ?>                    <!-- Table Results -->
+                <?php if (!empty($productos)): ?>
+                    <!-- Tabla de Resultados -->
                     <div class="table-responsive">
-                        <table class="highlight">
+                        <table class="striped highlight responsive-table">
                             <thead>
                                 <tr>
                                     <th class="sortable">Producto <i class="fas fa-sort"></i></th>
                                     <th class="sortable">Almacén <i class="fas fa-sort"></i></th>
                                     <th class="sortable">Cantidad <i class="fas fa-sort"></i></th>
-                                    <th>Stock Mínimo</th>
-                                    <th>Stock Máximo</th>
+                                    <th>Stock Mín.</th>
+                                    <th>Stock Máx.</th>
                                     <th class="sortable">Categoría <i class="fas fa-sort"></i></th>
                                     <th class="sortable">Proveedor <i class="fas fa-sort"></i></th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while ($row = $resultado->fetch_assoc()):
-
-                                    // Determine stock status
-                                    $quantity = (int) $row["cantidad"];
-                                    $min = (int) $row["stock_minimo"];
-                                    $max = (int) $row["stock_maximo"];
+                                <?php foreach ($productos as $producto): 
+                                    $cantidad = (int)$producto['cantidad'];
+                                    $min = (int)$producto['stock_minimo'];
+                                    $max = (int)$producto['stock_maximo'];
 
                                     $status_class = "stock-normal";
                                     $status_text = "Normal";
 
-                                    if ($quantity <= 0) {
+                                    if ($cantidad <= 0) {
                                         $status_class = "stock-danger";
                                         $status_text = "Sin Stock";
-                                    } elseif ($quantity < $min) {
+                                    } elseif ($cantidad < $min) {
                                         $status_class = "stock-warning";
                                         $status_text = "Bajo";
-                                    } elseif ($quantity > $max) {
+                                    } elseif ($cantidad > $max) {
                                         $status_class = "stock-overflow";
                                         $status_text = "Exceso";
                                     }
-                                    ?>
+                                ?>
                                     <tr>
-                                        <td><strong><?= htmlspecialchars(
-                                            $row["producto"]
-                                        ) ?></strong></td>
-                                        <td><?= htmlspecialchars(
-                                            $row["almacen"]
-                                        ) ?></td>
-                                        <td class="stock-cell"
-                                            data-quantity="<?= $quantity ?>"
-                                            data-min="<?= $min ?>"
-                                            data-max="<?= $max ?>">
-                                            <?= $quantity ?>
-                                        </td>
-                                        <td><?= htmlspecialchars(
-                                            $row["stock_minimo"]
-                                        ) ?></td>
-                                        <td><?= htmlspecialchars(
-                                            $row["stock_maximo"]
-                                        ) ?></td>
-                                        <td><?= htmlspecialchars(
-                                            $row["categoria"]
-                                        ) ?></td>
-                                        <td><?= htmlspecialchars(
-                                            $row["proveedor"]
-                                        ) ?></td>
+                                        <td><strong><?= htmlspecialchars($producto['producto'] ?? $producto['nombre'] ?? 'N/A') ?></strong></td>
+                                        <td><?= htmlspecialchars($producto['almacen'] ?? 'N/A') ?></td>
+                                        <td><?= $cantidad ?></td>
+                                        <td><?= $min ?></td>
+                                        <td><?= $max ?></td>
+                                        <td><?= htmlspecialchars($producto['categoria'] ?? 'N/A') ?></td>
+                                        <td><?= htmlspecialchars($producto['proveedor'] ?? 'N/A') ?></td>
                                         <td><span class="stock-badge <?= $status_class ?>"><?= $status_text ?></span></td>
+                                        <td>
+                                            <?php if (isset($producto['id'])): ?>
+                                                <a href="../../Controller/stock/ajustarStockController.php?id=<?= $producto['id'] ?>" class="btn-small blue">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="../../Controller/productos/verDetalleProductoController.php?id=<?= $producto['id'] ?>" class="btn-small green">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
-                                <?php
-                                endwhile; ?>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Pagination -->
+                    <!-- Paginación -->
                     <div class="pagination">
                         <div class="page-info">
-                            Mostrando <strong>1-<?= min(
-                                $total_items,
-                                10
-                            ) ?></strong> de <strong><?= $total_items ?></strong> productos
+                            Mostrando <strong><?= count($productos) ?></strong> de <strong><?= $totalProductos ?></strong> productos
                         </div>
                         <div class="page-controls">
                             <div class="page-item disabled"><i class="fas fa-chevron-left"></i></div>
                             <div class="page-item active">1</div>
-                            <?php if ($total_items > 10): ?>
-                                <div class="page-item">2</div>
-                            <?php endif; ?>
-                            <?php if ($total_items > 20): ?>
-                                <div class="page-item">3</div>
-                            <?php endif; ?>
-                            <?php if ($total_items > 30): ?>
-                                <div class="page-item">...</div>
-                                <div class="page-item"><?= ceil(
-                                    $total_items / 10
-                                ) ?></div>
-                            <?php endif; ?>
-                            <div class="page-item <?= $total_items <= 10
-                                ? "disabled"
-                                : "" ?>"><i class="fas fa-chevron-right"></i></div>
+                            <div class="page-item disabled"><i class="fas fa-chevron-right"></i></div>
                         </div>
                     </div>
                 <?php else: ?>
-                    <!-- Empty State -->
+                    <!-- Estado Vacío -->
                     <div class="empty-state">
                         <i class="fas fa-search"></i>
-                        <h3>No se encontraron resultados</h3>
+                        <h5>No se encontraron productos</h5>
                         <p>No hay productos que coincidan con los criterios de búsqueda. Intente con diferentes parámetros o añada productos al inventario.</p>
                         <a href="../../Controller/productos/agregarProductoController.php" class="btn blue">
                             <i class="fas fa-plus"></i> Agregar Nuevo Producto
@@ -453,118 +337,51 @@ if (session_status() == PHP_SESSION_NONE) {
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-</body>
-</html>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Agregar manejadores para los botones de exportación
-        document.getElementById('exportPDF').addEventListener('click', function() {
-            window.location.href = '../../Controller/exportarArchivos/exportarPDFController.php?filtro=' + 
-                encodeURIComponent(JSON.stringify(getFilterParams()));
-        });
-        
-        document.getElementById('exportExcel').addEventListener('click', function() {
-            window.location.href = '../../Controller/exportarArchivos/exportarEXCELController.php?filtro=' + 
-                encodeURIComponent(JSON.stringify(getFilterParams()));
-        });
-        
-        document.getElementById('printReport').addEventListener('click', function() {
-            window.print();
-        });
-        
-        // Función para obtener parámetros de filtro actuales
-        function getFilterParams() {
-            return {
-                almacen: document.getElementById('almacen').value,
-                categoria: document.getElementById('categoria').value,
-                proveedor: document.getElementById('proveedor').value
-            };
-        }
-    });
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar Materialize
+            M.updateTextFields();
 
-<!-- Tabla de Resultados -->
-<div class="row">
-    <div class="col s12">
-        <?php if (!empty($productos)): ?>
-            <table class="striped responsive-table">
-                <thead>
-                    <tr>
-                        <th class="sortable">Código <i class="fas fa-sort"></i></th>
-                        <th class="sortable">Producto <i class="fas fa-sort"></i></th>
-                        <th class="sortable">Categoría <i class="fas fa-sort"></i></th>
-                        <th class="sortable">Almacén <i class="fas fa-sort"></i></th>
-                        <th class="sortable">Stock <i class="fas fa-sort"></i></th>
-                        <th class="sortable">Valor <i class="fas fa-sort"></i></th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($productos as $producto): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($producto['codigo']); ?></td>
-                            <td><?php echo htmlspecialchars($producto['nombre']); ?></td>
-                            <td><?php echo htmlspecialchars($producto['categoria']); ?></td>
-                            <td><?php echo htmlspecialchars($producto['almacen']); ?></td>
-                            <td class="stock-cell" 
-                                data-quantity="<?php echo $producto['cantidad']; ?>" 
-                                data-min="<?php echo $producto['stock_minimo']; ?>" 
-                                data-max="<?php echo $producto['stock_maximo']; ?>">
-                                <?php echo $producto['cantidad']; ?>
-                            </td>
-                            <td><?php echo number_format($producto['valor_total'], 2); ?> €</td>
-                            <td>
-                                <a href="../../Controller/stock/ajustarStockController.php?id=<?php echo $producto['id']; ?>" class="btn-small blue">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="../../Controller/productos/verDetalleProductoController.php?id=<?php echo $producto['id']; ?>" class="btn-small green">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+            // Manejadores de exportación
+            document.getElementById('exportPDF').addEventListener('click', function() {
+                window.location.href = '../../Controller/exportarArchivos/exportarPDFController.php?filtro=' + 
+                    encodeURIComponent(JSON.stringify(getFilterParams()));
+            });
             
-            <!-- Paginación -->
-            <div class="pagination">
-                <div class="page-info">
-                    Mostrando <?php echo count($productos); ?> de <?php echo $totalProductos; ?> productos
-                </div>
-                <div class="page-controls">
-                    <span class="page-item disabled"><i class="fas fa-chevron-left"></i></span>
-                    <span class="page-item active">1</span>
-                    <span class="page-item">2</span>
-                    <span class="page-item">3</span>
-                    <span class="page-item"><i class="fas fa-chevron-right"></i></span>
-                </div>
-            </div>
-        <?php else: ?>
-            <div class="empty-state">
-                <i class="fas fa-search"></i>
-                <h5>No se encontraron productos</h5>
-                <p>Intente con diferentes criterios de búsqueda o limpie los filtros</p>
-            </div>
-        <?php endif; ?>
-    </div>
-</div>
+            document.getElementById('exportExcel').addEventListener('click', function() {
+                window.location.href = '../../Controller/exportarArchivos/exportarEXCELController.php?filtro=' + 
+                    encodeURIComponent(JSON.stringify(getFilterParams()));
+            });
+            
+            document.getElementById('printReport').addEventListener('click', function() {
+                window.print();
+            });
 
-<!-- Elimina esta sección duplicada -->
-<!--
-<div class="col s12 m6 right-align">
-    <button class="btn grey" id="printReport">
-        <i class="fas fa-print"></i> Imprimir
-    </button>
-    <button class="btn green" id="exportExcel">
-        <i class="fas fa-file-excel"></i> Exportar Excel
-    </button>
-    <button class="btn red" id="exportPDF">
-        <i class="fas fa-file-pdf"></i> Exportar PDF
-    </button>
-    <a href="../../Views/usuarios/dashboard.php" class="btn blue">
-        <i class="fas fa-home"></i> Dashboard
-    </a>
-</div>
--->
+            // Limpiar filtros
+            document.getElementById('clearFilters').addEventListener('click', function() {
+                document.querySelectorAll('#filterForm input').forEach(input => {
+                    input.value = '';
+                });
+                document.getElementById('filterForm').submit();
+            });
+
+            // Función para obtener parámetros de filtro
+            function getFilterParams() {
+                return {
+                    almacen: document.getElementById('almacen').value,
+                    categoria: document.getElementById('categoria').value,
+                    proveedor: document.getElementById('proveedor').value
+                };
+            }
+
+            // Ordenamiento de tabla (básico)
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.addEventListener('click', function() {
+                    // Implementar lógica de ordenamiento si es necesario
+                    console.log('Ordenar por:', this.textContent.trim());
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -19,6 +19,7 @@ class ControlInventarioController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ver_inventario'])) {
             $id_almacen = (int) $_POST['id_almacen'];
             $inventario = $this->stockModel->verInventario($id_almacen);
+            $stockModel = $this->stockModel; // Pasar el modelo a la vista
             require_once __DIR__ . '/../../Views/stock/verInventario.php';
         }
     }

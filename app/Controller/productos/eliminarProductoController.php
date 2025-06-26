@@ -21,7 +21,6 @@ class EliminarProductoController
 
         // Validar y obtener el ID del producto
         if (!isset($_GET["id"]) || empty($_GET["id"])) {
-            $_SESSION["errores"] = ["ID de producto no proporcionado"];
             header(
                 "Location: ../../Controller/productos/ListarProductosController.php"
             );

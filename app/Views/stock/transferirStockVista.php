@@ -72,13 +72,14 @@
 
             <!-- Información del almacén de origen (se muestra después de seleccionar producto) -->
             <div id="almacen-origen-info" class="card-panel">
-                <h6>Almacén de origen:</h6>
+                <h6><i class="fas fa-warehouse"></i> Almacén de origen:</h6>
                 <p><strong id="nombre-almacen-origen"></strong></p>
+                <p><small class="grey-text">Stock disponible: <span id="stock-disponible">0</span> unidades</small></p>
             </div>
             
             <!-- Mensaje de error si no hay stock -->
             <div id="error-mensaje" class="card-panel red lighten-4 red-text text-darken-4">
-                <i class="fas fa-exclamation-circle"></i> No hay stock disponible de este producto.
+                <i class="fas fa-exclamation-circle"></i> No hay stock disponible de este producto en ningún almacén.
             </div>
 
             <!-- Seleccionar Almacén de Destino -->
@@ -160,6 +161,11 @@
                     document.getElementById('almacen-origen-info').style.display = 'block';
                     document.getElementById('nombre-almacen-origen').textContent = data.nombre;
                     document.getElementById('id_almacen_origen').value = data.id_almacen;
+                    document.getElementById('stock-disponible').textContent = data.cantidad_disponible;
+                    
+                    // Actualizar el máximo del campo cantidad
+                    document.getElementById('cantidad').max = data.cantidad_disponible;
+                    document.getElementById('cantidad').placeholder = `Máximo: ${data.cantidad_disponible}`;
                     
                     // Actualizar opciones del almacén de destino para evitar seleccionar el mismo
                     const selectDestino = document.getElementById('id_almacen_destino');

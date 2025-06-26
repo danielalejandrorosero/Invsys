@@ -84,10 +84,11 @@
                                 <option value="" disabled selected>Seleccione un nivel</option>
                                 <option value="1">Administrador</option>
                                 <option value="2">Usuario Regular</option>
+                                <option value="3">Operador</option>
                             </select>
                             <label for="nivel_usuario">Nivel de Usuario</label>
                         </div>
-                    </div>
+                    </div>  
 
                     <button type="submit" name="agregarUsuario" class="btn waves-effect waves-light green">
                         Crear Usuario <i class="fas fa-user-plus ml-2"></i>

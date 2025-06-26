@@ -51,6 +51,9 @@
                 </span>
                 <p>Control y gestión de productos disponibles en el inventario</p>
                 <div class="right-align">
+                    <a href="../../Controller/stock/productosSinAlmacenController.php" class="btn waves-effect waves-light orange">
+                        <i class="fas fa-exclamation-triangle"></i> Sin Almacén
+                    </a>
                     <a href="../../Controller/stock/ajustarStockController.php" class="btn waves-effect waves-light green">
                         <i class="fas fa-edit"></i> Ajustar Stock
                     </a>
@@ -152,6 +155,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col s12 m6 l3">
+                        <div class="card-panel">
+                            <div class="center-align">
+                                <i class="fas fa-exclamation-triangle fa-2x orange-text"></i>
+                                <h5>
+                                    <?php
+                                    $sinAlmacen = 0;
+                                    if (isset($stockModel)) {
+                                        $sinAlmacen = $stockModel->contarProductosSinAlmacen();
+                                    }
+                                    echo $sinAlmacen;
+                                    ?>
+                                </h5>
+                                <p>Sin asignar a almacén</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Table Controls -->
@@ -198,10 +219,20 @@
                             <tbody>
                                 <?php foreach ($inventario as $item):
 
-                                    $stock_minimo = $item["stock_minimo"] ?? 10;
-                                    $stock_maximo = $item["stock_maximo"] ?? 100;
-                                    $cantidad = $item["cantidad"];
+                                    // Valores por defecto más conservadores y realistas
+                                    $stock_minimo = $item["stock_minimo"] ?? 5;  // Mínimo más bajo
+                                    $stock_maximo = $item["stock_maximo"] ?? 50; // Máximo más conservador
+                                    $cantidad = $item["cantidad"] ?? 0;
 
+                                    // Calcular el porcentaje de stock basado en el stock máximo
+                                    $porcentaje_stock = 0;
+                                    if ($stock_maximo > 0) {
+                                        $porcentaje_stock = round(($cantidad / $stock_maximo) * 100);
+                                        // Limitar el porcentaje a 100%
+                                        $porcentaje_stock = min($porcentaje_stock, 100);
+                                    }
+
+                                    // Determinar el estado del stock
                                     $stockStatus = "green";
                                     $stockLabel = "Adecuado";
 
@@ -244,22 +275,21 @@
                                             <span class="stock-value"><?php echo htmlspecialchars(
                                                 $cantidad
                                             ); ?></span>
+                                            <small class="grey-text">
+                                                (Min: <?php echo $stock_minimo; ?> | Max: <?php echo $stock_maximo; ?>)
+                                            </small>
                                         </td>
                                         <td>
                                             <span class="new badge <?php echo $stockStatus; ?>" data-badge-caption=""><?php echo $stockLabel; ?></span>
                                         </td>
                                         <td>
                                             <div class="progress">
-                                                <div class="determinate" style="width: <?php echo $stock_maximo > 0 ? round(
-                                                    ($cantidad / $stock_maximo) * 100
-                                                ) : 0; ?>%"></div>
+                                                <div class="determinate" style="width: <?php echo $porcentaje_stock; ?>%"></div>
                                             </div>
-                                            <span><?php echo $stock_maximo > 0 ? round(
-                                                ($cantidad / $stock_maximo) * 100
-                                            ) : 0; ?>%</span>
+                                            <span><?php echo $porcentaje_stock; ?>%</span>
                                         </td>
                                         <td>
-                                            <a href="../../Controller/stock/ajustarStockController.php?id=<?php echo $item[
+                                            <a href="../../Controller/stock/ajustarStockController.php?id_producto=<?php echo $item[
                                                 "id_producto"
                                             ] ??
                                                 ""; ?>" class="btn-floating btn-small waves-effect waves-light blue" title="Ajustar Stock">
@@ -284,6 +314,28 @@
                             <a href="#!"><i class="fas fa-chevron-right"></i></a>
                         </li>
                     </ul>
+                <?php endif; ?>
+
+                <!-- Productos Sin Almacén -->
+                <?php 
+                // Obtener productos sin almacén
+                $productosSinAlmacen = [];
+                if (isset($stockModel)) {
+                    $productosSinAlmacen = $stockModel->obtenerProductosSinAlmacen();
+                }
+                ?>
+                
+                <?php if (!empty($productosBajoStock)): ?>
+                    var productos = <?php echo json_encode($productosBajoStock); ?>;
+                    productos.forEach(function (producto, index) {
+                        setTimeout(function() {
+                            M.toast({
+                                html: '<i class="fas fa-exclamation-circle"></i> <b>Stock bajo:</b> ' + producto.nombre + ' - Cantidad: ' + producto.cantidad_disponible,
+                                classes: 'orange darken-2',
+                                displayLength: 8000
+                            });
+                        }, index * 300 + 1000);
+                    });
                 <?php endif; ?>
             </div>
         </div>

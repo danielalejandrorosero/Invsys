@@ -385,11 +385,11 @@ class Stock {
         }
     }
 
-    public function almacenExiste($nombre) {
+    public function almacenExiste($id_almacen) {
         $stmt = null;
         try {
-            $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM almacenes WHERE nombre = ? AND activo = 1");
-            $stmt->bind_param("s", $nombre);
+            $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM almacenes WHERE id_almacen = ? AND estado = 'activo'");
+            $stmt->bind_param("i", $id_almacen);
             $stmt->execute();
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
@@ -397,6 +397,113 @@ class Stock {
         } catch (Exception $e) {
             error_log("Error al verificar almacén existente: " . $e->getMessage());
             return false;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+
+    public function almacenExistePorNombre($nombre) {
+        $stmt = null;
+        try {
+            $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM almacenes WHERE nombre = ? AND estado = 'activo'");
+            $stmt->bind_param("s", $nombre);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            return $row['total'] > 0;
+        } catch (Exception $e) {
+            error_log("Error al verificar almacén existente por nombre: " . $e->getMessage());
+            return false;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+
+    public function transferirStock($id_producto, $id_almacen_origen, $id_almacen_destino, $cantidad, $id_usuario) {
+        $this->conn->begin_transaction();
+        $stmt = null;
+        try {
+            // Validar que los almacenes sean diferentes
+            if ($id_almacen_origen === $id_almacen_destino) {
+                throw new Exception("Error: El almacén de origen y destino no pueden ser el mismo.");
+            }
+
+            // Validar que la cantidad sea positiva
+            if ($cantidad <= 0) {
+                throw new Exception("Error: La cantidad a transferir debe ser mayor que cero.");
+            }
+
+            // Verificar que el producto exista
+            $stmt = $this->conn->prepare("SELECT id_producto FROM productos WHERE id_producto = ? AND estado = 'activo'");
+            $stmt->bind_param("i", $id_producto);
+            $stmt->execute();
+            if (!$stmt->fetch()) {
+                throw new Exception("Error: El producto no existe o no está activo.");
+            }
+            $stmt->close();
+            $stmt = null;
+
+            // Verificar stock disponible en almacén origen
+            $stmt = $this->conn->prepare("SELECT cantidad_disponible FROM stock_almacen WHERE id_producto = ? AND id_almacen = ?");
+            $stmt->bind_param("ii", $id_producto, $id_almacen_origen);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            if (!$row) {
+                throw new Exception("Error: No se encontró stock en el almacén de origen.");
+            }
+            $stock_actual = $row['cantidad_disponible'];
+            $stmt->close();
+            $stmt = null;
+
+            if ($stock_actual < $cantidad) {
+                throw new Exception("Error: Stock insuficiente en el almacén de origen. Stock disponible: " . $stock_actual);
+            }
+
+            // Actualizar stock en almacén origen
+            $stmt = $this->conn->prepare("UPDATE stock_almacen SET cantidad_disponible = cantidad_disponible - ? WHERE id_producto = ? AND id_almacen = ?");
+            $stmt->bind_param("iii", $cantidad, $id_producto, $id_almacen_origen);
+            $stmt->execute();
+            if ($stmt->affected_rows === 0) {
+                throw new Exception("Error al actualizar stock en el almacén de origen.");
+            }
+            $stmt->close();
+            $stmt = null;
+
+            // Actualizar o insertar stock en almacén destino
+            $stmt = $this->conn->prepare("INSERT INTO stock_almacen 
+                                        (id_producto, id_almacen, cantidad_disponible) 
+                                        VALUES (?, ?, ?) 
+                                        ON DUPLICATE KEY UPDATE cantidad_disponible = cantidad_disponible + ?");
+            $stmt->bind_param("iiii", $id_producto, $id_almacen_destino, $cantidad, $cantidad);
+            $stmt->execute();
+            if ($stmt->affected_rows === 0) {
+                throw new Exception("Error al actualizar stock en el almacén de destino.");
+            }
+            $stmt->close();
+            $stmt = null;
+
+            // Registrar el movimiento
+            $stmt = $this->conn->prepare("INSERT INTO movimientos_stock 
+                                        (id_producto, tipo_movimiento, cantidad, id_almacen_origen, id_almacen_destino, fecha_movimiento, id_usuario) 
+                                        VALUES (?, 'transferencia', ?, ?, ?, NOW(), ?)");
+            $stmt->bind_param("iiiii", $id_producto, $cantidad, $id_almacen_origen, $id_almacen_destino, $id_usuario);
+            $stmt->execute();
+            if ($stmt->affected_rows === 0) {
+                throw new Exception("Error al registrar el movimiento de stock.");
+            }
+
+            $this->conn->commit();
+            return true;
+
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            error_log("Error en transferirStock: " . $e->getMessage());
+            return $e->getMessage();
         } finally {
             if (isset($stmt) && $stmt !== false) {
                 $stmt->close();
@@ -581,119 +688,6 @@ class Stock {
         }
     }
 
-  
-    public function almacenExistePorNombre(string $nombre) {
-        $stmt = null;
-        try {
-            $sql = "SELECT COUNT(*) as total FROM almacenes WHERE nombre = ?";
-            $stmt = $this->conn->prepare($sql);
-            
-            if ($stmt === false) {
-                throw new \Exception("Error al preparar la consulta: " . $this->conn->error);
-            }
-            
-            $stmt->bind_param("s", $nombre);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
-            $fila = $resultado->fetch_assoc();
-            
-            return ($fila['total'] > 0);
-        } catch (\Exception $e) {
-            error_log("Error en StockModel::almacenExistePorNombre: " . $e->getMessage());
-            return false;
-        } finally {
-            if ($stmt instanceof \mysqli_stmt) {
-                $stmt->close();
-            }
-        }
-    }
-
-    public function transferirStock($id_producto, $id_almacen_origen, $id_almacen_destino, $cantidad, $id_usuario) {
-        $this->conn->begin_transaction();
-        $stmt = null;
-        try {
-            // Validar que los almacenes sean diferentes
-            if ($id_almacen_origen === $id_almacen_destino) {
-                throw new Exception("Error: El almacén de origen y destino no pueden ser el mismo.");
-            }
-
-            // Validar que la cantidad sea positiva
-            if ($cantidad <= 0) {
-                throw new Exception("Error: La cantidad a transferir debe ser mayor que cero.");
-            }
-
-            // Verificar que el producto exista
-            $stmt = $this->conn->prepare("SELECT id_producto FROM productos WHERE id_producto = ? AND estado = 'activo'");
-            $stmt->bind_param("i", $id_producto);
-            $stmt->execute();
-            if (!$stmt->fetch()) {
-                throw new Exception("Error: El producto no existe o no está activo.");
-            }
-            $stmt->close();
-            $stmt = null;
-
-            // Verificar stock disponible en almacén origen
-            $stmt = $this->conn->prepare("SELECT cantidad_disponible FROM stock_almacen WHERE id_producto = ? AND id_almacen = ?");
-            $stmt->bind_param("ii", $id_producto, $id_almacen_origen);
-            $stmt->execute();
-            $stock_actual = 0;
-            $stmt->bind_result($stock_actual);
-            if (!$stmt->fetch()) {
-                throw new Exception("Error: No se encontró stock en el almacén de origen.");
-            }
-            $stmt->close();
-            $stmt = null;
-
-            if ($stock_actual < $cantidad) {
-                throw new Exception("Error: Stock insuficiente en el almacén de origen. Stock disponible: " . $stock_actual);
-            }
-
-            // Actualizar stock en almacén origen
-            $stmt = $this->conn->prepare("UPDATE stock_almacen SET cantidad_disponible = cantidad_disponible - ? WHERE id_producto = ? AND id_almacen = ?");
-            $stmt->bind_param("iii", $cantidad, $id_producto, $id_almacen_origen);
-            $stmt->execute();
-            if ($stmt->affected_rows === 0) {
-                throw new Exception("Error al actualizar stock en el almacén de origen.");
-            }
-            $stmt->close();
-            $stmt = null;
-
-            // Actualizar o insertar stock en almacén destino
-            $stmt = $this->conn->prepare("INSERT INTO stock_almacen 
-                                        (id_producto, id_almacen, cantidad_disponible) 
-                                        VALUES (?, ?, ?) 
-                                        ON DUPLICATE KEY UPDATE cantidad_disponible = cantidad_disponible + ?");
-            $stmt->bind_param("iiii", $id_producto, $id_almacen_destino, $cantidad, $cantidad);
-            $stmt->execute();
-            if ($stmt->affected_rows === 0) {
-                throw new Exception("Error al actualizar stock en el almacén de destino.");
-            }
-            $stmt->close();
-            $stmt = null;
-
-            // Registrar el movimiento
-            $stmt = $this->conn->prepare("INSERT INTO movimientos_stock 
-                                        (id_producto, tipo_movimiento, cantidad, id_almacen_origen, id_almacen_destino, fecha_movimiento, id_usuario) 
-                                        VALUES (?, 'transferencia', ?, ?, ?, NOW(), ?)");
-            $stmt->bind_param("iiiii", $id_producto, $cantidad, $id_almacen_origen, $id_almacen_destino, $id_usuario);
-            $stmt->execute();
-            if ($stmt->affected_rows === 0) {
-                throw new Exception("Error al registrar el movimiento de stock.");
-            }
-
-            $this->conn->commit();
-            return true;
-
-        } catch (Exception $e) {
-            $this->conn->rollback();
-            error_log("Error en transferirStock: " . $e->getMessage());
-            return $e->getMessage();
-        } finally {
-            if (isset($stmt) && $stmt !== false) {
-                $stmt->close();
-            }
-        }
-    }
  
     public function obtenerProducto($id_producto) {
         $query = "SELECT p.*, c.nombre as categoria_nombre 
@@ -750,23 +744,23 @@ class Stock {
         }
     }
     
-    public function eliminarAlmacen($id_almacen) {
-        $stmt = null;
-        try {
-            $sql = "UPDATE almacenes SET estado = 'eliminado' WHERE id_almacen = ?";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("i", $id_almacen);
-            $stmt->execute();
-            return $stmt->affected_rows > 0;
-        } catch (Exception $e) {
-            error_log("Error al eliminar almacén: " . $e->getMessage());
-            return false;
-        } finally {
-            if (isset($stmt) && $stmt !== false) {
-                $stmt->close();
+        public function eliminarAlmacen($id_almacen) {
+            $stmt = null;
+            try {
+                $sql = "UPDATE almacenes SET estado = 'eliminado' WHERE id_almacen = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("i", $id_almacen);
+                $stmt->execute();
+                return $stmt->affected_rows > 0;
+            } catch (Exception $e) {
+                error_log("Error al eliminar almacén: " . $e->getMessage());
+                return false;
+            } finally {
+                if (isset($stmt) && $stmt !== false) {
+                    $stmt->close();
+                }
             }
         }
-    }
     
     public function almacenTieneProductos($id_almacen) {
         $stmt = null;
@@ -787,12 +781,125 @@ class Stock {
         }
     }
     
-    
-    
-    
+    public function obtenerStockProducto($id_producto) {
+        $stmt = null;
+        try {
+            $sql = "SELECT sa.id_almacen, sa.cantidad_disponible, a.nombre as nombre_almacen
+                    FROM stock_almacen sa
+                    JOIN almacenes a ON sa.id_almacen = a.id_almacen
+                    WHERE sa.id_producto = ? AND sa.cantidad_disponible > 0
+                    ORDER BY sa.cantidad_disponible DESC";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $id_producto);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            $stock_info = [];
+            while ($row = $result->fetch_assoc()) {
+                $stock_info[] = $row;
+            }
+            
+            return $stock_info;
+        } catch (Exception $e) {
+            error_log("Error al obtener stock del producto: " . $e->getMessage());
+            return [];
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
 
+    public function obtenerStockMaximoProducto($id_producto) {
+        $stmt = null;
+        try {
+            $sql = "SELECT SUM(sa.cantidad_disponible) as stock_total
+                    FROM stock_almacen sa
+                    WHERE sa.id_producto = ? AND sa.cantidad_disponible > 0";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("i", $id_producto);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            
+            return $row['stock_total'] ?? 0;
+        } catch (Exception $e) {
+            error_log("Error al obtener stock máximo del producto: " . $e->getMessage());
+            return 0;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
 
+    public function obtenerProductosSinAlmacen() {
+        $stmt = null;
+        try {
+            $sql = "SELECT 
+                        p.id_producto,
+                        p.nombre,
+                        p.codigo,
+                        p.sku,
+                        p.descripcion,
+                        c.nombre as categoria,
+                        pr.nombre as proveedor,
+                        COALESCE(SUM(sa.cantidad_disponible), 0) as stock_total
+                    FROM productos p
+                    LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
+                    LEFT JOIN proveedores pr ON p.id_proveedor = pr.id_proveedor
+                    LEFT JOIN stock_almacen sa ON p.id_producto = sa.id_producto
+                    WHERE p.estado = 'activo'
+                    GROUP BY p.id_producto, p.nombre, p.codigo, p.sku, p.descripcion, c.nombre, pr.nombre
+                    HAVING stock_total = 0 OR stock_total IS NULL
+                    ORDER BY p.nombre ASC";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            $productos = [];
+            while ($row = $result->fetch_assoc()) {
+                $productos[] = $row;
+            }
+            
+            return $productos;
+        } catch (Exception $e) {
+            error_log("Error al obtener productos sin almacén: " . $e->getMessage());
+            return [];
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
 
+    public function contarProductosSinAlmacen() {
+        $stmt = null;
+        try {
+            $sql = "SELECT COUNT(DISTINCT p.id_producto) as total
+                    FROM productos p
+                    LEFT JOIN stock_almacen sa ON p.id_producto = sa.id_producto
+                    WHERE p.estado = 'activo'
+                    GROUP BY p.id_producto
+                    HAVING COALESCE(SUM(sa.cantidad_disponible), 0) = 0";
+            
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            return $result->num_rows;
+        } catch (Exception $e) {
+            error_log("Error al contar productos sin almacén: " . $e->getMessage());
+            return 0;
+        } finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
 }
 
 

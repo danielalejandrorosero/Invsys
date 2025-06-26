@@ -40,7 +40,6 @@
                                     <th>Email</th>
                                     <th>Fecha de registro</th>
                                     <th>Grupo</th>
-                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,16 +87,7 @@
                                         <td><span class="new badge <?php echo $badgeClass; ?>" data-badge-caption=""><?php echo htmlspecialchars(
     $usuario["grupo"]
 ); ?></span></td>
-                                        <td>
-                                            <div class="row-actions">
-                                                <a href="../../Controller/usuarios/editarUsuario.php?id=<?php echo $usuario[
-                                                    "id"
-                                                ] ??
-                                                    ""; ?>" class="btn-floating btn-small waves-effect waves-light blue" title="Editar">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            </div>
-                                        </td>
+
                                     </tr>
                                 <?php
                                 endforeach; ?>

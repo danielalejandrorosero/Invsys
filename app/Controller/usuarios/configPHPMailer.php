@@ -64,9 +64,12 @@ class MailService {
             if ($this->mail->send()) {
                 return true;
             }
-            
+            // Si no se envía, mostrar el error
+            echo '<pre>Error PHPMailer: ' . $this->mail->ErrorInfo . '</pre>';
+            error_log('Error al enviar el correo: ' . $this->mail->ErrorInfo);
         } catch (Exception $e) {
-            error_log("Error al enviar el correo: " . $this->mail->ErrorInfo);
+            echo '<pre>Excepción PHPMailer: ' . $e->getMessage() . '</pre>';
+            error_log('Excepción al enviar el correo: ' . $e->getMessage());
         }
         return false;
     }

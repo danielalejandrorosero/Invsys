@@ -341,7 +341,7 @@ if (!isset($error)) {
 
         <div class="nav-links">
             <a href="../../Controller/proveedores/ListarProveedoresController.php">📋 Ver Lista de Proveedores</a>
-            <a href="../../../public/index.php">🏠 Volver al Inicio</a>
+            <a href="../../Views/usuarios/dashboard.php">🏠 Volver al Inicio</a>
         </div>
     </div>
 

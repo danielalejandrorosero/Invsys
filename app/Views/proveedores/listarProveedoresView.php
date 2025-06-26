@@ -506,10 +506,6 @@ if (isset($_SESSION['errores'])) {
                                 <a href="../../Controller/proveedores/editarProveedorController.php?id=<?php echo $proveedor["id_proveedor"]; ?>" class="btn btn-secondary btn-sm" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="../../Controller/proveedores/VerProveedorController.php?id=<?php echo $proveedor['id_proveedor']; ?>" 
-                                   class="btn btn-secondary btn-sm" title="Ver detalles">
-                                    <i class="fas fa-eye"></i>
-                                </a>
                                 <button onclick="confirmarEliminacion(<?php echo $proveedor['id_proveedor']; ?>, '<?php echo htmlspecialchars($proveedor['nombre'], ENT_QUOTES); ?>')" 
                                         class="btn btn-danger btn-sm" title="Eliminar proveedor">
                                     <i class="fas fa-trash"></i>

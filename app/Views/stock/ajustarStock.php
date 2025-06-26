@@ -5,10 +5,10 @@ $productos = $productos ?? [];
 $almacenes = $almacenes ?? [];
 $mensaje = $mensaje ?? '';
 $tipo_mensaje = $tipo_mensaje ?? '';
-$id_producto_selected = $_POST['id_producto'] ?? '';
-$id_almacen_selected = $_POST['id_almacen'] ?? '';
-$cantidad_selected = $_POST['cantidad'] ?? '';
-$tipo_ajuste_selected = $_POST['tipo_ajuste'] ?? 'absoluto';
+$id_producto_selected = $_POST['id_producto'] ?? $id_producto_selected ?? '';
+$id_almacen_selected = $_POST['id_almacen'] ?? $id_almacen_selected ?? '';
+$cantidad_selected = $_POST['cantidad'] ?? $cantidad_selected ?? '';
+$tipo_ajuste_selected = $_POST['tipo_ajuste'] ?? $tipo_ajuste_selected ?? 'absoluto';
 ?>
 
 <!DOCTYPE html>
@@ -158,6 +158,30 @@ $tipo_ajuste_selected = $_POST['tipo_ajuste'] ?? 'absoluto';
                                         </p>
                                     </div>
                                 </div>
+                                
+                                <!-- Stock actual en todos los almacenes -->
+                                <?php if (isset($stock_actual) && !empty($stock_actual)): ?>
+                                    <div class="alert alert-info mt-3" role="alert">
+                                        <h6 class="alert-heading">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            Stock Actual del Producto
+                                        </h6>
+                                        <div class="row mt-2">
+                                            <?php foreach ($stock_actual as $stock): ?>
+                                                <div class="col-md-6 mb-2">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span class="fw-bold"><?php echo htmlspecialchars($stock['nombre_almacen']); ?>:</span>
+                                                        <span class="badge bg-primary"><?php echo $stock['cantidad_disponible']; ?> unidades</span>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-lightbulb me-1"></i>
+                                            Se ha pre-seleccionado el almacén con mayor stock disponible.
+                                        </small>
+                                    </div>
+                                <?php endif; ?>
                             <?php endif; ?>
 
                             <!-- Formulario de ajuste de stock -->
