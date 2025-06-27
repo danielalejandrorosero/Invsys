@@ -3,8 +3,6 @@
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
 
-// Verificar nivel de acceso requerido
-nivelRequerido(1);
 
 class ReporteController {
     private $stockModel;

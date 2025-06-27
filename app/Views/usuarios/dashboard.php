@@ -1,6 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-ini_set("display_errors", 1);
 
 require_once __DIR__ . "/../../../config/cargarConfig.php";
 require_once __DIR__ . "/../../Models/stock/stock.php";
@@ -161,6 +162,8 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
             <h3>Productos</h3>
             <ul>
                 <li><a href="../../Controller/productos/agregarProductoController.php"><i class="fas fa-plus-circle"></i> Agregar Producto</a></li>
+                <li><a href="../../Controller/productos/agregarCategoriaController.php"><i class="fas fa-folder-plus"></i> Agregar Categoría</a></li>
+                <li><a href="../../Controller/productos/ListarCategoriasController.php"><i class="fas fa-list-alt"></i> Listar Categorías</a></li>
                 <li><a href="../../Controller/productos/buscarProductosController.php"><i class="fas fa-search"></i> Buscar Producto</a></li>
                 <li><a href="../../Controller/productos/RestaurarProductoController.php"><i class="fas fa-trash-restore"></i> Restaurar Producto</a></li>
                 <li><a href="../../Controller/productos/ListarProductosController.php"><i class="fas fa-list"></i> Listar Productos</a></li>

@@ -10,7 +10,7 @@ class RestaurarProveedorController {
     
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
-        nivelRequerido([1,2]);
+        nivelRequerido([1,2]);  
     }
     
     public function restaurarProveedor() {

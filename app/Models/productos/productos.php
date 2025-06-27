@@ -85,31 +85,7 @@ class productos
         }
     }
 
-    // NOTA: Este método es duplicado de validarProducto(), considerar unificar en el futuro
-    // COMENTADO: No usar este método, utilizar validarProducto() en su lugar
-    /*
-    public function nombreProductoExiste($id_producto)
-    {
-        try {
-            $sql = "SELECT id_producto FROM productos WHERE id_producto = ?";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("i", $id_producto);
-            $stmt->execute();
-            $stmt->store_result();
-            $existe = $stmt->num_rows > 0;
-            return $existe;
-        } catch (Exception $e) {
-            error_log(
-                "Error al verificar producto por ID: " . $e->getMessage()
-            );
-            return false;
-        } finally {
-            if (isset($stmt) && $stmt !== false) {
-                $stmt->close();
-            }
-        }
-    }
-    */
+
 
     public function agregarProducto(
         $nombre,
@@ -184,7 +160,8 @@ class productos
     {
         try {
             $stmt = $this->conn->prepare(
-                "SELECT id_categoria FROM categorias WHERE id_categoria = ?"
+                # solo categorias activas
+                "SELECT id_categoria FROM categorias WHERE estado = 'activo' AND id_categoria = ?"
             );
             $stmt->bind_param("i", $id_categoria);
             $stmt->execute();
@@ -666,7 +643,7 @@ class productos
     public function obtenerCategorias() {
         $stmt = null;
         try {
-            $stmt = $this->conn->query("SELECT id_categoria, nombre, descripcion FROM categorias ORDER BY nombre");
+            $stmt = $this->conn->query("SELECT id_categoria, nombre, descripcion FROM categorias WHERE estado = 'activo' ORDER BY nombre");
             return $stmt->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             error_log("Error al obtener categorías: " . $e->getMessage());
@@ -717,7 +694,7 @@ class productos
     public function eliminarCategoria($id_categoria) {
         $stmt = null;
         try {
-            $sql = "DELETE FROM categorias WHERE id_categoria = ?";
+            $sql = "UPDATE categorias SET estado = 'eliminado' WHERE id_categoria = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("i", $id_categoria);
             $stmt->execute();
@@ -732,10 +709,33 @@ class productos
         }
     }
 
+
+    public function listarCategoria($id_categoria) {
+        $stmt = null;
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM categorias WHERE id_categoria = ?" );
+            $stmt->bind_param("i", $id_categoria);
+            $stmt->execute();
+
+            $resultado = $stmt->get_result();
+            $categoria = $resultado->fetch_assoc();
+
+
+            return $categoria;
+        } catch (Exception $e) {
+            error_log("Error al listar categoría: " . $e->getMessage());
+            return false;
+        }finally {
+            if (isset($stmt) && $stmt !== false) {
+                $stmt->close();
+            }
+        }
+    }
+
     public function existeCategoria($nombre) {
         $stmt = null;
         try {
-            $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM categorias WHERE nombre = ?");
+            $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM categorias WHERE nombre = ? AND estado = 'activo'");
             $stmt->bind_param("s", $nombre);
             $stmt->execute();
             $resultado = $stmt->get_result();

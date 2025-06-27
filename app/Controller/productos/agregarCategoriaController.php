@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 
 require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/productos/productos.php';
@@ -11,7 +14,7 @@ class AgregarCategoriaController {
     }
 
     public function agregarCategoria() {
-        nivelRequerido(1);
+        nivelRequerido([1,2]);
         $error = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_categoria'])) {
