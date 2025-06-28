@@ -8,11 +8,10 @@ class EliminarAlmacenController {
 
     public function __construct($conn) {
         $this->stockModel = new Stock($conn);
-        nivelRequerido([1]);
     }
 
     public function eliminarAlmacen() {
-        nivelRequerido(1);
+        nivelRequerido([1,2]);
         
         if (!isset($_GET['id']) || empty($_GET['id'])) {
             $_SESSION['errores'] = ['ID de almacén no válido'];

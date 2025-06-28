@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -6,42 +6,7 @@
     <title>Buscar Productos | Stock Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle search panel
-            const searchHeader = document.querySelector('.search-header');
-            const searchCard = document.querySelector('.search-card');
-
-            searchHeader.addEventListener('click', function() {
-                searchCard.classList.toggle('expanded');
-            });
-
-            // Clear search form
-            const clearBtn = document.getElementById('clearSearch');
-            if (clearBtn) {
-                clearBtn.addEventListener('click', function() {
-                    document.querySelectorAll('form input, form select').forEach(input => {
-                        input.value = '';
-                    });
-                });
-            }
-
-            // Table search filter
-            const tableSearch = document.getElementById('tableSearch');
-            if (tableSearch) {
-                tableSearch.addEventListener('input', function() {
-                    const searchValue = this.value.toLowerCase();
-                    const rows = document.querySelectorAll('table tbody tr');
-
-                    rows.forEach(row => {
-                        const text = row.textContent.toLowerCase();
-                        row.style.display = text.includes(searchValue) ? '' : 'none';
-                    });
-                });
-            }
-        });
-    </script>
+    <link rel="stylesheet" href="../../../public/css/buscarProductos.css">
 </head>
 <body>
     <div class="container">
@@ -279,11 +244,6 @@ $um["nombre"]
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('select');
-            M.FormSelect.init(elems);
-        });
-    </script>
+    <script src="../../../public/js/buscarProductos.js"></script>
 </body>
 </html>

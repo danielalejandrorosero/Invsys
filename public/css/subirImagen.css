@@ -1,0 +1,176 @@
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+}
+.container {
+    max-width: 420px;
+    margin: 50px auto;
+}
+.card-upload {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(102,126,234,0.15);
+    padding: 32px 28px 24px 28px;
+    margin-top: 30px;
+}
+.card-upload h2 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.7em;
+    margin-bottom: 32px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.dropzone {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto 18px auto;
+    border: 2.5px dashed #667eea;
+    border-radius: 14px;
+    background: #f8fafd;
+    padding: 38px 10px 28px 10px;
+    text-align: center;
+    color: #667eea;
+    cursor: pointer;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+}
+.dropzone.dragover {
+    border-color: #4CAF50;
+    background: #e3f2fd;
+}
+.dropzone i {
+    font-size: 2.8em;
+    margin-bottom: 10px;
+    animation: bounce 1.5s infinite;
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0);}
+    50% { transform: translateY(-8px);}
+}
+.dropzone p {
+    margin: 0;
+    font-size: 1.1em;
+    color: #555;
+}
+.dropzone input[type='file'] {
+    display: none;
+}
+.preview-area {
+    width: 100%;
+    max-width: 180px;
+    margin: 0 auto 18px auto;
+    display: none;
+    text-align: center;
+}
+.preview-area img {
+    max-width: 180px;
+    max-height: 180px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(102,126,234,0.13);
+    margin-bottom: 10px;
+}
+.remove-btn {
+    background: #ff4757;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 0.95em;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background 0.2s;
+}
+.remove-btn:hover {
+    background: #e84118;
+}
+.input-field select {
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    padding: 10px;
+    font-size: 1em;
+}
+.input-field label {
+    color: #667eea !important;
+    font-weight: 500;
+}
+.btn-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 340px;
+    margin: 18px 0 0 0;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 32px;
+    padding: 15px 0;
+    font-size: 1.2em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(102,126,234,0.10);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.btn-upload i {
+    font-size: 1.3em;
+    margin: 0;
+}
+.btn-upload:disabled {
+    background: linear-gradient(90deg, #e0e0e0, #bdbdbd);
+    color: #a0a0a0;
+    opacity: 1;
+    border: 1.5px solid #bdbdbd;
+    box-shadow: none;
+}
+.card-upload form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.input-field {
+    width: 100%;
+}
+.message {
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    animation: slideIn 0.5s ease;
+    text-align: center;
+}
+.success-message {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.08) 0%, rgba(102, 126, 234, 0.08) 100%);
+    border-left: 4px solid #4CAF50;
+    color: #2e7d32;
+}
+.error-message {
+    background: linear-gradient(135deg, rgba(244, 67, 54, 0.08) 0%, rgba(255, 71, 87, 0.08) 100%);
+    border-left: 4px solid #f44336;
+    color: #c62828;
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+@media (max-width: 600px) {
+    .container { padding: 0 2vw; }
+    .card-upload { padding: 18px 6vw 18px 6vw; }
+    .dropzone { padding: 28px 2vw 18px 2vw; }
+}
+.upload-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.dropzone, .btn-upload {
+    width: 100%;
+    max-width: 340px;
+}
+.btn-upload {
+    margin: 18px 0 0 0;
+}

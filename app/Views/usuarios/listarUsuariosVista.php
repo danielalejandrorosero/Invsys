@@ -61,18 +61,20 @@
                                         <td>
                                             <div class="user-info">
                                                 <div class="user-avatar circle">
-                                                    <?php echo htmlspecialchars(
-                                                        $iniciales
-                                                    ); ?>
+                                                    <?php if (!empty($usuario["imagen_perfil"]) && $usuario["imagen_perfil"] !== 'default-avatar.png'): ?>
+                                                        <img src="../../../public/uploads/imagenes/usuarios/<?php echo htmlspecialchars($usuario["imagen_perfil"]); ?>" 
+                                                             alt="Avatar de <?php echo htmlspecialchars($usuario["nombre"]); ?>"
+                                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                                    <?php else: ?>
+                                                        <?php echo htmlspecialchars($iniciales); ?>
+                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="user-details">
                                                     <span class="user-name"><?php echo htmlspecialchars(
                                                         $usuario["nombre"]
                                                     ); ?></span>
                                                     <span class="user-username">@<?php echo htmlspecialchars(
-                                                        $usuario[
-                                                            "nombre_usuario"
-                                                        ] ?? "username"
+                                                        $usuario["nombreUsuario"]
                                                     ); ?></span>
                                                 </div>
                                             </div>

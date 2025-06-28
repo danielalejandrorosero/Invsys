@@ -362,9 +362,11 @@
         // este metodo lo voy a usar para poder listar los usuarios
         public function obtenerUsuarios()
         {
-            $sql = "SELECT u.id_usuario, u.nombre, u.email, u.nivel_usuario, g.nombre_grupo AS grupo
+            $sql = "SELECT u.id_usuario, u.nombre, u.nombreUsuario, u.email, u.nivel_usuario, g.nombre_grupo AS grupo,
+                           COALESCE(iu.nombre_imagen, 'default-avatar.png') AS imagen_perfil
                     FROM usuarios u
-                    JOIN grupos g ON u.nivel_usuario = g.id_grupo";
+                    JOIN grupos g ON u.nivel_usuario = g.id_grupo
+                    LEFT JOIN imagenes_usuarios iu ON u.id_usuario = iu.id_usuario";
             $result = $this->conn->query($sql);
 
             if (!$result) {

@@ -8,11 +8,10 @@ class EliminarProveedorController {
 
     public function __construct($conn) {
         $this->proveedorModel = new Proveedor($conn);
-        nivelRequerido([1,2]);
     }
 
     public function eliminarProveedor() {
-        nivelRequerido(1);
+        nivelRequerido([1,2]);
         
         if (!isset($_GET["id"]) || empty($_GET["id"])) {
             header("Location: ../../Controller/proveedores/listarProveedores.php");

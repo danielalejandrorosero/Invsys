@@ -4,7 +4,6 @@ require_once __DIR__ . '/../../../config/cargarConfig.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
 require_once __DIR__ . '/../../Models/productos/productos.php';
 
-nivelRequerido(1);
 
 class ProductosSinAlmacenController {
     private $stockModel;

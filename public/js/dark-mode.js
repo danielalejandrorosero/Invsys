@@ -14,6 +14,16 @@ function toggleDarkMode() {
     if (darkModeIcon) {
         darkModeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
     }
+    
+    // Mostrar notificación
+    if (typeof M !== 'undefined' && M.toast) {
+        M.toast({
+            html: isDarkMode ? 
+                '<i class="fas fa-moon"></i> Modo oscuro activado' : 
+                '<i class="fas fa-sun"></i> Modo claro activado',
+            displayLength: 2000
+        });
+    }
 }
 
 // Función para aplicar el modo oscuro según la preferencia guardada
@@ -33,27 +43,14 @@ function applyDarkMode() {
     }
 }
 
-// Función para crear el botón de modo oscuro si no existe
-function createDarkModeButton() {
-    // Verificar si el botón ya existe
-    if (!document.querySelector('.dark-mode-toggle')) {
-        // Crear el botón
-        const darkModeButton = document.createElement('div');
-        darkModeButton.className = 'dark-mode-toggle waves-effect waves-light';
-        darkModeButton.setAttribute('title', 'Cambiar modo claro/oscuro');
-        
-        // Determinar el icono inicial basado en el modo actual
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        const iconClass = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-        
-        // Agregar el icono al botón
-        darkModeButton.innerHTML = `<i id="dark-mode-icon" class="${iconClass}"></i>`;
-        
-        // Agregar el evento click
+// Función para inicializar el botón de modo oscuro
+function initDarkModeButton() {
+    // Buscar el botón existente en el dashboard
+    const darkModeButton = document.querySelector('.dark-mode-toggle');
+    
+    if (darkModeButton) {
+        // Agregar el evento click al botón existente
         darkModeButton.addEventListener('click', toggleDarkMode);
-        
-        // Agregar el botón al body
-        document.body.appendChild(darkModeButton);
     }
 }
 
@@ -62,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Aplicar el modo oscuro según la preferencia guardada
     applyDarkMode();
     
-    // Crear el botón de modo oscuro
-    createDarkModeButton();
+    // Inicializar el botón de modo oscuro
+    initDarkModeButton();
     
     // Agregar clase para transiciones suaves
     document.body.classList.add('dark-mode-transition');

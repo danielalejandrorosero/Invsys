@@ -13,7 +13,7 @@ class EditarAlmacenController {
     }
 
     public function editarAlmacen() {
-        nivelRequerido(1);
+        nivelRequerido([1,2]);
         $error = [];
         $almacen = null;
 

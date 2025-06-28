@@ -17,7 +17,7 @@ class ListarProductosEliminadosController
 
     public function listarProductosEliminados()
     {
-        nivelRequerido(1);
+        nivelRequerido([1,2]);
 
         $productos = $this->productosModel->obtenerProductosEliminados();
 

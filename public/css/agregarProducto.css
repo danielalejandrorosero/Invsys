@@ -1,0 +1,63 @@
+/* Estilos para el formulario de agregar producto */
+
+.progress {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.required {
+    color: red;
+}
+
+.error-message {
+    color: #F44336;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.error-message.visible {
+    display: block;
+}
+
+.input-field.error input, 
+.input-field.error textarea,
+.input-field.error .select-wrapper input.select-dropdown {
+    border-bottom: 1px solid #F44336 !important;
+    box-shadow: 0 1px 0 0 #F44336 !important;
+}
+
+.input-field.error label {
+    color: #F44336 !important;
+}
+
+/* Estilos para el resaltado del escáner */
+.scanner-highlight {
+    animation: scanner-pulse 1s ease;
+}
+
+@keyframes scanner-pulse {
+    0% { 
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); 
+    }
+    50% { 
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); 
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); 
+    }
+}
+
+/* Estilos para los campos con validación correcta */
+.input-field input.valid {
+    border-bottom: 1px solid #4CAF50 !important;
+    box-shadow: 0 1px 0 0 #4CAF50 !important;
+}

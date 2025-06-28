@@ -1,23 +1,16 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 
 require_once __DIR__ . "/../../../config/cargarConfig.php";
 require_once __DIR__ . "/../../Models/stock/stock.php";
 require_once __DIR__ . "/../../Models/productos/productos.php";
 require_once __DIR__ . "/../../Models/usuarios/Usuarios.php";
 
-// Verificar si el usuario está autenticado (una sola vez)
-if (!isset($_SESSION["id_usuario"])) {
-    header("Location: ../../../public/index.php");
-    exit();
-}
 
 // Inicializar variable de sesión para la alerta de stock bajo
 if (!isset($_SESSION['alerta_stock_mostrada'])) {
     $_SESSION['alerta_stock_mostrada'] = false;
-}
+}   
 
 // Inicializar modelos una sola vez
 $usuario = new Usuario($conn);
@@ -56,7 +49,9 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard de Gestión | InvSys</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/index.css">
+    <link rel="stylesheet" href="../../../public/css/dark-mode.css">
 
     <link rel="stylesheet" href="../../../public/css/chatbot.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -64,55 +59,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
     <link rel="shortcut icon" href="../../../public/img/favicon.ico" type="image/x-icon">
     <meta name="description" content="Panel de control del sistema de gestión de inventario InvSys">
     <meta name="theme-color" content="#2c3e50">
-    
-    <style>
-        .alert-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-            animation: pulse 2s infinite;
-        }
-        
-        .alert-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .alert-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .alert-content {
-            background: white;
-            border-radius: 15px;
-            max-width: 800px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../public/css/dashboard.css">
 </head>
 
 <body>
@@ -194,8 +141,15 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
     <!-- Contenido Principal -->
     <div class="main-content">
         <div class="header">
-            <h1><i class="fas fa-tachometer-alt"></i> Panel de Control</h1>
-            <p>Bienvenido, <strong><?php echo htmlspecialchars($nombreUsuario); ?></strong>. Última actualización: <?php echo date('d/m/Y H:i'); ?></p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1><i class="fas fa-tachometer-alt"></i> Panel de Control</h1>
+                    <p>Bienvenido, <strong><?php echo htmlspecialchars($nombreUsuario); ?></strong>. Última actualización: <?php echo date('d/m/Y H:i'); ?></p>
+                </div>
+                <div class="dark-mode-toggle" style="position: static; width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #2196f3, #1976d2); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3); transition: all 0.3s ease; border: 2px solid rgba(255, 255, 255, 0.2);" title="Cambiar modo claro/oscuro" onclick="toggleDarkMode()">
+                    <i id="dark-mode-icon" class="fas fa-moon" style="font-size: 1.2rem;"></i>
+                </div>
+            </div>
         </div>
 
         <!-- Accesos Rápidos -->
@@ -484,140 +438,14 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="../../../public/js/dark-mode.js"></script>
     <script>
-        // Función para alternar la barra lateral
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('show');
-        }
-
-        // Función para verificar el ancho de la pantalla
-        function checkScreenSize() {
-            if (window.innerWidth <= 768) {
-                document.querySelector('.sidebar').classList.remove('show');
-            } else {
-                document.querySelector('.sidebar').classList.add('show');
-            }
-        }
-
-        // Inicialización cuando el DOM está listo
-        document.addEventListener('DOMContentLoaded', function () {
-            // Inicializar componentes de Materialize
-            M.AutoInit();
-            
-            // Mostrar modal de alertas si hay productos con bajo stock
-            <?php if (!empty($productosBajoStock) && $_SESSION['alerta_stock_mostrada'] === false): ?>
-                // Mostrar modal automáticamente después de 2 segundos
-                setTimeout(function() {
-                    showAlertModal();
-                    // Marcar la alerta como mostrada en la sesión
-                    fetch('marcar_alerta_stock.php');
-                }, 2000);
-            <?php endif; ?>
-            
-            // Detectar tamaño de pantalla al cargar
-            checkScreenSize();
-            
-            // Detectar cambios en el tamaño de la pantalla
-            window.addEventListener('resize', checkScreenSize);
-            
-            // Inicializar gráfico de resumen
-            const totalProductos = <?php echo $totalProductos; ?>;
-            const stockBajo = <?php echo count($productosBajoStock); ?>;
-            const transferencias = <?php echo $transferenciaPendientes; ?>;
-            
-            if (document.getElementById('chart-container')) {
-                const options = {
-                    series: [totalProductos - stockBajo, stockBajo, transferencias],
-                    labels: ['Productos con stock normal', 'Productos con stock bajo', 'Transferencias pendientes'],
-                    chart: {
-                        type: 'donut',
-                        height: 250,
-                        animations: {
-                            enabled: true,
-                            easing: 'easeinout',
-                            speed: 800,
-                            animateGradually: {
-                                enabled: true,
-                                delay: 150
-                            },
-                            dynamicAnimation: {
-                                enabled: true,
-                                speed: 350
-                            }
-                        }
-                    },
-                    colors: ['#4caf50', '#ff9800', '#2196f3'],
-                    legend: {
-                        position: 'bottom',
-                        formatter: function(seriesName, opts) {
-                            return [seriesName, ': ', opts.w.globals.series[opts.seriesIndex]].join('')
-                        }
-                    },
-                    responsive: [{
-                        breakpoint: 480,
-                        options: {
-                            chart: {
-                                height: 200
-                            },
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }],
-                    tooltip: {
-                        y: {
-                            formatter: function(val) {
-                                return val + " unidades";
-                            }
-                        }
-                    },
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function (val, opts) {
-                            return opts.w.globals.series[opts.seriesIndex]
-                        }
-                    }
-                };
-                
-                const chart = new ApexCharts(document.getElementById('chart-container'), options);
-                chart.render();
-            }
-            
-            // Verificar si la imagen se actualizó
-            if (window.location.search.includes('img_updated')) {
-                M.toast({
-                    html: '<i class="fas fa-check-circle"></i> ¡Imagen de perfil actualizada correctamente!',
-                    displayLength: 3000
-                });
-                
-                // Limpiar la URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        });
-        
-        // Función para mostrar el modal de alertas
-        function showAlertModal() {
-            document.getElementById('alertModal').style.display = 'flex';
-        }
-        
-        // Función para cerrar el modal de alertas
-        function closeAlertModal() {
-            document.getElementById('alertModal').style.display = 'none';
-        }
-        
-        // Cerrar modal al hacer clic fuera de él
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('alert-modal')) {
-                closeAlertModal();
-            }
-        });
-        
-        // Cerrar modal con ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeAlertModal();
-            }
-        });
+        // Variables globales para JS
+        var totalProductos = <?php echo $totalProductos; ?>;
+        var stockBajo = <?php echo count($productosBajoStock); ?>;
+        var transferencias = <?php echo $transferenciaPendientes; ?>;
+        var productosBajoStock = <?php echo json_encode($productosBajoStock); ?>;
+        var alertaStockMostrada = <?php echo $_SESSION['alerta_stock_mostrada'] ? 'true' : 'false'; ?>;
     </script>
+    <script src="../../../public/js/dashboard.js"></script>
 </body>
 </html>
 
