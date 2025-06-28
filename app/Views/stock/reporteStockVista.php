@@ -30,9 +30,6 @@ $resultado = $resultado ?? null;
                         <p>Análisis detallado del inventario actual por producto, almacén y categoría</p>
                     </div>
                     <div class="col s12 m6 right-align">
-                        <button class="btn grey" id="printReport">
-                            <i class="fas fa-print"></i> Imprimir
-                        </button>
                         <button class="btn green" id="exportExcel">
                             <i class="fas fa-file-excel"></i> Excel
                         </button>

@@ -1,0 +1,18 @@
+Producto	Almacén	Cantidad	Stock Mínimo	Stock Máximo	Categoría	Proveedor	Estado
+Camisa Algodón	Almacén Norte	1	20	1	Ropaeditada	Proveedor Ropa	Bajo
+Camisa Algodón	Almacén Central	8656	20	1	Ropaeditada	Proveedor Ropa	Exceso
+jabon	Almacén Central	10	2	2	Ropaeditada	Proveedor Tech	Exceso
+Juego de Sábanas	Almacén Central	111	15	20	Hogar	Proveedor Tech	Exceso
+Juego de Sábanas	Almacén Norte	471	15	20	Hogar	Proveedor Tech	Exceso
+noseque	Almacén Central	5000	3333	3333	Electrónicaa	proveedor de tecnologia	Exceso
+Prod111ucto de Pruebaddd	Almacén Central	1111	10	100	Electrónicaa	Proveedor Tech	Exceso
+ProductoPrueba	Almacén Norte	10100	5	50	Electrónicaa	Proveedor Tech	Exceso
+ProductoPrueba	Almacén Central	111	5	50	Electrónicaa	Proveedor Tech	Exceso
+prueba	Almacén Norte	212	11	11	Electrónicaa	proveedor de tecnologia	Exceso
+Smartphone X	Almacén Norte	10011	5	100	Electrónicaa	Proveedor Ropa	Exceso
+Smartphone X	Almacén Central	989	5	100	Electrónicaa	Proveedor Ropa	Exceso
+talco para pies	Almacén Central	3	11	111	Hogar	Proveedor Ropa	Bajo
+talco para pies	almacen sur	1111111	11	111	Hogar	Proveedor Ropa	Exceso
+Zapatos	Almacén Nort|<100	6	1000	Ropaeditada	Proveedor Ropa	Normal
+Zapatos	Almacén Central	0	6	1000	Ropaeditada	Proveedor Ropa	Sin Stock
+Zapatos	hola	1000	6	1000	Ropaeditada	Proveedor Ropa	Normal

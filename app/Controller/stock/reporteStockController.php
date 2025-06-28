@@ -1,6 +1,9 @@
 <?php
-// Cargar configuración y dependencias
-require_once __DIR__ . '/../../../config/cargarConfig.php';
+// Incluir solo la configuración de base de datos sin el modo oscuro
+require_once __DIR__ . '/../../../config/db_config.php';
+require_once __DIR__ . '/../../../config/db_connect.php';
+require_once __DIR__ . '/../../../config/sesiones.php';
+require_once __DIR__ . '/../../../config/funciones.php';
 require_once __DIR__ . '/../../Models/stock/stock.php';
 
 

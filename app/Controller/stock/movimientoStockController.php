@@ -47,9 +47,13 @@ class MovimientoStockController {
         // Calcular el número total de páginas
         $totalPaginas = ceil($total_registros / $limit);
         
+        // Obtener contadores por tipo para las métricas
+        $movimientosPorTipo = $this->stockModel->contarMovimientosPorTipo();
+        
         // Variables para la vista
         $pagina_actual = $page;
         $registros_por_pagina = $limit;
+        $total_paginas = $totalPaginas;
         
         // Construir parámetros de URL para mantener los filtros
         $params_url = '';

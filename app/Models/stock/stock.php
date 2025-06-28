@@ -357,7 +357,7 @@ class Stock {
     public function contarMovimientosPorTipo() {
         $stmt = null;
         try {
-            $tipos = ['entrada', 'salida', 'transferencia'];
+            $tipos = ['entrada', 'salida', 'transferencia', 'ajuste'];
             $resultado = [];
             
             foreach ($tipos as $tipo) {

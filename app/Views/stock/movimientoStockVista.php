@@ -28,6 +28,7 @@ foreach ($filtros as $filtro) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/historialMovimientos.css">
+    <link rel="stylesheet" href="../../../public/css/exportarMovimientos.css">
 </head>
 <body>
     <div class="container">
@@ -40,10 +41,24 @@ foreach ($filtros as $filtro) {
                         Historial de Movimientos
                     </h1>
                     <div class="header-actions">
-                        <button class="btn blue waves-effect waves-light">
-                            <i class="fas fa-file-export"></i>
-                            Exportar
-                        </button>
+                        <div class="dropdown">
+                            <button class="btn blue waves-effect waves-light dropdown-trigger" data-target="exportDropdown">
+                                <i class="fas fa-file-export"></i>
+                                Exportar
+                                <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>
+                            </button>
+                            <ul id="exportDropdown" class="dropdown-content">
+                                <li><a href="../../Controller/stock/exportarMovimientosController.php?formato=csv<?= $params_url ?>" class="export-link">
+                                    <i class="fas fa-file-csv"></i> Exportar CSV
+                                </a></li>
+                                <li><a href="../../Controller/stock/exportarMovimientosController.php?formato=excel<?= $params_url ?>" class="export-link">
+                                    <i class="fas fa-file-excel"></i> Exportar Excel
+                                </a></li>
+                                <li><a href="../../Controller/stock/exportarMovimientosController.php?formato=pdf<?= $params_url ?>" class="export-link">
+                                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                                </a></li>
+                            </ul>
+                        </div>
                         <a href="../../Views/usuarios/dashboard.php" class="btn grey waves-effect waves-light">
                             <i class="fas fa-home"></i>
                             Dashboard
@@ -328,34 +343,6 @@ foreach ($filtros as $filtro) {
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicialización de componentes de Materialize
-            M.AutoInit();
-            
-            // Mejorar la experiencia de usuario con animaciones
-            const metricCards = document.querySelectorAll('.metric-card');
-            metricCards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.style.animation = 'fadeInUp 0.6s ease forwards';
-            });
-        });
-        
-        // Animación CSS para las tarjetas métricas
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+    <script src="../../../public/js/exportarMovimiento.js"></script>
 </body>
 </html> 
