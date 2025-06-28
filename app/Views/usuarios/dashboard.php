@@ -390,10 +390,6 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                                        style="background: #2196f3; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 0.9rem;">
                                         <i class="fas fa-edit"></i> Ajustar
                                     </a>
-                                    <a href="../../Controller/productos/verProductoController.php?id=<?php echo $producto['id_producto']; ?>" 
-                                       style="background: #9e9e9e; color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 0.9rem;">
-                                        <i class="fas fa-eye"></i> Ver
-                                    </a>
                                 </div>
                             </div>
                         <?php endforeach; ?>

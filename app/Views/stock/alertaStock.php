@@ -29,7 +29,7 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertas de Stock Bajo | Stock Manager</title>
+    <title>Alertas de Stock Bajo | InvSys</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../../public/css/alertaStock.css">
@@ -116,10 +116,6 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
                                     <a href="../../Controller/stock/ajustarStockController.php?id_producto=<?php echo $producto['id_producto']; ?>" 
                                        class="action-btn btn-adjust">
                                         <i class="fas fa-edit"></i> Ajustar
-                                    </a>
-                                    <a href="../../Controller/productos/verProductoController.php?id=<?php echo $producto['id_producto']; ?>" 
-                                       class="action-btn btn-view">
-                                        <i class="fas fa-eye"></i> Ver
                                     </a>
                                 </div>
                             </div>
