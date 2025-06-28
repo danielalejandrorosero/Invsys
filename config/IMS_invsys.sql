@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 27-06-2025 a las 18:52:19
+-- Tiempo de generación: 28-06-2025 a las 15:03:29
 -- Versión del servidor: 11.8.2-MariaDB
 -- Versión de PHP: 8.4.8
 
@@ -531,7 +531,8 @@ INSERT INTO `chat_logs` (`id`, `user_input`, `bot_response`, `timestamp`, `user_
 (408, 'que preguntas puede responder este asistente ?', 'Lo siento, no puedo procesar tu solicitud en este momento. Por favor, intenta nuevamente.', '2025-06-26 16:48:43', NULL),
 (409, 'que preguntas puede responder este asistente ?', 'Este asistente puede responder preguntas sobre el inventario del sistema IMS_invsys.  Específicamente, puede proporcionar información sobre:\n\n* El número total de productos activos.\n* Los productos que están sin stock.\n* La lista de almacenes, incluyendo su nombre y ubicación.\n* Los productos con stock bajo (cantidad disponible menor o igual al stock mínimo).\n\nPara obtener esta información, debes formular preguntas que soliciten datos del inventario.  Por ejemplo, puedes preguntar \"¿Cuántos productos tengo?\", \"¿Cuáles son los productos sin stock?\", \"¿Cuáles son los almacenes disponibles?\", o \"¿Qué productos tienen stock bajo?\".', '2025-06-26 16:48:55', NULL),
 (410, 'puedes darme la lista de almacene incluyendo su nombre y ubicacion ?', '📊 Resultados:\n• Almacén Central: Bogotá, Carrera 10 #20-30\n• Almacén Norte: Medellín, Calle 50 #80-45\n• almacen sur: bogota\n• hola: ss\n• hola: ssss\n• hola: ssss', '2025-06-26 16:49:15', NULL),
-(411, 'dame los productos con bajo stock', '🔴 Productos con stock bajo:\n• Zapatos: 3 unidades', '2025-06-26 16:49:37', NULL);
+(411, 'dame los productos con bajo stock', '🔴 Productos con stock bajo:\n• Zapatos: 3 unidades', '2025-06-26 16:49:37', NULL),
+(412, 'Hola, me puedes decir cuantos productos tengo en el inventario  ?', '📊 Tienes 8 productos activos en el inventario.', '2025-06-28 17:43:30', NULL);
 
 -- --------------------------------------------------------
 
@@ -671,7 +672,11 @@ INSERT INTO `imagenes_productos` (`id_imagen`, `id_producto`, `nombre_imagen`, `
 (11, 1, '137febe302a96b3fe15b4cdb423013bdca573188885ec1dfd5df5f47502f44a7.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/137febe302a96b3fe15b4cdb423013bdca573188885ec1dfd5df5f47502f44a7.png'),
 (12, 3, 'b5a8d4fda6ba0fda53ffab6830f64da34b4e2a22d8465d6259d72905aaedc7b4.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/b5a8d4fda6ba0fda53ffab6830f64da34b4e2a22d8465d6259d72905aaedc7b4.png'),
 (13, 2, '46f70a7ce1b731dc7c72631023ff885546b27ee5720352ae5a1d671164718386.jpeg', 'C:\\xampp\\htdocs\\InventoryManagementSystem\\app\\Controller\\subirImagenes/../../../public/uploads/imagenes/productos/46f70a7ce1b731dc7c72631023ff885546b27ee5720352ae5a1d671164718386.jpeg'),
-(14, 26, '2fa41c25d702b615cbbc61ff6b9f7948c0842b78a7aa9778a2b76388b082a71a.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/2fa41c25d702b615cbbc61ff6b9f7948c0842b78a7aa9778a2b76388b082a71a.png');
+(14, 26, '334f1af65bf805418195722ea42e9cad1abb65326db4b3cdffe90a5c90da69d5.jpeg', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/334f1af65bf805418195722ea42e9cad1abb65326db4b3cdffe90a5c90da69d5.jpeg'),
+(15, 22, '609a6ba3065c3bd8a58fcb90b738a1e6b306936021361f8fa3f6319d009f2d54.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/609a6ba3065c3bd8a58fcb90b738a1e6b306936021361f8fa3f6319d009f2d54.png'),
+(16, 27, '4f7ef060757e6b5b092ce4be8513e936ca12c473261f3cddeaa124997f5ee06e.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/4f7ef060757e6b5b092ce4be8513e936ca12c473261f3cddeaa124997f5ee06e.png'),
+(17, 29, '0ed05f565d408c27a52947b1e9bee445ad4439519bf32f17d052666684d50e3a.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/0ed05f565d408c27a52947b1e9bee445ad4439519bf32f17d052666684d50e3a.png'),
+(18, 31, '7f4e6102cf4ec59f57216b64b801c5138ecd9a5a9f179d17c12bb394ac7fe958.jpeg', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/7f4e6102cf4ec59f57216b64b801c5138ecd9a5a9f179d17c12bb394ac7fe958.jpeg');
 
 -- --------------------------------------------------------
 
@@ -691,7 +696,8 @@ CREATE TABLE `imagenes_usuarios` (
 --
 
 INSERT INTO `imagenes_usuarios` (`id_imagen`, `id_usuario`, `nombre_imagen`, `ruta_imagen`) VALUES
-(1, 47, '28f5a14ea7402b227e3fa7e68aed858144422926fb891dc9ddbc30c48db8b3f4.jpg', 'C:\\xampp\\htdocs\\InventoryManagementSystem\\app\\Controller\\subirImagenes/../../../public/uploads/imagenes/usuarios/28f5a14ea7402b227e3fa7e68aed858144422926fb891dc9ddbc30c48db8b3f4.jpg');
+(1, 47, '8ab179beccdf6424dfdeeff56f9eae39f835328c89ed32994eb310244036133d.jpeg', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/usuarios/8ab179beccdf6424dfdeeff56f9eae39f835328c89ed32994eb310244036133d.jpeg'),
+(4, 87, '7bbf0436df14df37a10dea1aabfce8fea12331b0a3b389e6f82286106e798e7f.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/usuarios/7bbf0436df14df37a10dea1aabfce8fea12331b0a3b389e6f82286106e798e7f.png');
 
 -- --------------------------------------------------------
 
@@ -739,7 +745,8 @@ INSERT INTO `movimientos_stock` (`id_movimiento`, `id_producto`, `id_almacen_ori
 (30, 26, 1, 2, 'transferencia', 2, '2025-05-27 18:27:02', 47),
 (31, 2, 1, 2, 'transferencia', 111, '2025-05-28 18:52:20', 47),
 (32, 2, 1, 2, 'transferencia', 1111, '2025-05-28 18:52:33', 47),
-(33, 26, 1, 2, 'transferencia', 100, '2025-06-08 01:40:18', 47);
+(33, 26, 1, 2, 'transferencia', 100, '2025-06-08 01:40:18', 47),
+(34, 26, 1, 4, 'transferencia', 1000, '2025-06-28 04:58:31', 47);
 
 -- --------------------------------------------------------
 
@@ -778,7 +785,7 @@ INSERT INTO `productos` (`id_producto`, `nombre`, `codigo`, `sku`, `descripcion`
 (19, 'dwqdwq', 'wqdwq', 'wdwd', 'wqdwd', 11.00, 11.00, 4, 11, 111, 1, '2025-05-09 19:12:38', '2025-06-07 04:07:35', 1, 'eliminado'),
 (20, 'Producto de Prueba', 'TEST123', 'SKU123', 'Este es un producto de prueba', 100.00, 150.00, 1, 10, 100, 1, '2025-05-10 01:35:25', '2025-06-07 04:07:38', 1, 'eliminado'),
 (21, 'Producto de Pruebaddd', 'TEST1dd23', 'SKU12dd3', 'Esddte es un producto de prueba', 100.00, 150.00, 1, 10, 100, 1, '2025-05-10 01:37:01', '2025-06-19 00:57:58', 1, 'eliminado'),
-(22, 'Prod111ucto de Pruebaddd', 'TEST1dd1123', 'SKU1211dd3', 'Esddte es un producto de p11rueba', 100.00, 150.00, 1, 10, 100, 1, '2025-05-10 01:37:58', '2025-06-26 02:19:10', 1, 'activo'),
+(22, 'Prod111ucto de Pruebaddd', 'TEST1dd1123', 'SKU1211dd3', 'Esddte es un producto de p11rueba', 100.00, 150.00, 5, 10, 100, 1, '2025-05-10 01:37:58', '2025-06-28 01:28:51', 1, 'activo'),
 (23, 'Prod111ucto de Pruebaddd', 'TEST1dd11d23', 'SKU1211ddd3', 'Esddte es un producto de p11rueba', 100.00, 150.00, 1, 10, 100, 1, '2025-05-10 01:40:12', '2025-06-19 00:58:13', 1, 'eliminado'),
 (24, 'talco para pies', '819293017318', 'SKU175617', 'talco para pies paraa niños', 1111.00, 111.00, 1, 11, 111, 3, '2025-05-15 03:25:35', '2025-06-19 00:58:11', 2, 'eliminado'),
 (25, 'Zapatos', '12188283182828', 'Si', 'Zapatos', 200000.00, 250000.00, 1, 2, 100, 2, '2025-05-26 07:18:27', '2025-06-19 00:58:48', 2, 'eliminado'),
@@ -787,7 +794,7 @@ INSERT INTO `productos` (`id_producto`, `nombre`, `codigo`, `sku`, `descripcion`
 (28, '12312', '123123', '323123', '3123123', 333.00, 333.00, 3, 33, 3333, 2, '2025-06-06 16:12:44', '2025-06-26 02:55:09', 2, 'activo'),
 (29, '312', '3123', '213123', '33', 33.00, 33.00, 3, 333, 33333, 1, '2025-06-06 16:14:47', '2025-06-06 16:14:47', 2, 'activo'),
 (30, 'dwqd', '1233123123', '12312312', 'wdwqdwqd', 33.00, 3333.00, 3, 33, 3333, 1, '2025-06-06 16:16:37', '2025-06-06 16:16:37', 2, 'activo'),
-(31, 'noseque', '123123123123', '123123123', '123123123', 233.00, 333333.00, 5, 3333, 3333333, 1, '2025-06-07 02:31:27', '2025-06-07 02:31:27', 4, 'activo'),
+(31, 'noseque', '123123123123', '123123123', '123123123', 233.00, 3333.00, 5, 3333, 3333, 1, '2025-06-07 02:31:27', '2025-06-28 01:29:04', 4, 'activo'),
 (32, 'Productoprueba3', '3123214', '213123123123123', 's', 50000.00, 60000.00, 5, 50, 100, 1, '2025-06-26 03:22:14', '2025-06-26 03:22:14', 4, 'activo');
 
 -- --------------------------------------------------------
@@ -816,7 +823,7 @@ INSERT INTO `proveedores` (`id_proveedor`, `nombre`, `contacto`, `telefono`, `em
 (4, 'proveedor de tecnologia', 'daniel alejandro', '3215102025', 'danielalejandroroseroortiz80@gmail.com', 'cra 9 1-36 barrio el carmen', ''),
 (5, 'talco para pies', 'daniel alejandro', '3215102025', 'ddd@gmail.com', 'cra 9 1-36 barrio el carmen', ''),
 (6, 'eliminarlo', 'nose', '32151001252', 'hola@gmail.com', 'cra 9 1-36', 'activo'),
-(7, 'eliminarlo', 'nose', '32151001252d', 'hola@gmail.comnn', 'sise', 'eliminado'),
+(7, 'eliminarlo', 'nose', '32151001252d', 'hola@gmail.comnn', 'sise', 'activo'),
 (8, 'eliminarlojh', 'nose', '32151001252', 'ddwddwqdhola@gmail.comnn', 'sise', 'activo'),
 (9, 'elnuevo', 'hola@gmail.com', '3123123124', 'hola@gmail.comdwqdwqdq', 'wqdwqdwqd', 'activo'),
 (10, 'jabon', 'Juan Pérezd', '32151001252', 'proveedor.tech@example.comdd', 'hola', 'activo');
@@ -847,14 +854,16 @@ INSERT INTO `stock_almacen` (`id_stock`, `id_almacen`, `id_producto`, `cantidad_
 (10, 1, 1, 989),
 (18, 1, 2, 8656),
 (25, 1, 18, 10),
-(27, 1, 26, 1000),
+(27, 1, 26, 0),
 (28, 2, 26, 3),
 (35, 2, 12, 10100),
 (36, 1, 24, 3),
 (37, 1, 22, 1111),
 (39, 3, 24, 1111111),
 (40, 2, 27, 212),
-(41, 1, 31, 5000);
+(41, 1, 31, 5000),
+(42, 4, 26, 1000),
+(43, 3, 26, 100);
 
 -- --------------------------------------------------------
 
@@ -902,10 +911,10 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `email`, `password`, `status`, `last_login`, `nivel_usuario`, `nombreUsuario`, `token_recuperacion`, `expira_token`) VALUES
-(47, 'material', 'danielalejandroroseroortiz80@gmail.com', '$2y$12$R8q3VIG47hHkRzGUrYs4WurQMtnwJABwhqhmrYhRjSMSQks2xYgVW', 1, '2025-03-11 02:54:17', 1, 'root', NULL, NULL),
+(47, 'material', 'danielalejandroroseroortiz80@gmail.com', '$2y$12$R8q3VIG47hHkRzGUrYs4WurQMtnwJABwhqhmrYhRjSMSQks2xYgVW', 1, '2025-03-11 02:54:17', 1, 'root', '018514c685def456ae766f863a650a032e49f276ae566fe344fedbc1930a5069', '2025-06-28 00:52:24'),
 (85, 'santiago', 'santiago123@gmail.com', '$2y$10$eK0vBeMKwb91Y9egTmGZB.86LcAyz3s0Nwq5.OxfSBwCBsj004eXC', 1, '2025-05-27 13:29:35', 2, 'san1234', NULL, NULL),
-(86, 'Proveedor Tecnologico', 'hola@gmail.com', '$2y$12$prWmzigi5PB4MTOiJdFPseBn6syJcPyLs9CXlQisLA9PxE30PKbfC', 1, '2025-06-25 19:48:46', 3, '22', NULL, NULL),
-(87, 'elgranoperadore', 'operador@gmail.com', '$2y$12$1iJSIJyTcHs3jB4Jl.otRu3LCEUyrgWHHK4NSMBSqV3SDs6HP4KRG', 1, '2025-06-25 19:50:51', 3, 'operador', NULL, NULL);
+(87, 'elgranoperadore', 'operador@gmail.com', '$2y$12$1iJSIJyTcHs3jB4Jl.otRu3LCEUyrgWHHK4NSMBSqV3SDs6HP4KRG', 1, '2025-06-25 19:50:51', 3, 'operador', NULL, NULL),
+(88, 'usuarionuevito', 'daniel@gmail.com', '$2y$12$EHdOQLs5.PLo4mts71LFcO/NcA7SJjmZpxp71e23t2gqfIYe42aX.', 1, '2025-06-27 22:52:47', 3, 'archLinux', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1096,7 +1105,7 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `chat_logs`
 --
 ALTER TABLE `chat_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=412;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=413;
 
 --
 -- AUTO_INCREMENT de la tabla `clientes`
@@ -1132,19 +1141,19 @@ ALTER TABLE `grupos`
 -- AUTO_INCREMENT de la tabla `imagenes_productos`
 --
 ALTER TABLE `imagenes_productos`
-  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `imagenes_usuarios`
 --
 ALTER TABLE `imagenes_usuarios`
-  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `movimientos_stock`
 --
 ALTER TABLE `movimientos_stock`
-  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_movimiento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -1162,7 +1171,7 @@ ALTER TABLE `proveedores`
 -- AUTO_INCREMENT de la tabla `stock_almacen`
 --
 ALTER TABLE `stock_almacen`
-  MODIFY `id_stock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id_stock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `unidades_medida`
@@ -1174,7 +1183,7 @@ ALTER TABLE `unidades_medida`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
