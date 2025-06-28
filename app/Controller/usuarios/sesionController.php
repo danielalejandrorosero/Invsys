@@ -47,10 +47,28 @@ class LoginController
 
             // En el controlador de sesión, después de verificar las credenciales
             if ($usuario) {
+                // Verificar si el usuario ya tiene una sesión activa
+                if ($this->usuarioModel->verificarSesionActiva($usuario["id_usuario"])) {
+                    $_SESSION["error"] = "Este usuario ya tiene una sesión activa en otro dispositivo. Por favor, cierre la sesión anterior antes de iniciar una nueva.";
+                    header("Location: ../../../public/index.php");
+                    exit();
+                }
+
+                // Generar nuevo ID de sesión
                 session_regenerate_id(true);
+                $session_id = session_id();
+                
+                // Registrar la nueva sesión en la base de datos
+                if (!$this->usuarioModel->registrarSesion($usuario["id_usuario"], $session_id)) {
+                    $_SESSION["error"] = "Error al registrar la sesión. Intente nuevamente.";
+                    header("Location: ../../../public/index.php");
+                    exit();
+                }
+
                 $_SESSION["id_usuario"] = $usuario["id_usuario"];
                 $_SESSION["nombreUsuario"] = $usuario["nombreUsuario"];
                 $_SESSION["nivel_usuario"] = $usuario["nivel_usuario"];
+                $_SESSION["session_id"] = $session_id;
                 
                 // Guardar la ruta de la imagen si existe
                 if (!empty($usuario["ruta_imagen"])) {

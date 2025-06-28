@@ -19,6 +19,16 @@ function nivelRequerido($nivelesPermitidos)
         exit();
     }
 
+    // Verificar que la sesión sea válida (no invalidada por otra sesión)
+    if (!verificarSesionValida()) {
+        // Limpiar la sesión inválida
+        session_unset();
+        session_destroy();
+        $_SESSION["error"] = "Su sesión ha sido invalidada por una nueva sesión en otro dispositivo.";
+        header("Location: ../public/index.php");
+        exit();
+    }
+
     // Obtener el usuario actual
     $usuarioActual = UsuarioActual();
     if (!$usuarioActual) {
@@ -51,6 +61,30 @@ function nivelRequerido($nivelesPermitidos)
             header("Location: ../../Views/usuarios/dashboard.php");
             exit();
         }
+    }
+}
+
+function verificarSesionValida()
+{
+    global $conn;
+    
+    if (!isset($_SESSION["id_usuario"]) || !isset($_SESSION["session_id"])) {
+        return false;
+    }
+    
+    try {
+        $stmt = $conn->prepare(
+            "SELECT id_usuario FROM usuarios WHERE id_usuario = ? AND session_id = ?"
+        );
+        $stmt->bind_param("is", $_SESSION["id_usuario"], $_SESSION["session_id"]);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        
+        return $resultado->num_rows > 0;
+    } catch (Exception $e) {
+        return false;
+    } finally {
+        $stmt->close();
     }
 }
 

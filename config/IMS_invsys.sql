@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-06-2025 a las 15:03:29
+-- Tiempo de generación: 28-06-2025 a las 15:36:40
 -- Versión del servidor: 11.8.2-MariaDB
 -- Versión de PHP: 8.4.8
 
@@ -672,7 +672,7 @@ INSERT INTO `imagenes_productos` (`id_imagen`, `id_producto`, `nombre_imagen`, `
 (11, 1, '137febe302a96b3fe15b4cdb423013bdca573188885ec1dfd5df5f47502f44a7.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/137febe302a96b3fe15b4cdb423013bdca573188885ec1dfd5df5f47502f44a7.png'),
 (12, 3, 'b5a8d4fda6ba0fda53ffab6830f64da34b4e2a22d8465d6259d72905aaedc7b4.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/b5a8d4fda6ba0fda53ffab6830f64da34b4e2a22d8465d6259d72905aaedc7b4.png'),
 (13, 2, '46f70a7ce1b731dc7c72631023ff885546b27ee5720352ae5a1d671164718386.jpeg', 'C:\\xampp\\htdocs\\InventoryManagementSystem\\app\\Controller\\subirImagenes/../../../public/uploads/imagenes/productos/46f70a7ce1b731dc7c72631023ff885546b27ee5720352ae5a1d671164718386.jpeg'),
-(14, 26, '334f1af65bf805418195722ea42e9cad1abb65326db4b3cdffe90a5c90da69d5.jpeg', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/334f1af65bf805418195722ea42e9cad1abb65326db4b3cdffe90a5c90da69d5.jpeg'),
+(14, 26, 'f8eb1a5b8ad19530d78f2daa25810b990c971d5fcfae32f34225676b32aa5551.jpeg', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/f8eb1a5b8ad19530d78f2daa25810b990c971d5fcfae32f34225676b32aa5551.jpeg'),
 (15, 22, '609a6ba3065c3bd8a58fcb90b738a1e6b306936021361f8fa3f6319d009f2d54.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/609a6ba3065c3bd8a58fcb90b738a1e6b306936021361f8fa3f6319d009f2d54.png'),
 (16, 27, '4f7ef060757e6b5b092ce4be8513e936ca12c473261f3cddeaa124997f5ee06e.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/4f7ef060757e6b5b092ce4be8513e936ca12c473261f3cddeaa124997f5ee06e.png'),
 (17, 29, '0ed05f565d408c27a52947b1e9bee445ad4439519bf32f17d052666684d50e3a.png', '/srv/http/InventoryManagementSystem/app/Controller/subirImagenes/../../../public/uploads/imagenes/productos/0ed05f565d408c27a52947b1e9bee445ad4439519bf32f17d052666684d50e3a.png'),
@@ -903,18 +903,19 @@ CREATE TABLE `usuarios` (
   `nivel_usuario` int(11) NOT NULL DEFAULT 1,
   `nombreUsuario` varchar(50) NOT NULL,
   `token_recuperacion` varchar(255) DEFAULT NULL,
-  `expira_token` datetime DEFAULT NULL
+  `expira_token` datetime DEFAULT NULL,
+  `session_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `nombre`, `email`, `password`, `status`, `last_login`, `nivel_usuario`, `nombreUsuario`, `token_recuperacion`, `expira_token`) VALUES
-(47, 'material', 'danielalejandroroseroortiz80@gmail.com', '$2y$12$R8q3VIG47hHkRzGUrYs4WurQMtnwJABwhqhmrYhRjSMSQks2xYgVW', 1, '2025-03-11 02:54:17', 1, 'root', '018514c685def456ae766f863a650a032e49f276ae566fe344fedbc1930a5069', '2025-06-28 00:52:24'),
-(85, 'santiago', 'santiago123@gmail.com', '$2y$10$eK0vBeMKwb91Y9egTmGZB.86LcAyz3s0Nwq5.OxfSBwCBsj004eXC', 1, '2025-05-27 13:29:35', 2, 'san1234', NULL, NULL),
-(87, 'elgranoperadore', 'operador@gmail.com', '$2y$12$1iJSIJyTcHs3jB4Jl.otRu3LCEUyrgWHHK4NSMBSqV3SDs6HP4KRG', 1, '2025-06-25 19:50:51', 3, 'operador', NULL, NULL),
-(88, 'usuarionuevito', 'daniel@gmail.com', '$2y$12$EHdOQLs5.PLo4mts71LFcO/NcA7SJjmZpxp71e23t2gqfIYe42aX.', 1, '2025-06-27 22:52:47', 3, 'archLinux', NULL, NULL);
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `email`, `password`, `status`, `last_login`, `nivel_usuario`, `nombreUsuario`, `token_recuperacion`, `expira_token`, `session_id`) VALUES
+(47, 'material', 'danielalejandroroseroortiz80@gmail.com', '$2y$12$R8q3VIG47hHkRzGUrYs4WurQMtnwJABwhqhmrYhRjSMSQks2xYgVW', 1, '2025-06-28 15:34:07', 1, 'root', '018514c685def456ae766f863a650a032e49f276ae566fe344fedbc1930a5069', '2025-06-28 00:52:24', 'ge30ctt6b796pgn26627g4aq5d'),
+(85, 'santiago', 'santiago123@gmail.com', '$2y$10$eK0vBeMKwb91Y9egTmGZB.86LcAyz3s0Nwq5.OxfSBwCBsj004eXC', 1, '2025-05-27 13:29:35', 2, 'san1234', NULL, NULL, NULL),
+(87, 'elgranoperadore', 'operador@gmail.com', '$2y$12$1iJSIJyTcHs3jB4Jl.otRu3LCEUyrgWHHK4NSMBSqV3SDs6HP4KRG', 1, '2025-06-28 15:34:13', 3, 'operador', NULL, NULL, 'jamse5ds2va3gknjvadvj52956'),
+(88, 'usuarionuevito', 'daniel@gmail.com', '$2y$12$EHdOQLs5.PLo4mts71LFcO/NcA7SJjmZpxp71e23t2gqfIYe42aX.', 1, '2025-06-27 22:52:47', 3, 'archLinux', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1070,7 +1071,8 @@ ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`),
   ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `unique_nombreUsuario` (`nombreUsuario`),
-  ADD KEY `id_grupo` (`nivel_usuario`);
+  ADD KEY `id_grupo` (`nivel_usuario`),
+  ADD KEY `idx_session_id` (`session_id`);
 
 --
 -- Indices de la tabla `ventas`

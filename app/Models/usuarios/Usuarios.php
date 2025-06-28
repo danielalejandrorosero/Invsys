@@ -268,6 +268,77 @@
             }
         }
 
+        // Métodos para control de sesiones únicas
+        public function verificarSesionActiva($id_usuario)
+        {
+            try {
+                $stmt = $this->conn->prepare(
+                    "SELECT session_id FROM usuarios WHERE id_usuario = ?"
+                );
+                $stmt->bind_param("i", $id_usuario);
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+                $usuario = $resultado->fetch_assoc();
+                
+                return $usuario && !empty($usuario["session_id"]);
+            } catch (Exception $e) {
+                return false;
+            } finally {
+                $stmt->close();
+            }
+        }
+
+        public function registrarSesion($id_usuario, $session_id)
+        {
+            try {
+                $stmt = $this->conn->prepare(
+                    "UPDATE usuarios SET session_id = ?, last_login = NOW() WHERE id_usuario = ?"
+                );
+                $stmt->bind_param("si", $session_id, $id_usuario);
+                $stmt->execute();
+                
+                return $stmt->affected_rows > 0;
+            } catch (Exception $e) {
+                return false;
+            } finally {
+                $stmt->close();
+            }
+        }
+
+        public function limpiarSesion($id_usuario)
+        {
+            try {
+                $stmt = $this->conn->prepare(
+                    "UPDATE usuarios SET session_id = NULL WHERE id_usuario = ?"
+                );
+                $stmt->bind_param("i", $id_usuario);
+                $stmt->execute();
+                
+                return $stmt->affected_rows > 0;
+            } catch (Exception $e) {
+                return false;
+            } finally {
+                $stmt->close();
+            }
+        }
+
+        public function verificarSesionValida($id_usuario, $session_id)
+        {
+            try {
+                $stmt = $this->conn->prepare(
+                    "SELECT id_usuario FROM usuarios WHERE id_usuario = ? AND session_id = ?"
+                );
+                $stmt->bind_param("is", $id_usuario, $session_id);
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+                
+                return $resultado->num_rows > 0;
+            } catch (Exception $e) {
+                return false;
+            } finally {
+                $stmt->close();
+            }
+        }
 
         // solicitar recuperación de contra
         public function generarToken($correo)
