@@ -17,85 +17,7 @@ $resultado = $resultado ?? null;
     <title>Reporte de Stock | Stock Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .search-product {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .search-product i {
-            margin-right: 10px;
-        }
-        .stock-badge {
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: #fff;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .stock-normal { background-color: #4caf50; }
-        .stock-warning { background-color: #ff9800; }
-        .stock-danger { background-color: #f44336; }
-        .stock-overflow { background-color: #2196f3; }
-        
-        .pagination {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .page-controls {
-            display: flex;
-            align-items: center;
-        }
-        .page-item {
-            padding: 5px 10px;
-            margin: 0 5px;
-            cursor: pointer;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-        }
-        .page-item.active {
-            background-color: #2196f3;
-            color: #fff;
-        }
-        .page-item.disabled {
-            color: #bdbdbd;
-            cursor: not-allowed;
-        }
-        .empty-state {
-            text-align: center;
-            margin-top: 50px;
-        }
-        .empty-state i {
-            font-size: 3rem;
-            color: #bdbdbd;
-            margin-bottom: 20px;
-        }
-        .sortable {
-            cursor: pointer;
-            user-select: none;
-        }
-        .sortable:hover {
-            background-color: #f5f5f5;
-        }
-        .table-responsive {
-            overflow-x: auto;
-        }
-        .stats-card {
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../public/css/reporteStock.css">
 </head>
 <body>
     <div class="container">
@@ -337,51 +259,7 @@ $resultado = $resultado ?? null;
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar Materialize
-            M.updateTextFields();
+    <script src="../../../public/js/reporteStock.js"></script>
 
-            // Manejadores de exportación
-            document.getElementById('exportPDF').addEventListener('click', function() {
-                window.location.href = '../../Controller/exportarArchivos/exportarPDFController.php?filtro=' + 
-                    encodeURIComponent(JSON.stringify(getFilterParams()));
-            });
-            
-            document.getElementById('exportExcel').addEventListener('click', function() {
-                window.location.href = '../../Controller/exportarArchivos/exportarEXCELController.php?filtro=' + 
-                    encodeURIComponent(JSON.stringify(getFilterParams()));
-            });
-            
-            document.getElementById('printReport').addEventListener('click', function() {
-                window.print();
-            });
-
-            // Limpiar filtros
-            document.getElementById('clearFilters').addEventListener('click', function() {
-                document.querySelectorAll('#filterForm input').forEach(input => {
-                    input.value = '';
-                });
-                document.getElementById('filterForm').submit();
-            });
-
-            // Función para obtener parámetros de filtro
-            function getFilterParams() {
-                return {
-                    almacen: document.getElementById('almacen').value,
-                    categoria: document.getElementById('categoria').value,
-                    proveedor: document.getElementById('proveedor').value
-                };
-            }
-
-            // Ordenamiento de tabla (básico)
-            document.querySelectorAll('.sortable').forEach(header => {
-                header.addEventListener('click', function() {
-                    // Implementar lógica de ordenamiento si es necesario
-                    console.log('Ordenar por:', this.textContent.trim());
-                });
-            });
-        });
-    </script>
 </body>
 </html>

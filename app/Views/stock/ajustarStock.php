@@ -1,5 +1,4 @@
 <?php
-// Verificar que las variables estén definidas
 $error = $error ?? [];
 $productos = $productos ?? [];
 $almacenes = $almacenes ?? [];
@@ -19,46 +18,7 @@ $tipo_ajuste_selected = $_POST['tipo_ajuste'] ?? $tipo_ajuste_selected ?? 'absol
     <title>Ajustar Stock - Sistema de Inventario</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-            transform: translateY(-1px);
-        }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        }
-        .alert {
-            border-radius: 10px;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .tipo-ajuste-info {
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-        .product-info {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .product-icon {
-            font-size: 2rem;
-            color: #667eea;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../public/css/ajustarStock.css">
 </head>
 <body class="bg-light">
     <div class="container mt-5">
@@ -294,63 +254,6 @@ $tipo_ajuste_selected = $_POST['tipo_ajuste'] ?? $tipo_ajuste_selected ?? 'absol
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Actualizar texto de ayuda según el tipo de ajuste
-            var radioButtons = document.querySelectorAll('input[name="tipo_ajuste"]');
-            var cantidadHelper = document.getElementById('cantidad-helper');
-            var ajusteInfo = document.getElementById('ajuste-info');
-            
-            function updateHelperText() {
-                var selectedType = document.querySelector('input[name="tipo_ajuste"]:checked').value;
-                
-                if (selectedType === 'absoluto') {
-                    cantidadHelper.textContent = 'Ingrese la nueva cantidad total de este producto en el almacén seleccionado';
-                    ajusteInfo.innerHTML = '<strong>Nota:</strong> Este ajuste sobrescribirá la cantidad actual del producto en el almacén seleccionado.';
-                } else if (selectedType === 'incremento') {
-                    cantidadHelper.textContent = 'Ingrese la cantidad a añadir al stock actual';
-                    ajusteInfo.innerHTML = '<strong>Nota:</strong> Esta cantidad se sumará al stock actual del producto en el almacén.';
-                } else if (selectedType === 'decremento') {
-                    cantidadHelper.textContent = 'Ingrese la cantidad a restar del stock actual';
-                    ajusteInfo.innerHTML = '<strong>Nota:</strong> Esta cantidad se restará del stock actual del producto en el almacén. Se verificará que hay suficiente stock.';
-                }
-            }
-            
-            radioButtons.forEach(function(radio) {
-                radio.addEventListener('change', updateHelperText);
-            });
-            
-            // Ejecutar al cargar la página
-            updateHelperText();
-
-            // Focus the first select when the page loads
-            const firstSelect = document.querySelector('select');
-            if (firstSelect) {
-                firstSelect.focus();
-            }
-
-            // Validación del formulario
-            document.querySelector('form[method="POST"]').addEventListener('submit', function(e) {
-                if (this.querySelector('input[name="ajustar_stock"]')) {
-                    const cantidad = parseInt(document.getElementById('cantidad').value);
-                    const tipoAjuste = document.querySelector('input[name="tipo_ajuste"]:checked').value;
-                    
-                    if (tipoAjuste === 'incremento' || tipoAjuste === 'decremento') {
-                        if (cantidad <= 0) {
-                            e.preventDefault();
-                            alert('Para incrementar o disminuir stock, la cantidad debe ser mayor que 0.');
-                            return false;
-                        }
-                    }
-                    
-                    if (cantidad < 0) {
-                        e.preventDefault();
-                        alert('La cantidad no puede ser negativa.');
-                        return false;
-                    }
-                }
-            });
-        });
-    </script>
+    <script src="../../../public/js/ajustarStock.js"></script>
 </body>
 </html>

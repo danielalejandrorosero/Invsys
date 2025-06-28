@@ -1,0 +1,19 @@
+
+.container {
+    margin-top: 20px;
+}
+.form-title {
+    margin-bottom: 20px;
+}
+#almacen-origen-info {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #e8f5e9;
+    display: none;
+}
+#error-mensaje {
+    color: #d32f2f;
+    margin: 10px 0;
+    display: none;
+}

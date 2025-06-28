@@ -6,36 +6,7 @@
     <title>Productos Sin Almacén | Stock Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .stats-card {
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        .product-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../public/css/productosSinAlmacen.css">
 </head>
 <body>
     <div class="container">

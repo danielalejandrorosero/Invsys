@@ -6,40 +6,8 @@
     <title>Inventario | Stock Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar tooltips
-            var elems = document.querySelectorAll('.tooltipped');
-            var instances = M.Tooltip.init(elems);
-            
-            // Table search
-            const searchInput = document.getElementById('tableSearch');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase();
-                    const tableRows = document.querySelectorAll('.inventory-table tbody tr');
+    <script src="../../../public/js/verInventario.js"></script>
 
-                    tableRows.forEach(row => {
-                        const rowText = row.textContent.toLowerCase();
-                        row.style.display = rowText.includes(searchTerm) ? '' : 'none';
-                    });
-                });
-            }
-
-            // Initialize stock level bars
-            const stockBars = document.querySelectorAll('.stock-bar');
-            stockBars.forEach(bar => {
-                const value = parseInt(bar.getAttribute('data-value'));
-                const max = parseInt(bar.getAttribute('data-max')) || 100;
-                const percentage = (value / max) * 100;
-                bar.style.width = `${Math.min(percentage, 100)}%`;
-
-                if (percentage < 30) {
-                    bar.classList.add('stock-low');
-                }
-            });
-        });
-    </script>
 </head>
 <body>
     <div class="container">
