@@ -6,34 +6,6 @@
     <title>Agregar Usuario | Stock Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        function togglePassword() {
-            const passwordField = document.getElementById('password');
-            const icon = document.querySelector('.password-toggle i');
-
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordField.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            const errorContainer = document.querySelector('.error-container');
-
-            // Check if there are error messages and show the container
-            const errorMessages = document.querySelectorAll('.error-message');
-            if (errorMessages.length > 0) {
-                errorContainer.classList.add('active');
-            }
-        });
-    </script>
 </head>
 <body>
     <div class="container">
@@ -107,11 +79,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('select');
-            M.FormSelect.init(elems);
-        });
-    </script>
+    <script src="../../../public/js/agregarUsuario.js"></script>
 </body>
 </html>

@@ -6,24 +6,6 @@
     <title>Proveedores Eliminados | Stock Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Table search
-            const searchInput = document.getElementById('tableSearch');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase();
-                    const tableRows = document.querySelectorAll('.proveedores-table tbody tr');
-
-                    tableRows.forEach(row => {
-                        const rowText = row.textContent.toLowerCase();
-                        row.style.display = rowText.includes(searchTerm) ? '' : 'none';
-                    });
-                });
-            }
-        });
-    </script>
 </head>
 <body>
     <div class="container">
@@ -35,7 +17,7 @@
                 </span>
                 <p>Proveedores que han sido removidos del sistema activo</p>
                 <div class="right-align">
-                    <a href="../../Controller/proveedores/ListarProveedoresController.php" class="btn waves-effect waves-light">
+                    <a href="../../Controller/proveedores/listarProveedores.php" class="btn waves-effect waves-light">
                         <i class="fas fa-truck"></i> Ver Proveedores Activos
                     </a>
                     <a href="../../Views/usuarios/dashboard.php" class="btn waves-effect waves-light grey">
@@ -175,5 +157,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="../../../public/js/listarProveedoresEliminados.js"></script>
 </body>
 </html>
