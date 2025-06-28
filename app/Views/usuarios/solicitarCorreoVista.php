@@ -6,6 +6,7 @@
     <title>Recuperar Contraseña</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../public/css/recuperarCorreo.css">
 </head>
 <body>
     <div class="container">

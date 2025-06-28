@@ -1,0 +1,65 @@
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container {
+    margin-top: 60px;
+}
+.card {
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(102,126,234,0.15);
+    padding: 32px 28px 24px 28px;
+    background: #fff;
+}
+.card-title {
+    font-size: 1.5em;
+    font-weight: 700;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 24px;
+}
+.input-field input[type="email"] {
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    padding: 12px;
+    font-size: 1.1em;
+    background: #f8fafd;
+}
+.input-field label {
+    color: #667eea !important;
+    font-weight: 500;
+}
+.input-field i.prefix {
+    color: #764ba2;
+    font-size: 1.4em;
+    top: 18px;
+}
+.btn {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 1.1em;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(102,126,234,0.10);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.btn:hover {
+    background: linear-gradient(90deg, #764ba2, #667eea);
+    box-shadow: 0 4px 16px rgba(102,126,234,0.18);
+}
+.card-panel.green {
+    background: linear-gradient(90deg, #e8f5e9 80%, #b2f7ef 100%) !important;
+    color: #388e3c !important;
+    border-left: 5px solid #43a047;
+    border-radius: 10px;
+    font-weight: 500;
+    margin-top: 18px;
+}
+.card-content {
+    padding-bottom: 0 !important;
+} 
