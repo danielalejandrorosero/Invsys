@@ -128,3 +128,4 @@ document.addEventListener('keydown', function(e) {
         closeAlertModal();
     }
 });
+// === FIN: Código movido desde dashboard.php ===

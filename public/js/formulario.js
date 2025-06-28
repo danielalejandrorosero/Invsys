@@ -1,4 +1,7 @@
-
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+});
 document.addEventListener('DOMContentLoaded', function() {
     // Handle warehouse card selection
     const warehouseCards = document.querySelectorAll('.warehouse-card');
@@ -19,9 +22,4 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('selected');
         });
     });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('select');
-    var instances = M.FormSelect.init(elems);
 });

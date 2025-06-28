@@ -6,7 +6,6 @@
     <title>Inventario | Stock Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="../../../public/js/verInventario.js"></script>
 
 </head>
 <body>
@@ -310,5 +309,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="../../../public/js/verInventario.js"></script>
 </body>
 </html>
