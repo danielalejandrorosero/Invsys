@@ -47,7 +47,10 @@ class LoginController
 
             // En el controlador de sesión, después de verificar las credenciales
             if ($usuario) {
-                // Verificar si el usuario ya tiene una sesión activa
+                // Primero limpiar sesiones inactivas (más de 30 minutos)
+                $this->usuarioModel->limpiarSesionesInactivas();
+                
+                // Verificar si el usuario ya tiene una sesión activa (después de limpiar inactivas)
                 if ($this->usuarioModel->verificarSesionActiva($usuario["id_usuario"])) {
                     $_SESSION["error"] = "Este usuario ya tiene una sesión activa en otro dispositivo. Por favor, cierre la sesión anterior antes de iniciar una nueva.";
                     header("Location: ../../../public/index.php");

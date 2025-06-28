@@ -440,8 +440,10 @@ $nombreArchivo = !empty($_SESSION["rutaImagen"])
         var transferencias = <?php echo $transferenciaPendientes; ?>;
         var productosBajoStock = <?php echo json_encode($productosBajoStock); ?>;
         var alertaStockMostrada = <?php echo $_SESSION['alerta_stock_mostrada'] ? 'true' : 'false'; ?>;
+        var session_id = '<?php echo $_SESSION["session_id"] ?? ""; ?>';
     </script>
     <script src="../../../public/js/dashboard.js"></script>
+    <script src="../../../public/js/session_keepalive.js"></script>
 </body>
 </html>
 

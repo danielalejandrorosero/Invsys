@@ -340,6 +340,47 @@
             }
         }
 
+        // Método para limpiar sesiones inactivas (más de 30 minutos sin actividad)
+        public function limpiarSesionesInactivas()
+        {
+            try {
+                $stmt = $this->conn->prepare(
+                    "UPDATE usuarios SET session_id = NULL 
+                     WHERE session_id IS NOT NULL 
+                     AND last_login < DATE_SUB(NOW(), INTERVAL 30 MINUTE)"
+                );
+                $stmt->execute();
+                
+                return $stmt->affected_rows;
+            } catch (Exception $e) {
+                return 0;
+            } finally {
+                $stmt->close();
+            }
+        }
+
+        // Método para verificar si una sesión específica está inactiva
+        public function verificarSesionInactiva($id_usuario)
+        {
+            try {
+                $stmt = $this->conn->prepare(
+                    "SELECT id_usuario FROM usuarios 
+                     WHERE id_usuario = ? 
+                     AND session_id IS NOT NULL 
+                     AND last_login < DATE_SUB(NOW(), INTERVAL 30 MINUTE)"
+                );
+                $stmt->bind_param("i", $id_usuario);
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+                
+                return $resultado->num_rows > 0;
+            } catch (Exception $e) {
+                return false;
+            } finally {
+                $stmt->close();
+            }
+        }
+
         // solicitar recuperación de contra
         public function generarToken($correo)
         {
